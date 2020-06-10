@@ -907,7 +907,7 @@ foreach($courses as $key => $value) {
                 </li>
                 <li class='".$leave_page."'>
                   <a href='" . ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( ' ', '-', $clasname->c_name) . "-" . $clasname->cid."'>
-                 <spanOnline Class Room</span></a>
+                 <span>Online Class Room</span></a>
                 </li>
               </ul> 
           </li></ul>";

@@ -41,7 +41,7 @@ wpsp_header();
 						<th>Teacher Incharge</th>
 						<th>Number of Students</th>
 						<th>Capacity</th>
-						<th>Location</th>
+						<th>Online Class Room</th>
 						<?php  if( $current_user_role=='administrator' ) { ?> <th class="nosort" align="center">Action</th> <?php } ?>
 					</tr>
 					</thead>
@@ -92,7 +92,10 @@ wpsp_header();
 											<td><?php echo isset( $teacherlist[$teach_id] ) ? $teacherlist[$teach_id] : '';?></td>
 											<td><?php echo $class_students_count;?></td>
 											<td><?php echo $wpsp_class->c_capacity;?></td>
-											<td><?php echo $wpsp_class->c_loc;?></td>
+											<td>
+												<a href="<?php echo ESCHOOL_CLASS_ROOM_BASE_URL . str_replace(' ', '-', $wpsp_class->c_name ) .'-' . $wpsp_class->cid; ?>">Join</a>
+											</td>
+											
 											<?php  if( $current_user_role=='administrator' ) { ?>
 												<td align="center">
 													<div class="wpsp-action-col">
@@ -147,8 +150,7 @@ wpsp_header();
 										<th>Class Name</th>
 										<th>Teacher Incharge</th>
 										<th>Number of Students</th>
-										<th>Location</th>
-										<th>Class Room</th>
+										<th>Online Class Room</th>
 									</tr>
 									</thead>
 									<tbody>
@@ -180,8 +182,9 @@ wpsp_header();
 											<td><?php echo $wpsp_class->c_name;?></td>
 										    <td><?php echo isset( $teacherlist[$teach_id] ) ? $teacherlist[$teach_id] : '';?></td>
 											<td><?php echo $class_students_count;?></td>
-											<td><?php echo $wpsp_class->c_loc;?></td>
-											<td><a href="#" target="_blank">Join Class</a></td>
+											<td>
+												<a href="<?php echo ESCHOOL_CLASS_ROOM_BASE_URL . str_replace(' ', '-', $wpsp_class->c_name ) .'-' . $wpsp_class->cid; ?>">Join</a>
+											</td>>
 										</tr>
 										<?php
 										$sno++;

@@ -58,7 +58,6 @@ wpsp_header();
 							<th><?php _e( 'Incharge of Class', 'WPSchoolPress' ); ?></th>
 							<th><?php _e( 'Subjects Handling', 'WPSchoolPress' ); ?></th>
 							<th><?php _e( 'Phone', 'WPSchoolPress' ); ?></th>
-							<th><?php _e( 'Class Room', 'WPSchoolPress' ); ?></th>
 						</tr>
 						</thead>
 						<tbody>
@@ -100,7 +99,6 @@ wpsp_header();
 								<td><?php if(isset($cincharge[$tinfo->wp_usr_id])) { echo implode( ", ", $cincharge[$tinfo->wp_usr_id] ); } else { echo '-'; } ?></td>
 								<td><?php if(isset($sub_handling[$tinfo->wp_usr_id])) { echo implode( ", ", $sub_handling[$tinfo->wp_usr_id] ); } else { echo '-'; } ?></td>
 								<td><?php echo $tinfo->phone;?></td>
-								<td><a href="https://meet.wpandro.com/CallsA" target="_blank">Join Class</a></td>
 							</tr>
 							<?php }	?>
 						<?php } ?>
@@ -112,7 +110,6 @@ wpsp_header();
 							<th><?php _e( 'Incharge of Class', 'WPSchoolPress' ); ?></th>
 							<th><?php _e( 'Subjects Handling', 'WPSchoolPress' ); ?></th>
 							<th><?php _e( 'Phone', 'WPSchoolPress' ); ?></th>
-							<th><?php _e( 'Class Room', 'WPSchoolPress' ); ?></th>
 						</tr>
 						</tfoot>
 					</table>

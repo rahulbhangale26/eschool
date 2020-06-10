@@ -89,7 +89,7 @@ function wpsp_topbar(){
       </a>
       <div class="wpsp-head">
       <div class="wpsp-menuIcon"><span></span></div>
-      <h3 class="wpsp-customeMsg">“Live as if you were to die tomorrow. Learn as if you were to live forever.”</h3>
+      <h3 class="wpsp-customeMsg">â€œLive as if you were to die tomorrow. Learn as if you were to live forever.â€�</h3>
 
       <div class="wpsp-righthead">
         <div class="wpsp-head-action"></div>
@@ -642,6 +642,10 @@ foreach($courses as $key => $value) {
                   <a href='".site_url('wp-admin/admin.php?page=sch-leavecalendar&cid=').$id."'>
                  <span>".$sch_leavecalendar."</span></a>
                 </li>
+                <li class='".$leave_page."'>
+                  <a href='" . ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( ' ', '-', $clasname->c_name ) . "-" . $clasname->cid."'>
+                 <span>Online Class Room</span></a>
+                </li>
               </ul>
           </li></li></ul>";
           }
@@ -901,7 +905,11 @@ foreach($courses as $key => $value) {
                   <a href='".site_url('wp-admin/admin.php?page=sch-leavecalendar&cid='.$id.'&sid=').$sid."'>
                  <span>".$sch_leavecalendar."</span></a>
                 </li>
-              </ul>
+                <li class='".$leave_page."'>
+                  <a href='" . ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( ' ', '-', $clasname->c_name) . "-" . $clasname->cid."'>
+                 <spanOnline Class Room</span></a>
+                </li>
+              </ul> 
           </li></ul>";
           }
           echo "</li></ul></li></ul>";

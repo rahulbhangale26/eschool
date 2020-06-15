@@ -643,7 +643,7 @@ foreach($courses as $key => $value) {
                  <span>".$sch_leavecalendar."</span></a>
                 </li>
                 <li class='".$leave_page."'>
-                  <a href='" . ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( ' ', '-', $clasname->c_name ) . "-" . $clasname->cid."'>
+                  <a target='__blank' href='" . ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( '-', '', str_replace( ' ', '-', $clasname->c_name ) . "-" . $clasname->cid ) . "'>
                  <span>Online Class Room</span></a>
                 </li>
               </ul>
@@ -906,7 +906,7 @@ foreach($courses as $key => $value) {
                  <span>".$sch_leavecalendar."</span></a>
                 </li>
                 <li class='".$leave_page."'>
-                  <a href='" . ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( ' ', '-', $clasname->c_name) . "-" . $clasname->cid."'>
+                  <a target='__blank' href='" . ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( '-', '', str_replace( ' ', '-', $clasname->c_name) . "-" . $clasname->cid ) ."'>
                  <span>Online Class Room</span></a>
                 </li>
               </ul> 

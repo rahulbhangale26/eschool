@@ -50,9 +50,8 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
 					$class_table	=	$wpdb->prefix."wpsp_class";
 					$sel_class		=	$wpdb->get_results("select cid,c_name from $class_table Order By cid ASC");
 					?>
-					<?php if($current_user_role=='administrator' ) { ?>
 					<option value="all" <?php if($sel_classid=='all') echo "selected"; ?>><?php _e( 'All', 'WPSchoolPress' ); ?></option>
-					<?php } foreach( $sel_class as $classes ) {
+					<?php foreach( $sel_class as $classes ) {
 					?>
 						<option value="<?php echo $classes->cid;?>" <?php if($sel_classid==$classes->cid) echo "selected"; ?>><?php echo $classes->c_name;?></option>
 					<?php } ?>

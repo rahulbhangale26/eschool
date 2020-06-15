@@ -603,6 +603,10 @@ foreach($courses as $key => $value) {
                   <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".$classname1."</span>
                 </a>
                 <ul class='sub-menu'>
+                <li class='".$leave_page."'>
+                     <a target='__blank' href='" . ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( '-', '', str_replace( ' ', '-', $clasname->c_name ) . "-" . $clasname->cid ) . "'>
+                    <span>Online Class Room</span></a>
+                </li>
                 <li class='".$timetable_page."'>
                   <a href='".site_url('wp-admin/admin.php?page=sch-timetable&cid=').$id."'>
                     <span>".$sch_timetable."</span>
@@ -641,10 +645,6 @@ foreach($courses as $key => $value) {
                 <li class='".$leave_page."'>
                   <a href='".site_url('wp-admin/admin.php?page=sch-leavecalendar&cid=').$id."'>
                  <span>".$sch_leavecalendar."</span></a>
-                </li>
-                <li class='".$leave_page."'>
-                  <a target='__blank' href='" . ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( '-', '', str_replace( ' ', '-', $clasname->c_name ) . "-" . $clasname->cid ) . "'>
-                 <span>Online Class Room</span></a>
                 </li>
               </ul>
           </li></li></ul>";
@@ -871,6 +871,10 @@ foreach($courses as $key => $value) {
                   <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".$clasname->c_name."</span>
                 </a>
                 <ul class='sub-menu ".((isset($nonemenu)? $nonemenu : ''))."'>
+                <li class='".$leave_page."'>
+                  <a target='__blank' href='" . ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( '-', '', str_replace( ' ', '-', $clasname->c_name) . "-" . $clasname->cid ) ."'>
+                 <span>Online Class Room</span></a>
+                </li>    
                 <li class='".$timetable_page."'>
                   <a href='".site_url('wp-admin/admin.php?page=sch-timetable&cid='.$id.'&sid=').$sid."'>
                     <span>".$sch_timetable."</span>
@@ -904,10 +908,6 @@ foreach($courses as $key => $value) {
                 <li class='".$leave_page."'>
                   <a href='".site_url('wp-admin/admin.php?page=sch-leavecalendar&cid='.$id.'&sid=').$sid."'>
                  <span>".$sch_leavecalendar."</span></a>
-                </li>
-                <li class='".$leave_page."'>
-                  <a target='__blank' href='" . ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( '-', '', str_replace( ' ', '-', $clasname->c_name) . "-" . $clasname->cid ) ."'>
-                 <span>Online Class Room</span></a>
                 </li>
               </ul> 
           </li></ul>";

@@ -43,7 +43,7 @@ function wpsp_topbar(){
   $role   = isset( $current_user->roles[0] ) ? $current_user->roles[0] : '';
   $url = site_url()."/wp-content/plugins/wpschoolpress/img/wpschoolpresslogo.jpg";
   $img_url  = $loc_avatar ? $loc_avatar['full'] : WPSP_PLUGIN_URL.'img/avatar.png';
-  $schoolname = isset( $wpsp_settings_data['sch_name'] ) && !empty( $wpsp_settings_data['sch_name'] ) ? $wpsp_settings_data['sch_name'] : __( 'WPSchoolPress','WPSchoolPress' );
+  $schoolname = isset( $wpsp_settings_data['sch_name'] ) && !empty( $wpsp_settings_data['sch_name'] ) ? $wpsp_settings_data['sch_name'] : __( 'ESchool','WPSchoolPress' );
   $imglogo  = isset( $wpsp_settings_data['sch_logo'] ) ? $wpsp_settings_data['sch_logo'] : $url;
   $schoolyear = isset( $wpsp_settings_data['sch_wrkingyear'] ) ? $wpsp_settings_data['sch_wrkingyear'] : '';
   $postname = isset( $post->post_name ) ? $post->post_name :'';
@@ -363,6 +363,14 @@ function wpsp_sidebar(){
                 </li>
            ";
         if($current_user_role=='administrator' || $current_user_role=='teacher') {
+            global $wpsp_settings_data;
+            $schoolname = isset( $wpsp_settings_data['sch_name'] ) && !empty( $wpsp_settings_data['sch_name'] ) ? $wpsp_settings_data['sch_name'] : __( 'ESchool','WPSchoolPress' );
+            
+            echo 
+                "<li class='".$notify_page."'>
+                  <a target='__blank' href='" . ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( ' ', '', $schoolname ) . 'StaffMeeting' ."'>
+                 <i class='dashicons dashicons-groups icon'></i><span>Meeting Room</span></a>
+                </li>";
             echo "
             <li class='".$notify_page."'>
             <a href='".site_url('wp-admin/admin.php?page=sch-notify')."'>
@@ -1169,7 +1177,7 @@ if(isset($_GET['cid'])){
 function wpsp_body_end()
 {
   echo "<footer class='wpsp-footer'>
-        <p>Copyright &copy;".date('Y')." <a href='http://wpschoolpress.com' target='_blank'>WPSchoolPress</a>. All rights reserved. <span class='wpsp-right'>WPSchoolPress Version ".WPSP_PLUGIN_VERSION."</span></p></footer>
+        </footer>
     <!-- Control Sidebar -->
     </section><!-- /.wpsp-container -->
   </div><!-- /.wpsp-wrapper -->

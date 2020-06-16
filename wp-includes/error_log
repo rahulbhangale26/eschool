@@ -1,0 +1,7 @@
+[25-Apr-2019 14:51:56 UTC] PHP Fatal error:  Call to undefined function _deprecated_file() in /home/nutaniti/public_html/wp-includes/locale.php on line 10
+[01-Apr-2020 13:00:49 UTC] PHP Warning:  require(ABSPATHWPINC/option.php): failed to open stream: No such file or directory in /home/nutaniti/public_html/wp-includes/functions.php on line 8
+[01-Apr-2020 13:00:49 UTC] PHP Warning:  require(ABSPATHWPINC/option.php): failed to open stream: No such file or directory in /home/nutaniti/public_html/wp-includes/functions.php on line 8
+[01-Apr-2020 13:00:49 UTC] PHP Fatal error:  require(): Failed opening required 'ABSPATHWPINC/option.php' (include_path='.:/opt/cpanel/ea-php56/root/usr/share/pear') in /home/nutaniti/public_html/wp-includes/functions.php on line 8
+[15-Apr-2020 00:02:18 UTC] PHP Warning:  require(ABSPATHWPINC/option.php): failed to open stream: No such file or directory in /home/nutaniti/public_html/wp-includes/functions.php on line 8
+[15-Apr-2020 00:02:18 UTC] PHP Warning:  require(ABSPATHWPINC/option.php): failed to open stream: No such file or directory in /home/nutaniti/public_html/wp-includes/functions.php on line 8
+[15-Apr-2020 00:02:18 UTC] PHP Fatal error:  require(): Failed opening required 'ABSPATHWPINC/option.php' (include_path='.:/opt/cpanel/ea-php56/root/usr/share/pear') in /home/nutaniti/public_html/wp-includes/functions.php on line 8

@@ -28,5 +28,5 @@ function _t( $strText ) {
         'No Child Added, Please contact teacher/admin to add your child' => 'No Child Added, Please contact instructor/admin to add your child'
     ];
     
-    return __( $arrmixTranslations[$strText], 'WPSchoolPress' );
+    return ( false == isset( $arrmixTranslations[$strText] ) ) ? __( $strText, 'WPSchoolPress' ) : __( $arrmixTranslations[$strText], 'WPSchoolPress' );
 }

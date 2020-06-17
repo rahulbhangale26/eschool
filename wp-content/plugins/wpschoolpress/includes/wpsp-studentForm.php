@@ -204,17 +204,17 @@
                         </div>
                         <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
                             <div class="wpsp-form-group">
-                                        <label class="wpsp-label"  for="s_p_phone">
+                                        <label class="wpsp-label"  for="s_phone">
                                           <?php $item =  apply_filters( 'wpsp_student_personal_title_item',esc_html("Phone Number","WPSchoolPress"));
-                                          if(isset($item['section']) && $item['section'] == "personal" && isset($item['s_p_phone'])){
-                                                echo $pl= esc_html($item['s_p_phone'],"WPSchoolPress");
+                                          if(isset($item['section']) && $item['section'] == "personal" && isset($item['s_phone'])){
+                                                echo $pl= esc_html($item['s_phone'],"WPSchoolPress");
                                           }else{
                                               echo $pl= esc_html("Phone Number","WPSchoolPress");
                                           }
 
                                           /*Check Required Field*/
-                                          if(isset($is_required_item['section']) && $is_required_item['section'] == "personal" && isset($is_required_item['s_p_phone'])){
-                                              $is_required =  $is_required_item['s_p_phone'];
+                                          if(isset($is_required_item['section']) && $is_required_item['section'] == "personal" && isset($is_required_item['s_phone'])){
+                                              $is_required =  $is_required_item['s_phone'];
                                           }else{
                                               $is_required = false;
                                           }
@@ -222,7 +222,7 @@
                                           ?>
                                           <span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span>
                                         </label>
-                                        <input type="text" data-is_required="<?php echo $is_required; ?>" class="wpsp-form-control" id="s_p_phone" name="s_p_phone" placeholder="<?php echo $pl;?>" onkeypress='return event.keyCode == 8 || event.keyCode == 46
+                                        <input type="text" data-is_required="<?php echo $is_required; ?>" class="wpsp-form-control" id="s_phone" name="s_phone" placeholder="<?php echo $pl;?>" onkeypress='return event.keyCode == 8 || event.keyCode == 46
  || event.keyCode == 37 || event.keyCode == 39 || event.charCode >= 48 && event.charCode <= 57'>
                                         <small>(Please enter country code with mobile number)</small>
                                     </div>
@@ -704,22 +704,22 @@
                                 <label class="wpsp-label" for="phone">
                                   <?php $item =  apply_filters( 'wpsp_student_parent_title_item',esc_html("Phone","WPSchoolPress"));
                                     $pl = "";
-                                    if(isset($item['section']) && $item['section'] == "parent" && isset($item['s_phone'])){
-                                          echo $pl = esc_html($item['s_phone'],"WPSchoolPress");
+                                    if(isset($item['section']) && $item['section'] == "parent" && isset($item['s_p_phone'])){
+                                          echo $pl = esc_html($item['s_p_phone'],"WPSchoolPress");
 
                                     }else{
                                         echo $pl = esc_html("Phone","WPSchoolPress");
                                     }
                                     /*Check Required Field*/
-                                    if(isset($is_required_parent['section']) && $is_required_parent['section'] == "parent" && isset($is_required_parent['s_phone'])){
-                                        $is_required =  $is_required_parent['s_phone'];
+                                    if(isset($is_required_parent['section']) && $is_required_parent['section'] == "parent" && isset($is_required_parent['s_p_phone'])){
+                                        $is_required =  $is_required_parent['s_p_phone'];
                                     }else{
                                         $is_required = false;
                                     }
                                     ?>
                                     <span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span>
                                   </label>
-                                <input type="text" data-is_required="<?php echo $is_required; ?>" class="wpsp-form-control" id="s_phone" name="s_phone" placeholder="<?php echo $pl; ?>">
+                                <input type="text" data-is_required="<?php echo $is_required; ?>" class="wpsp-form-control" id="s_p_phone" name="s_p_phone" placeholder="<?php echo $pl; ?>">
                             </div>
                     </div>
                     <div class="wpsp-col-md-3 wpsp-col-sm-6 wpsp-col-xs-12">

@@ -179,7 +179,7 @@ wpsp_header();
 	</div>
 			<?php
 			} else {
-				echo 'No Child Added, Please contact teacher/admin to add your child';
+				echo _t( 'No Child Added, Please contact teacher/admin to add your child' );
 			} ?>
 		<?php
 		wpsp_body_end();

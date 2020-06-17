@@ -36,7 +36,7 @@ else {
 		$wpsp_fees_payment			=	$wpdb->prefix.'wpsp_fees_payment';		
 		$wpsp_fee_payment_history	=	$wpdb->prefix.'wpsp_fee_payment_history';
 		$wpsp_leavedays	=	$wpdb->prefix.'wpsp_leavedays';			
-		$page_titles=array( 'Teacher','Student','Class','Dashboard','Messages','Exams','Attendance','Timetable','Events','Subject','Transport','Settings','Marks','Notify','SMS','ImportHistory','LeaveCalendar','TeacherAttendance', 'Parent', 'Change Password', 'Payment' );		
+		$page_titles=array( _t( 'Teacher' ),'Student','Class','Dashboard','Messages','Exams','Attendance','Timetable','Events','Subject','Transport','Settings','Marks','Notify','SMS','ImportHistory','LeaveCalendar', _t( 'TeacherAttendance' ), 'Parent', 'Change Password', 'Payment' );		
 		foreach($page_titles as $page_title) {			
 			$page = get_page_by_title($page_title);			
 			wp_delete_post($page->ID,true);	//Trash or delete a post or page.	
@@ -92,7 +92,7 @@ else {
 		$wpsp_fees					=	$wpdb->prefix.'wpsp_fees';		
 		$wpsp_fees_payment			=	$wpdb->prefix.'wpsp_fees_payment';		
 		$wpsp_fee_payment_history	=	$wpdb->prefix.'wpsp_fee_payment_history';		
-		$page_titles=array( 'Teacher','Student','Class','Dashboard','Messages','Exams','Attendance','Timetable','Events','Subject','Transport','Settings','Marks','Notify','SMS','ImportHistory','LeaveCalendar','TeacherAttendance', 'Parent' );		
+		$page_titles=array( _t( 'Teacher' ),'Student','Class','Dashboard','Messages','Exams','Attendance','Timetable','Events','Subject','Transport','Settings','Marks','Notify','SMS','ImportHistory','LeaveCalendar', _t( 'TeacherAttendance' ), 'Parent' );		
 		foreach($page_titles as $page_title) {			
 			$page = get_page_by_title($page_title);			
 			wp_delete_post($page->ID,true);	//Trash or delete a post or page.	

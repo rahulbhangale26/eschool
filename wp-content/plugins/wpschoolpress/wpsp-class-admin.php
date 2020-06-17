@@ -56,7 +56,7 @@ function wpsp_admin_menu()
 			'wpsp_callback_request'
 		));
 		}
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-groups icon"></i>&nbsp; Teachers', 'edit_posts', 'sch-teacher', array(
+		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-groups icon"></i>&nbsp; ' . _t( 'Teachers' ), 'edit_posts', 'sch-teacher', array(
 			$this,
 			'wpsp_callback_teachers'
 		));
@@ -108,7 +108,7 @@ function wpsp_admin_menu()
 			'wpsp_callback_transport'
 		));
 		if($current_user_role=='administrator' || $current_user_role=='teacher'){
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-signal"></i>&nbsp; Teacher Attendance', 'edit_posts', 'sch-teacherattendance', array(
+		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-signal"></i>&nbsp; ' . _t( 'Teacher Attendance' ) , 'edit_posts', 'sch-teacherattendance', array(
 			$this,
 			'wpsp_callback_teacherattendance'
 		));
@@ -574,7 +574,7 @@ function wpsp_admin_menu()
 		$wp_admin_bar->add_menu(array(
 			'parent' => 'dashboard',
 			'id' => 'teacher',
-			'title' => _('Teacher') ,
+			'title' => _t('Teacher') ,
 			'href' => $wpsp_wpschoolteacher_url
 		));
 		$wp_admin_bar->add_menu(array(

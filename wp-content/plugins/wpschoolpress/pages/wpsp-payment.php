@@ -27,7 +27,7 @@ wpsp_header();
                                             <th>Student Name</th>
                                             <th>Roll No</th>
                                             <th>Class Name</th>
-                                            <th>Class Teacher Name</th>
+                                            <th><?php echo _t( 'Class Teacher Name' ); ?></th>
                                             <th>Amount</th>
                                             <th>Date</th>
                                             <th>Class Fee Status</th>
@@ -139,7 +139,7 @@ foreach($wpsp_clas_data as $clsloop){
                                             <th>Student Name</th>
                                             <th>Roll No</th>
                                             <th>Class Name</th>
-                                            <th>Class Teacher Name</th>
+                                            <th><?php echo _t( 'Class Teacher Name' ); ?></th>
                                             <th>Amount</th>
                                             <th>Date</th>
                                             <th>Class Fee Status</th>

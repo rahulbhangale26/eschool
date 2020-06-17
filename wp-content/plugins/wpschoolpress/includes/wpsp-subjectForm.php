@@ -125,11 +125,11 @@ foreach($classQuery as $classdata){
 									<label class="wpsp-label" for="Name">
                     <?php
                       $pl = "";
-                      $item =  apply_filters( 'wpsp_subject_title_item',esc_html("Subject Teacher","WPSchoolPress"));
+                      $item =  apply_filters( 'wpsp_subject_title_item', _t( "Subject Teacher" ));
                           if(isset($item['STeacherID'])){
                             echo $pl = esc_html($item['STeacherID'],"WPSchoolPress");
                       }else{
-                          echo $pl = esc_html("Subject Teacher","WPSchoolPress")."<span> (Incharge)</span>";
+                          echo $pl = _t( "Subject Teacher" )."<span> (Incharge)</span>";
 
                       }
 
@@ -143,7 +143,7 @@ foreach($classQuery as $classdata){
                       <span class="wpsp-required"><?php echo ($is_required)?"*":""; ?>
                     </label>
 									<select name="STeacherID[]"  data-is_required="<?php echo $is_required; ?>" class="wpsp-form-control">
-										<option value="">Select Teacher </option>
+										<option value="">Select <?php echo _t( "Teacher" ); ?> </option>
 											<?php
 											foreach ($teacher_data as $teacher_list) {
 												$teacherlistid= $teacher_list->wp_usr_id;?>

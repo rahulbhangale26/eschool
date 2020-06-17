@@ -977,7 +977,7 @@ function wpsp_body_start()
       $addurl = $base_url.'sch-message&tab=addmessage';
       break;
     case 'teacher':
-      $pagetitle = 'Teacher';
+      $pagetitle = _t( 'Teacher' );
       $pagetitle = $sch_teacher;
       $addurl = $base_url.'sch-teacher&tab=addteacher';
       break;
@@ -1011,7 +1011,7 @@ function wpsp_body_start()
       $addurl = $base_url.'sch-attendance';
       break;
     case 'teacherattendance':
-      $pagetitle = 'Teacher Attendance';
+      $pagetitle = _t( 'Teacher Attendance' );
       $pagetitle = $sch_teacher_attendance;
       $addurl = $base_url.'sch-teacherattendance';
       break;

@@ -47,7 +47,7 @@ wpsp_header();
 			?>
 	     <div class="wpsp-card">
 			<div class="wpsp-card-head">
-        <h3 class="wpsp-card-title">Teacher's Details </h3>
+        <h3 class="wpsp-card-title"><?php echo _t( 'Teacher\'s Details' ); ?> </h3>
       </div>
 			<div class="wpsp-card-body">
 					<table id="teacher_table" class="wpsp-table">

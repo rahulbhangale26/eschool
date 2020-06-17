@@ -38,7 +38,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
 
 
 
-									'user_email'		=>	__('Teacher Email', 'WPSchoolPress'),
+									'user_email'		=>	_t( 'Teacher Email' ),
 
 
 

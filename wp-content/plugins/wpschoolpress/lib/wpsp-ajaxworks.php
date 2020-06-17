@@ -952,7 +952,7 @@ function wpsp_bulkaproverequest()
 					$msg.= 'Your Password is : ' . sanitize_text_field($userdetails['t_password']) . '<br /><br />';
 					$msg.= 'Please <a href="' . site_url() . '/sch-dashboard">click here </a>to loggin.<br /><br />';
 					$msg.= 'Regards,<br />' . get_bloginfo('name');
-					wpsp_send_mail($userdetails['t_email'], 'Teacher Registration Confirmation', $msg);
+					wpsp_send_mail($userdetails['t_email'], _t( 'Teacher Registration Confirmation' ), $msg);
 					$sp_stu_ins = $wpdb->insert($wpsp_teacher_table, $teachertable);
 					if ($sp_stu_ins)
 					{
@@ -3406,7 +3406,7 @@ function wpsp_SendMessage(){
 								}
 							}
 						}else{
-								echo "Teacher not available. Please try again!";
+								echo _t( "Teacher not available. Please try again!" );
 						}
 					}
 					else
@@ -3874,8 +3874,8 @@ function wpsp_TeacherAttendanceView(){
 			<table class="wpsp-table" id="teacherAttendanceTable" cellspacing="0" width="100%" style="width:100%">
 				<thead>
 				<tr>
-					<th>Teacher Code</th>
-					<th>Teacher Name</th>
+					<th><?php echo _t( 'Teacher Code' ); ?></th>
+					<th><?php echo _t( 'Teacher Name' ); ?></th>
 					<th>Attendance</th>
 					<th>Commment</th>
 				</tr>
@@ -3945,7 +3945,7 @@ function wpsp_getNotifyInfo()
 			'all' => __('All Users', 'WPSchoolPress') ,
 			'alls' => __('All Students', 'WPSchoolPress') ,
 			'allp' => __('All Parents', 'WPSchoolPress') ,
-			'allt' => __('All Teachers', 'WPSchoolPress')
+			'allt' => _t( 'All Teachers' )
 		);
 		$notifyTypeList = array(
 			0 => __('All', 'WPSchoolPress') ,

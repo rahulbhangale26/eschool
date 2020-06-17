@@ -15,7 +15,7 @@ wpsp_header();
                                 <?php
                                     $importtable=$wpdb->prefix."wpsp_import_history";
                                     $result = $wpdb->get_results("SELECT * FROM $importtable");
-                                    $imtype=array('-','Student','Teacher','Parent','Mark');
+                                    $imtype=array('-','Student', _t( 'Teacher' ),'Parent','Mark');
                                 ?>
                                   <table class="wpsp-table" id="import" cellspacing="0" width="100%" style="width:100%">
                                     <thead>

@@ -129,7 +129,7 @@ wpsp_header(); ?>
 								<label class="wpsp-label"><?php echo $pl; ?></label>
 									<select class="wpsp-form-control" id="evtype" name="evtype">
 										<option value="0">External(Show to all)</option>
-										<option value="1">Internal(Show to teachers only)</option>
+										<option value="1"><?php echo _t( 'Internal(Show to teachers only)'); ?></option>
 									</select>
 									<input type="hidden" name="evid" class="wpsp-form-control" id="evid">
 								</div>

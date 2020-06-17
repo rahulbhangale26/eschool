@@ -50,6 +50,7 @@ function wpsp_plugins_loaded()
 	$wpsp_lang_dir = dirname(plugin_basename(__FILE__)) . '/languages/';
 	load_plugin_textdomain('WPSchoolPress', false, $wpsp_lang_dir);
 	// initialize settings of plugin Open required files for initialization
+	require_once (WPSP_PLUGIN_PATH . 'lib/translations.php');
 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks.php');
 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks-student.php');
 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks-teacher.php');

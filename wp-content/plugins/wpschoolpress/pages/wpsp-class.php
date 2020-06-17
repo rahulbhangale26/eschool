@@ -38,7 +38,7 @@ wpsp_header();
 						<th class="nosort">#</th>
 						<th>Class Number</th>
 						<th>Class Name</th>
-						<th>Teacher Incharge</th>
+						<th><?php echo _t( 'Teacher Incharge' ); ?></th>
 						<th>Number of Students</th>
 						<th>Capacity</th>
 						<th>Online Class Room</th>
@@ -148,7 +148,7 @@ wpsp_header();
 										<th class="nosort">#</th>
 										<th>Class Number</th>
 										<th>Class Name</th>
-										<th>Teacher Incharge</th>
+										<th><?php echo _t( 'Teacher Incharge' ); ?></th>
 										<th>Number of Students</th>
 										<th>Online Class Room</th>
 									</tr>

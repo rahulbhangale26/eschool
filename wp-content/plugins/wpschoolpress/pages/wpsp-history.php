@@ -37,7 +37,7 @@ if( is_user_logged_in() ) {
             <tr>
               <th>ID</th>
               <th>Class Name</th>
-              <th>Teacher</th>
+              <th><?php echo _t( 'Teacher' ); ?></th>
               <th>Start Date</th>
               <th>End Date</th>
               <th>Joining Date</th>
@@ -89,7 +89,7 @@ if( is_user_logged_in() ) {
               <tr>
                  <th>ID</th>
                  <th>Class Name</th>
-                 <th>Teacher</th>
+                 <th><?php echo _t( 'Teacher' ); ?></th>
                  <th>Start Date</th>
                  <th>End Date</th>
                  <th>Joining Date</th>

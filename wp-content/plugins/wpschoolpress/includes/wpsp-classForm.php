@@ -119,7 +119,7 @@ $propayment = !$propayment['status'] ? 'notinstalled'    : 'installed';
  								if(isset($item['ClassTeacherID'])){
  											echo $pl = esc_html($item['ClassTeacherID'],"WPSchoolPress");
  								}else{
- 										echo $pl = esc_html("Class Teacher","WPSchoolPress")."<span> (Incharge)</span>";
+ 										echo $pl = _t("Class Teacher","WPSchoolPress")."<span> (Incharge)</span>";
  								}
  								/*Check Required Field*/
  								if(isset($is_required_item['ClassTeacherID'])){
@@ -130,7 +130,7 @@ $propayment = !$propayment['status'] ? 'notinstalled'    : 'installed';
  								?>
 								<span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span></label>
 							<select data-is_required="<?php echo $is_required; ?>" name="ClassTeacherID" class="wpsp-form-control">
-								<option value="">Select Teacher </option>
+								<option value="">Select <?php echo _t( 'Teacher' )?></option>
 								<?php
 								if(!empty($teacher_data)){
 								foreach ($teacher_data as $teacher_list) {

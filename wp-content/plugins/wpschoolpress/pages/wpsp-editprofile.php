@@ -281,7 +281,7 @@ if( !empty( $stinfo ) ) {
                         </div>
                       
                               
-                                    <input type="hidden" class="wpsp-form-control" id="Email" name="Email" value="<?php echo $tinfo->user_email; ?>" placeholder="Teacher Email">
+                                    <input type="hidden" class="wpsp-form-control" id="Email" name="Email" value="<?php echo $tinfo->user_email; ?>" placeholder="<?php echo _t( 'Teacher Email' ); ?>">
                       
                         <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
                             <div class="wpsp-form-group">

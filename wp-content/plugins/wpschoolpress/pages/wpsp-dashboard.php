@@ -163,7 +163,7 @@ $nocount++;
 					<th>Student Name</th>
 									<th>Roll No</th>
 									<th>Class Name</th>
-									<th>Class Teacher Name</th>
+									<th><?php echo _t( 'Class Teacher Name' ); ?></th>
 									<th>Class Fee Status</th>
 									<th>Fees For</th>
 
@@ -416,7 +416,7 @@ if($paymenconfirmationid > 0){
 									<th>Student Name</th>
 									<th>Roll No</th>
 									<th>Class Name</th>
-									<th>Class Teacher Name</th>
+									<th><?php echo _t( 'Class Teacher Name' ); ?></th>
 									<th>Class Fee Status</th>
 									<th>Fees For</th>
 
@@ -551,7 +551,7 @@ if( $current_user_role=='administrator' || $current_user_role == 'parent'){?> <d
 	</div>
 	<div class="wpsp-col-sm-3 wpsp-col-xs-6">
 		<a class="wpsp-colorBox wpsp-orangebox wpsp-teacherInfo" <?php if($current_user_role == 'parent'  || $current_user_role == 'student'){ }else {?> href="<?php echo wpsp_admin_url();?>sch-teacher" <?php } ?>>
-			<span class="wpsp-colorBox-title"><?php echo apply_filters('wpsp_sidebar_teacher_title_menu',esc_html__('Teachers','WPSchoolPress')); ?></span>
+			<span class="wpsp-colorBox-title"><?php echo apply_filters('wpsp_sidebar_teacher_title_menu',_t( 'Teachers' )); ?></span>
 			<h4 class="wpsp-colorBox-head"><?php echo isset($teachercount->countteacher)  ?  intval($teachercount->countteacher) : 0; ?><sup>+</sup></h4>
 		</a>
 	</div>

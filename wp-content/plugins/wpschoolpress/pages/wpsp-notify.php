@@ -8,7 +8,7 @@ wpsp_header();
 		$current_user_role=$current_user->roles[0];
 	if($current_user_role=='teacher') {
 		$receiverTypeList = array( 'all'  => __( 'All Users', 'WPSchoolPress' ),
-			 						'allt' => __( 'All Teachers', 'WPSchoolPress' ),
+			 						'allt' => _t( 'All Teachers' ),
 								'alls' => __( 'All Students', 'WPSchoolPress'),
 							    'allp' => __( 'All Parents', 'WPSchoolPress')
 							   );
@@ -16,7 +16,7 @@ wpsp_header();
 	$receiverTypeList = array( 'all'  => __( 'All Users', 'WPSchoolPress' ),
 								'alls' => __( 'All Students', 'WPSchoolPress'),
 							    'allp' => __( 'All Parents', 'WPSchoolPress'),
-							    'allt' => __( 'All Teachers', 'WPSchoolPress' ) );
+							    'allt' => _t( 'All Teachers' ) );
 }
 		$notifyTypeList	=	array( 0 	=>	__( 'All', 'WPSchoolPress') ,
 							   1 	=>	__( 'Email', 'WPSchoolPress'),
@@ -197,7 +197,7 @@ $usersList1	=	array_merge( $student_ids1,$teacher_ids1);
 										 <option value="all">All Users</option>
 										 <option value="alls">All Students</option>
 										 <option value="<?php echo 'allp'?>">All Parents</option>
-										 <option value="<?php echo 'allt'?>">All Teachers</option>
+										 <option value="<?php echo 'allt'?>"><?php echo _t( 'All Teachers' ); ?>( </option>
 										 <?php foreach($usersList1 as $usersList1details)
 											{?>
 												 <option value="<?php echo $usersList1details['wp_usr_id'];?>"><?php echo $usersList1details['s_fname']." ".$usersList1details['s_lname'];

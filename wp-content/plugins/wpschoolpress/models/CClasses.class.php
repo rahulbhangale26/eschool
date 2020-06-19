@@ -12,8 +12,8 @@ class CClasses extends CModel {
     public function fetchClassesByUserId( $intUserId ) {
         
         
-        $strSql = 'SELECT 
-                        DISTINCT *
+       $strSql = 'SELECT 
+                        DISTINCT c.*
                     FROM
                         ' . $this->strTableName . ' c
                         JOIN ' . ( new CSubjects() )->strTableName . ' s ON s.class_id = c.cid

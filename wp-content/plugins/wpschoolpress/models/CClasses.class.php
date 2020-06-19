@@ -13,7 +13,7 @@ class CClasses extends CModel {
         
         
         $strSql = 'SELECT 
-                        *
+                        DISTINCT *
                     FROM
                         ' . $this->strTableName . ' c
                         JOIN ' . ( new CSubjects() )->strTableName . ' s ON s.class_id = c.cid

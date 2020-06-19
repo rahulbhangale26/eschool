@@ -15,7 +15,7 @@ class CStudents extends CModel {
     
     public function fetchStudentsByUserId( $intUserId ) {
        $strSql = 'SELECT
-                        *
+                       DISTINCT s.*
                     FROM ' . $this->strTableName . ' s
                         JOIN ' . $this->strTablePrefix . 'wpsp_subject sb ON s.class_id LIKE CONCAT( \'%\', sb.class_id , \'%\' )
                     WHERE

@@ -25,7 +25,28 @@ function _t( $strText ) {
         'Teacher Registration Confirmation'     => 'Instructor Registration Confirmation',
         'Teacher not available. Please try again!'  => 'Instructor not available. Please try again!',
         'Internal(Show to teachers only)' => 'Internal(Show to instructors only)',
-        'No Child Added, Please contact teacher/admin to add your child' => 'No Child Added, Please contact instructor/admin to add your child'
+        'No Child Added, Please contact teacher/admin to add your child' => 'No Child Added, Please contact instructor/admin to add your child',
+        
+        
+        
+        'student'   => 'trainee',
+        'Student'   => 'Trainee',
+        'students'  => 'trainees',
+        'Students'  => 'Trainees',
+        'All Students'  => 'All Students',
+        'Student Name'  => 'Student Name',
+        'Students Attendance'   => 'Trainees Attendance',
+        'Student Name'          => 'Trainee Name',
+        'Student First Name'    => 'Student First Name',
+        'Student Middle Name'   => 'Student Middle Name',
+        'Student Last Name'     => 'Student Last Name',
+        'Student Email ID Already Exists!'  => 'Student Email ID Already Exists!',
+        'Given Student User Name Already Exists!' => 'Given Student User Name Already Exists!',
+        'Student Registration Confirmation'     => 'Student Registration Confirmation',
+        
+        
+        
+        
     ];
     
     return ( false == isset( $arrmixTranslations[$strText] ) ) ? __( $strText, 'WPSchoolPress' ) : __( $arrmixTranslations[$strText], 'WPSchoolPress' );

@@ -33,6 +33,7 @@ if (!defined('WPSP_PLUGIN_VERSION'))
 define('WPSP_PERMISSION_MSG', 'You don\'t have enough permission to access this page');
 // Call the  required files when plugin activate
 register_activation_hook(__FILE__, 'wpsp_activation');
+
 function wpsp_activation()
 {
 	include_once (WPSP_PLUGIN_PATH . 'lib/wpsp-activation.php');
@@ -50,6 +51,12 @@ function wpsp_plugins_loaded()
 	$wpsp_lang_dir = dirname(plugin_basename(__FILE__)) . '/languages/';
 	load_plugin_textdomain('WPSchoolPress', false, $wpsp_lang_dir);
 	// initialize settings of plugin Open required files for initialization
+	require_once WPSP_PLUGIN_PATH . 'models/base/CModel.class.php';
+
+	foreach (glob(WPSP_PLUGIN_PATH . "models/*.php") AS $strFile) {
+	    require_once $strFile;
+	}
+	
 	require_once (WPSP_PLUGIN_PATH . 'lib/translations.php');
 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks.php');
 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks-student.php');
@@ -59,7 +66,7 @@ function wpsp_plugins_loaded()
 	wpsp_get_setting();
 
 	global $wpsp_settings_data;
-	global $wpsp_admin, $wpsp_public, $paytmClass, $paypalClass;
+	global $wpsp_admin, $wpsp_public, $paytmClass, $paypalClass, $objUser;
 	// admin class handles most of functionalities of plugin
 	include_once (WPSP_PLUGIN_PATH . 'wpsp-class-admin.php');
 	$wpsp_admin = new Wpsp_Admin();
@@ -68,8 +75,18 @@ function wpsp_plugins_loaded()
 	include_once (WPSP_PLUGIN_PATH . 'wpsp-class-public.php');
 	$wpsp_public = new Wpsp_Public();
 	$wpsp_public->add_hooks();
-}
+	
+	global $current_user;
+	global $objUser;
+	$objUser                = new CUser();
+	$objUser->setUserId( $current_user->id );
+	$objUser->setRole( $current_user->roles[0] );
 
+	if( 'teacher' == $objUser->strRole ) {
+	    $objUser->setTeacher( ( new CTeachers() )->fetchTeacherByUserId( $objUser->getUserId() ) );
+	}
+	
+}
 
 
 add_action('admin_init', 'ajax_actions');

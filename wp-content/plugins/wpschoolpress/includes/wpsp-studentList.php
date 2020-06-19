@@ -1,13 +1,15 @@
 <?php
 if (!defined( 'ABSPATH' ) )exit('No Such File');
+
+global $objUser;
  $proversion	=	wpsp_check_pro_version();
 	  $proclass		=	!$proversion['status'] && isset( $proversion['class'] )? $proversion['class'] : '';
 	  $protitle		=	!$proversion['status'] && isset( $proversion['message'] )? $proversion['message']	: '';
 	  $prodisable	=	!$proversion['status'] ? 'disabled="disabled"'	: '';
 	  $studentFieldList =  array(	's_rollno'			=>	__('Roll Number', 'WPSchoolPress'),
-									's_fname'			=>	__('Student First Name', 'WPSchoolPress'),
-									's_mname'			=>	__('Student Middle Name', 'WPSchoolPress'),
-									's_lname'			=>	__('Student Last Name', 'WPSchoolPress'),
+									's_fname'			=>	_t( 'Student First Name' ),
+									's_mname'			=>	_t( 'Student Middle Name' ),
+									's_lname'			=>	_t( 'Student Last Name' ),
 									's_zipcode'			=>	__('Zip Code', 'WPSchoolPress'),
 									's_country'			=>	__('Country', 'WPSchoolPress'),
 									's_gender'			=>	__('Gender', 'WPSchoolPress'),
@@ -47,8 +49,15 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
 				<select name="ClassID" id="ClassID" class="wpsp-form-control">
 					<?php
 					$sel_classid	=	isset( $_POST['ClassID'] ) ? intval($_POST['ClassID']) : '';
-					$class_table	=	$wpdb->prefix."wpsp_class";
-					$sel_class		=	$wpdb->get_results("select cid,c_name from $class_table Order By cid ASC");
+					//$class_table	=	$wpdb->prefix."wpsp_class";
+					//$sel_class		=	$wpdb->get_results("select cid,c_name from $class_table Order By cid ASC");
+					global $objUser;
+					if( CRole::TEACHER == $objUser->getRole() ) {		    
+    					$sel_class = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
+					} elseif( CRole::ADMIN == $objUser->getRole() ) {
+					    $sel_class = ( new CClasses() )->fetchAllClasses();
+					}
+
 					?>
 					<option value="all" <?php if($sel_classid=='all') echo "selected"; ?>><?php _e( 'All', 'WPSchoolPress' ); ?></option>
 					<?php foreach( $sel_class as $classes ) {
@@ -176,7 +185,13 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
 
 								}
 								else if(!isset($_POST['ClassID']) || $_POST['ClassID'] == 'all' ){
-									$studentlists	=	$wpdb->get_results("select sid from $student_table");
+								    
+								    if( CRole::TEACHER == $objUser->getRole() ) {
+								        $studentlists	=	( new CStudents() )->fetchStudentsByUserId( $objUser->getUserId() );
+								    } elseif( CRole::ADMIN == $objUser->getRole() ) {
+								        $studentlists	=	$wpdb->get_results("select sid from $student_table");
+								    }
+								    
 									foreach ($studentlists as $stu) {
 										 $stl[] = $stu->sid;
 									}
@@ -194,6 +209,12 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
 
 							$pendingcount =0;
 							$cid = [];
+							
+							if( CRole::TEACHER == $objUser->getRole() ) {
+							    $sel_class = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
+							} elseif( CRole::ADMIN == $objUser->getRole() ) {
+							    $sel_class = ( new CClasses() )->fetchAllClasses();
+							}
 							foreach($students as $stinfo)
 							{
 								//echo $stinfo->wp_usr_id;

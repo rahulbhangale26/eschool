@@ -9,12 +9,12 @@ wpsp_header();
 	if($current_user_role=='teacher') {
 		$receiverTypeList = array( 'all'  => __( 'All Users', 'WPSchoolPress' ),
 			 						'allt' => _t( 'All Teachers' ),
-								'alls' => __( 'All Students', 'WPSchoolPress'),
+								'alls' => __( 'All ' . _t( 'Students' ) , 'WPSchoolPress'),
 							    'allp' => __( 'All Parents', 'WPSchoolPress')
 							   );
 } else {
 	$receiverTypeList = array( 'all'  => __( 'All Users', 'WPSchoolPress' ),
-								'alls' => __( 'All Students', 'WPSchoolPress'),
+	                           'alls' => __( 'All ' .  _t( 'Students' ) , 'WPSchoolPress'),
 							    'allp' => __( 'All Parents', 'WPSchoolPress'),
 							    'allt' => _t( 'All Teachers' ) );
 }
@@ -195,7 +195,7 @@ $usersList1	=	array_merge( $student_ids1,$teacher_ids1);
 											<label class="wpsp-label"><?php echo $pl; ?></label>
 											<select id="example-enableClickableOptGroups-disabled" name="receiver[]" multiple="multiple">
 										 <option value="all">All Users</option>
-										 <option value="alls">All Students</option>
+										 <option value="alls">All <?php echo _t( 'Students' ); ?></option>
 										 <option value="<?php echo 'allp'?>">All Parents</option>
 										 <option value="<?php echo 'allt'?>"><?php echo _t( 'All Teachers' ); ?>( </option>
 										 <?php foreach($usersList1 as $usersList1details)

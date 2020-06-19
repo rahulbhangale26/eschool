@@ -46,7 +46,7 @@ function wpsp_admin_menu()
 				'wpsp_callback_messages'
 			));
 		
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-id icon"></i>&nbsp; Students', 'edit_posts', 'sch-student', array(
+		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-id icon"></i>&nbsp; ' . _t( 'Students' ), 'edit_posts', 'sch-student', array(
 			$this,
 			'wpsp_callback_students'
 		));
@@ -580,7 +580,7 @@ function wpsp_admin_menu()
 		$wp_admin_bar->add_menu(array(
 			'parent' => 'dashboard',
 			'id' => 'student',
-			'title' => _('Student') ,
+			'title' => _t('Student') ,
 			'href' => $wpsp_wpschoolstudent_url
 		));
 		$wp_admin_bar->add_menu(array(

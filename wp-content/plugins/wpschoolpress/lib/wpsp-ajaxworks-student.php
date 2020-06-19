@@ -47,12 +47,12 @@ function wpsp_AddStudent(){
 	$username = sanitize_user($_POST['Username']);
 	if (wpsp_CheckUsername($username, true) === true)
 	{
-		echo "Given Student User Name Already Exists!";
+		echo _t( "Given Student User Name Already Exists!" );
 		exit;
 	}
 	if (email_exists(sanitize_email($_POST['email'])))
 	{
-		echo "Student Email ID Already Exists!";
+		echo _t( 'Student Email ID Already Exists!' );
 		exit;
 	}
 	if (strtolower(sanitize_user($_POST['Username'])) == strtolower(sanitize_user($_POST['pUsername'])))

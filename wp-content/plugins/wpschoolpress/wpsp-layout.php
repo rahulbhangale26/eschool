@@ -982,7 +982,7 @@ function wpsp_body_start()
       $addurl = $base_url.'sch-teacher&tab=addteacher';
       break;
     case 'student':
-      $pagetitle = 'Student';
+      $pagetitle = _t( 'Student' );
       $pagetitle = $sch_student;
       $addurl = $base_url.'sch-student&tab=addstudent';
       break;

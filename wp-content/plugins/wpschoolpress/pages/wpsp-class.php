@@ -39,7 +39,7 @@ wpsp_header();
 						<th>Class Number</th>
 						<th>Class Name</th>
 						<th><?php echo _t( 'Teacher Incharge' ); ?></th>
-						<th>Number of Students</th>
+						<th>Number of <?php echo _t( 'Students'); ?></th>
 						<th>Capacity</th>
 						<th>Online Class Room</th>
 						<?php  if( $current_user_role=='administrator' ) { ?> <th class="nosort" align="center">Action</th> <?php } ?>
@@ -149,7 +149,7 @@ wpsp_header();
 										<th>Class Number</th>
 										<th>Class Name</th>
 										<th><?php echo _t( 'Teacher Incharge' ); ?></th>
-										<th>Number of Students</th>
+										<th>Number of <?php echo _t( 'Students' ); ?></th>
 										<th>Online Class Room</th>
 									</tr>
 									</thead>

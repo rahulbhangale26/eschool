@@ -7,7 +7,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
 	  $parentFieldList =  array(	'p_fname'		=>	__('First Name', 'WPSchoolPress'),	
 									'p_mname'		=>	__('Middle Name', 'WPSchoolPress'),	
 									'p_lname'		=>	__('Last Name', 'WPSchoolPress'),
-									's_fname'		=>	__('Student Name', 'WPSchoolPress'),
+									's_fname'		=>	_t( 'Student Name' ),
 									'user_email'	=>	__('Parent Email ID', 'WPSchoolPress'),
 									'p_edu'			=>	__('Education', 'WPSchoolPress'),									
 									'p_gender'		=>	__('Gender', 'WPSchoolPress'),
@@ -171,7 +171,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
 			<thead>
 				<tr>								
 					<th><?php echo apply_filters( 'wpsp_parent_name_list_detail', esc_html__( 'Parent Name', 'WPSchoolPress' )); ?></th>
-					<th>Student Name</th>							
+					<th><?php echo _t( 'Student' ); ?> Name</th>							
 					<th><?php echo apply_filters( 'wpsp_parent_email_list_detail', esc_html__( 'Parent Email ID', 'WPSchoolPress' )); ?></th>
 					<th  align="center" class="nosort">Action</th>
 				</tr>
@@ -216,7 +216,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
 			<tfoot>
 			  <tr>														
 					<th><?php echo apply_filters( 'wpsp_parent_name_list_detail', esc_html__( 'Parent Name', 'WPSchoolPress' )); ?></th>
-				<th>Student Name</th>							
+				<th><?php echo _t( 'Student' ); ?> Name</th>							
 				<th><?php echo apply_filters( 'wpsp_parent_email_list_detail', esc_html__( 'Parent Email ID', 'WPSchoolPress' )); ?></th>
 				<th  align="center">Action</th>
 			  </tr>

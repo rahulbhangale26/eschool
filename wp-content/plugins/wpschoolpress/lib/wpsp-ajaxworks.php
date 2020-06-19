@@ -691,7 +691,7 @@ function  wpsp_Updateregisteractive()
 					$msg.= 'Please <a href="' . site_url() . '/sch-dashboard">click here </a>to loggin.<br /><br />';
 					$msg.= 'You will be notified when a class is assigned to you.<br /><br />';
 					$msg.= 'Regards,<br />' . get_bloginfo('name');
-					wpsp_send_mail($userdetails['t_email'], 'Student Registration Confirmation', $msg);
+					wpsp_send_mail($userdetails['t_email'], _t( 'Student Registration Confirmation' ), $msg);
 					$sp_stu_ins = $wpdb->insert($wpsp_student_table, $studenttable);
 					if ($sp_stu_ins)
 					{
@@ -885,7 +885,7 @@ function wpsp_bulkaproverequest()
 					$msg.= 'Please <a href="' . site_url() . '/sch-dashboard">click here </a>to loggin.<br /><br />';
 					$msg.= 'You will be notified when a class is assigned to you.<br /><br />';
 					$msg.= 'Regards,<br />' . get_bloginfo('name');
-					wpsp_send_mail($userdetails['t_email'], 'Student Registration Confirmation', $msg);
+					wpsp_send_mail($userdetails['t_email'], _t( 'Student Registration Confirmation' ), $msg);
 					$sp_stu_ins = $wpdb->insert($wpsp_student_table, $studenttable);
 					if ($sp_stu_ins)
 					{
@@ -1145,7 +1145,7 @@ function wpsp_StudentCount()
 	}
 	else
 	{
-		echo "There are " . $count . " students associated with this class.";
+		echo "There are " . $count . " " . _t( 'students' ) . " associated with this class.";
 	}
 	wp_die();
 }
@@ -1563,7 +1563,7 @@ function wpsp_GetAbsentees()
 	$show_date = wpsp_ViewDate($date);
 	$att_info = $wpdb->get_row("select at.*,cl.c_name from $att_table at LEFT JOIN $class_table cl ON cl.cid=at.class_id where at.class_id='$cid' and at.date='$date'");
 	$absents = $att_info->absents;
-	$content = "<div class='box box-info'><div class='box-header'>Absentees List </div><div class='box-body'><span><label>Class : </label>" . $att_info->c_name . "</span><span class='pull-right'><label> Date : </label>" . $show_date . "</span><table class='table table-bordered'><thead><th>Student</th><th>Reason</th></thead><tbody>";
+	$content = "<div class='box box-info'><div class='box-header'>Absentees List </div><div class='box-body'><span><label>Class : </label>" . $att_info->c_name . "</span><span class='pull-right'><label> Date : </label>" . $show_date . "</span><table class='table table-bordered'><thead><th>" . _t( 'Student' ) . "</th><th>Reason</th></thead><tbody>";
 	if ($absents != 'Nil')
 	{
 		$ab_decode = json_decode($absents);
@@ -1603,7 +1603,7 @@ function wpsp_GetAbsentDates()
 			}
 		}
 	}
-	$content = "<div class='box box-info'><div class='box-header'>Absent Dates </div><div class='box-body'><span><label>Class : </label>" . $st_info->c_name . "</span><span class='pull-right'><label> Student : </label>" . $st_info->full_name . "</span><table class='table table-bordered'><thead><th>Absent Date</th><th>Reason</th></thead><tbody>";
+	$content = "<div class='box box-info'><div class='box-header'>Absent Dates </div><div class='box-body'><span><label>Class : </label>" . $st_info->c_name . "</span><span class='pull-right'><label> " . _t( 'Student' ) . " : </label>" . $st_info->full_name . "</span><table class='table table-bordered'><thead><th>Absent Date</th><th>Reason</th></thead><tbody>";
 	foreach($absents as $abd)
 	{
 		$show_date = wpsp_ViewDate($abd['date']);
@@ -3943,7 +3943,7 @@ function wpsp_getNotifyInfo()
 		$notifyInfo = $wpdb->get_row("Select *from $notify_table where nid= $notifyID");
 		$receiverTypeList = array(
 			'all' => __('All Users', 'WPSchoolPress') ,
-			'alls' => __('All Students', 'WPSchoolPress') ,
+			'alls' => __( _t( 'All Students' ), 'WPSchoolPress') ,
 			'allp' => __('All Parents', 'WPSchoolPress') ,
 			'allt' => _t( 'All Teachers' )
 		);
@@ -4124,7 +4124,7 @@ function wpsp_getStudentsAttendanceList()
 			{
 				ob_start();
 				echo '<table class="wpsp-table" id="attendanceOverview" cellspacing="0" width="100%" style="width:100%"><tr><th>' . __('Roll Number', 'WPSchoolPress') . '</th>
-							<th>' . __('Student Name', 'WPSchoolPress') . '</th>
+							<th>' . _t( 'Student Name' ) . '</th>
 							<th>' . __('Attendance', 'WPSchoolPress') . '</th>
 							<th>' . __('Commment', 'WPSchoolPress') . '</th>
 							</tr>';
@@ -4155,7 +4155,7 @@ function wpsp_getStudentsAttendanceList()
 			}
 			elseif (empty($msg))
 			{
-				$msg = __('<span class="wpsp-text-red">No Students Available in this class</span>', 'WPSchoolPress');
+				$msg = __('<span class="wpsp-text-red">No ' . _t( 'Students' ). ' Available in this class</span>', 'WPSchoolPress');
 			}
 		}
 		$title = '<h3 class="wpsp-card-title">' . __('Attendance Overview', 'WPSchoolPress') . '</h3>';

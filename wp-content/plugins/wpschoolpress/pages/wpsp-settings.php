@@ -600,7 +600,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                             <div class="wpsp-form-group <?php echo $proclass; ?>" title="<?php echo $protitle;?>" <?php echo $prodisable; ?>>
                                                     <label class="wpsp-label"><?php _e( 'SMS Setting' ,'WPSchoolPress'); ?></label>
                                                     <input id="absent_sms_alert" type="checkbox" class="wpsp-checkbox ccheckbox <?php echo $proclass; ?> " title="<?php echo $protitle;?>" <?php echo $prodisable; ?> <?php if(isset($settings_data['absent_sms_alert']) && $settings_data['absent_sms_alert']==1) echo "checked"; ?> name="absent_sms_alert" value="1" >
-                                                    <label for="absent_sms_alert" class="wpsp-checkbox-label"> <?php _e( 'Send SMS to parent when student absent','WPSchoolPress');?></label>
+                                                    <label for="absent_sms_alert" class="wpsp-checkbox-label"> <?php _e( 'Send SMS to parent when ' . _t( 'student' ) . ' absent','WPSchoolPress');?></label>
                                                     <input id="notification_sms_alert" type="checkbox" class="wpsp-checkbox ccheckbox <?php echo $proclass; ?>" title="<?php echo $protitle;?>" <?php echo $prodisable; ?> <?php if(isset($settings_data['notification_sms_alert']) && $settings_data['notification_sms_alert']==1) echo "checked"; ?> name="notification_sms_alert" value="1" >
                                                     <label for="notification_sms_alert" class="wpsp-checkbox-label"> <?php _e( 'Enable SMS Notification','WPSchoolPress');?></label>
                                                 </div>

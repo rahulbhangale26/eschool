@@ -10,24 +10,24 @@ wpsp_header();
 			wpsp_body_start();
 			$filename	=	WPSP_PLUGIN_PATH .'includes/wpsp-studentList.php';
 			if( isset( $_GET['tab'] ) && $_GET['tab'] == 'addstudent' ) {
-				$label	=	__( 'Add New Student', 'WPSchoolPress');
+				$label	=	__( 'Add New ' . _t( 'Student' ), 'WPSchoolPress');
 				$filename	=	WPSP_PLUGIN_PATH .'includes/wpsp-studentForm.php';
 			} else if( isset($_GET['id']) && is_numeric($_GET['id']) ) {
-				$label	=	__( 'Update Student', 'WPSchoolPress');
+			    $label	=	__( 'Update ' . _t( 'Student' ), 'WPSchoolPress');
 				$filename	=	WPSP_PLUGIN_PATH .'includes/wpsp-studentProfile.php';
 			} else if( isset( $_POST['ClassID'] ) && empty( $_POST['ClassID'] ) ) {
-				 $label	=	'List Of Unassigned Students';
+				 $label	=	'List Of Unassigned ' . _t( 'Students' );
 			} else if( isset( $_POST['ClassID']  ) && $_POST['ClassID']=='all' ) {
-				 $label	=	'List Of All Students';
+			    $label	=	'List Of All ' . _t( 'Students' );
 			}
 			else if( isset( $_POST['ClassID'] ) && !empty( $_POST['ClassID'] ) ){
 				 $where =    ' where  cid='.$_POST['ClassID'];
                 $class_table    =    $wpdb->prefix."wpsp_class";
                 $sel_class        =    $wpdb->get_var("select c_name from $class_table $where Order By cid ASC");
-                $label    =    'List of class ' .$sel_class. ' Students';
+                $label    =    'List of class ' .$sel_class. ' ' . _t( 'Students' );
 			}
             else  {
-                 $label    =    'List Of All Students';
+                $label    =    'List Of All ' . _t( 'Students' );
             }
 			?>
 			<?php
@@ -210,7 +210,7 @@ wpsp_header();
 					<tr>
 						<th>#</th>
 						<th><?php echo apply_filters( 'wpsp_student_table_rollno_heading',esc_html__('Roll No.','WPSchoolPress'));?></th>
-						<th><?php echo apply_filters( 'wpsp_student_table_fullname_heading',esc_html__('Student Name','WPSchoolPress'));?></th>
+						<th><?php echo apply_filters( 'wpsp_student_table_fullname_heading',_t( 'Student Name' ) );?></th>
 						<th><?php echo apply_filters( 'wpsp_student_table_parent_heading',esc_html__('Parent Name','WPSchoolPress'));?></th>
 						<th><?php echo apply_filters( 'wpsp_student_table_streetaddress_heading',esc_html__('Permanent Address','WPSchoolPress'));?></th>
 					</tr>

@@ -39,7 +39,7 @@ if( is_user_logged_in() ) {
 				?>
 				<div class="wpsp-card">
 						<div class="wpsp-card-head">
-								<h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_student_marks_heading_item',esc_html("Students Marks","WPSchoolPress")); ?></h3>
+								<h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_student_marks_heading_item',esc_html( _t( 'Students' ) . " Marks","WPSchoolPress")); ?></h3>
 						</div>
 						 <div class="wpsp-card-body">
 										<?php
@@ -219,7 +219,7 @@ $class_id_array = unserialize( $stu->class_id );
 																								}
 																				}
 										if (empty($stl)) {
-							echo "<tr><td>".__( 'No Students to retrive', 'WPSchoolPress')."</td></tr>";
+							echo "<tr><td>".__( 'No ' . _t( 'Students' ) . ' to retrive', 'WPSchoolPress')."</td></tr>";
 													}else {
 																	foreach ($stl as $id ) {
  $getslist  =   $wpdb->get_results("select * from $stable WHERE sid = $id order by CAST('s_rollno' as SIGNED)");
@@ -287,7 +287,7 @@ $marktable  =   $wpdb->prefix."wpsp_mark";
 												}
 									}
 							if (empty($stl)) {
-								echo "<tr><td>".__( 'No Students to retrive3', 'WPSchoolPress')."</td></tr>";
+								echo "<tr><td>".__( 'No ' . _t( 'Students' ) . ' to retrive3', 'WPSchoolPress')."</td></tr>";
 								}else {
 									foreach ($stl as $id ) {
 					 $getslist  =   $wpdb->get_results("select * from $stable WHERE sid = $id order by CAST('s_rollno' as SIGNED)");
@@ -326,7 +326,7 @@ $marktable  =   $wpdb->prefix."wpsp_mark";
 						?>
 			<?php
 				if(empty($stl) && $mark_entered=='0'){
-					 echo "<tr><td>".__( 'No Students to retrive', 'WPSchoolPress')."</td></tr>";
+					 echo "<tr><td>".__( 'No ' . _t( 'Students' ). ' to retrive', 'WPSchoolPress')."</td></tr>";
 																						}else { ?>
 													<?php }} ?>
 																				</tbody>
@@ -376,7 +376,7 @@ $marktable  =   $wpdb->prefix."wpsp_mark";
 
 						<div class="wpsp-card">
 								<div class="wpsp-card-head">
-								<h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_student_marks_heading_item',esc_html("Students Marks","WPSchoolPress")); ?></h3>
+								<h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_student_marks_heading_item',esc_html( _t( 'Students' ). " Marks","WPSchoolPress")); ?></h3>
 						</div>
 						<div class="wpsp-card-body">
 								<div class="tabbable-line">

@@ -160,7 +160,7 @@ $nocount++;
 <table class="wpsp-table <?php echo $nonemenu;?>" id="status-table" cellspacing="0" width="100%" style="width:100%;margin-bottom: 30px !important;">
 			<thead>
 				<tr>
-					<th>Student Name</th>
+					<th><?php echo _t( 'Student' ); ?> Name</th>
 									<th>Roll No</th>
 									<th>Class Name</th>
 									<th><?php echo _t( 'Class Teacher Name' ); ?></th>
@@ -413,7 +413,7 @@ if($paymenconfirmationid > 0){
 						<table class="wpsp-table <?php echo $nonemenu; ?>" id="status-table" cellspacing="0" width="100%" style="width:100%;margin-bottom: 30px !important;">
 							<thead>
 								<tr>
-									<th>Student Name</th>
+									<th><?php echo _t( 'Student' ); ?> Name</th>
 									<th>Roll No</th>
 									<th>Class Name</th>
 									<th><?php echo _t( 'Class Teacher Name' ); ?></th>
@@ -545,7 +545,7 @@ if( $current_user_role=='administrator' || $current_user_role == 'parent'){?> <d
 	<?php  } ?>
 	<div class="wpsp-col-sm-3 wpsp-col-xs-6">
 		<a class="wpsp-colorBox" <?php if($current_user_role == 'parent' || $current_user_role == 'student'){ }else {?> href="<?php echo wpsp_admin_url();?>sch-student" <?php } ?> >
-			<span class="wpsp-colorBox-title"><?php echo apply_filters('wpsp_sidebar_student_title_menu',esc_html__('Students','WPSchoolPress')); ?></span>
+			<span class="wpsp-colorBox-title"><?php echo apply_filters('wpsp_sidebar_student_title_menu',_t( 'Students' ) ); ?></span>
 			<h4 class="wpsp-colorBox-head"><?php echo isset( $usercount->countstudent ) ?  intval($usercount->countstudent) : 0; ?><sup>+</sup></h4>
 		</a>
 	</div>

@@ -598,7 +598,7 @@ if (is_user_logged_in()) {
                   <?php }
                   if(!empty($students)){
                     if ($current_user_role != 'student'){
-                      echo '<li><a href="javascript:;" id="showStudents">Select Students</a></li>';
+                      echo '<li><a href="javascript:;" id="showStudents">Select ' . _t( 'Students' ) . '</a></li>';
                     }
                   }
                   if(!empty($parents)){
@@ -639,14 +639,14 @@ if (is_user_logged_in()) {
                  ?>
                 <div class="wpsp-form-group" id="receiverStudents">
                   <div class="wpsp-row">
-                    <label class="wpsp-col-sm-3 control-label">Select Students</label>
+                    <label class="wpsp-col-sm-3 control-label">Select <?php echo _t( 'Students' ); ?></label>
                     <div class="wpsp-col-sm-9" >
 
                       <select name="r_id[]" multiple class="r_id" class="wpsp-form-control student_multi_select">
                         <?php
 
                           if (!empty($students)) {
-                            echo '<optgroup label="Select Students">';
+                            echo '<optgroup label="Select " '. _t( 'Students' ). ' >';
                             foreach ($students as $sinfo) {
                               $student_list = $wpdb->get_results("SELECT CONCAT_WS(' ', s_fname, s_mname, s_lname) AS full_name from $studenttable where wp_usr_id = $sinfo  order by sid DESC");
                               ?>
@@ -722,7 +722,7 @@ if (is_user_logged_in()) {
                         <?php }
 
                         if(!empty($students)){ ?>
-                          <option value="students">All Students</option>
+                          <option value="students">All <?php echo _t( 'Students' ); ?></option>
                       <?php }
                       if(!empty($teachers)){
                         if(($current_user_role == 'teacher') ){
@@ -733,13 +733,13 @@ if (is_user_logged_in()) {
                           echo '<option value="teachers">' . _t( 'All Teachers' ) . '</option>';
                         }
                       } ?>
-                        <optgroup label="Class Students">
+                        <optgroup label="Class <?php echo _t( 'Students' ); ?>">
                           <?php
                           $class_table = $wpdb->prefix . "wpsp_class";
                           $class_ids   = $wpdb->get_results("select cid,c_name from $class_table");
                           foreach ($class_ids as $clss) {
                             ?>
-                            <option value="s.<?php echo intval($clss->cid); ?>"> Class <?php echo $clss->c_name; ?> Students </option>
+                            <option value="s.<?php echo intval($clss->cid); ?>"> Class <?php echo $clss->c_name; ?> <?php echo _t( 'Students' ); ?> </option>
                             <?php
                           }
                           ?>

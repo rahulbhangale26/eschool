@@ -24,7 +24,7 @@ wpsp_header();
                                 <table id="class_table" class="wpsp-table wpsp-table-bordered wpsp-table-striped" cellspacing="0" width="100%" style="width:100%">
                                     <thead>
                                     <tr>
-                                            <th>Student Name</th>
+                                            <th><?php echo _t( 'Student' ); ?> Name</th>
                                             <th>Roll No</th>
                                             <th>Class Name</th>
                                             <th><?php echo _t( 'Class Teacher Name' ); ?></th>
@@ -136,7 +136,7 @@ foreach($wpsp_clas_data as $clsloop){
                                 <table id="class_table" class="wpsp-table wpsp-table-bordered wpsp-table-striped" cellspacing="0" width="100%" style="width:100%">
                                     <thead>
                                     <tr>
-                                            <th>Student Name</th>
+                                            <th><?php echo _t( 'Student' ); ?> Name</th>
                                             <th>Roll No</th>
                                             <th>Class Name</th>
                                             <th><?php echo _t( 'Class Teacher Name' ); ?></th>

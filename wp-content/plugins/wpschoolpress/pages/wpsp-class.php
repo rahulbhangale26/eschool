@@ -94,7 +94,7 @@ wpsp_header();
 											<td><?php echo $class_students_count;?></td>
 											<td><?php echo $wpsp_class->c_capacity;?></td>
 											<td>
-												<a target='__blank' href="<?php echo ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( '-', '', str_replace(' ', '-', $wpsp_class->c_name ) .'-' . $wpsp_class->cid ); ?>" class="wpsp-btn wpsp-btn-success">Begin</a>
+												<a target='__blank' href="<?php echo ESCHOOL_CLASS_ROOM_BASE_URL . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace('-', '', $wpsp_class->c_name ) . $wpsp_class->cid ); ?>" class="wpsp-btn wpsp-btn-success">Begin</a>
 											</td>
 											
 											<?php  if( $current_user_role=='administrator' ) { ?>
@@ -184,7 +184,7 @@ wpsp_header();
 										    <td><?php echo isset( $teacherlist[$teach_id] ) ? $teacherlist[$teach_id] : '';?></td>
 											<td><?php echo $class_students_count;?></td>
 											<td>
-												<a target='__blank' href="<?php echo ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( '-', '', str_replace(' ', '-', $wpsp_class->c_name ) .'-' . $wpsp_class->cid ); ?>" class="wpsp-btn wpsp-btn-success">Begin</a>
+												<a target='__blank' href="<?php echo ESCHOOL_CLASS_ROOM_BASE_URL . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace('-', '', $wpsp_class->c_name ) . $wpsp_class->cid ); ?>" class="wpsp-btn wpsp-btn-success">Begin</a>
 											</td>>
 										</tr>
 										<?php

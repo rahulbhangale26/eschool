@@ -54,7 +54,7 @@ global $objUser;
 										<tr id="<?php echo intval($wpsp_class->cid);?>" class="pointer">
 											<td><?php echo $wpsp_class->c_name;?></td>
 											<td>
-												<a target='__blank' href="<?php echo ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( '-', '', str_replace(' ', '-', $wpsp_class->c_name ) .'-' . $wpsp_class->cid ); ?>" class="wpsp-btn wpsp-btn-success">Begin</a>
+												<a target='__blank' href="<?php echo ESCHOOL_CLASS_ROOM_BASE_URL . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace('-', '', $wpsp_class->c_name ) . $wpsp_class->cid ); ?>" class="wpsp-btn wpsp-btn-success">Begin</a>
 											</td>									
 										</tr>
 									<?php

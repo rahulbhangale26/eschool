@@ -1,5 +1,6 @@
 <?php
 if (!defined( 'ABSPATH' ) )exit('No Such File');
+global $objUser;
 wpsp_header();
 if( is_user_logged_in() ) {
 	global $current_user, $wp_roles, $wpdb;
@@ -571,6 +572,39 @@ if( $current_user_role=='administrator' || $current_user_role == 'parent'){?> <d
 
 	</div>
 	<!-- Info boxes -->
+	
+	<?php if( CRole::TEACHER == $objUser->getRole() ) { ?>
+		<div class="wpsp-row">
+			<div class="wpsp-col-lg-8  wpsp-col-xs-12">
+				<div class="wpsp-card">
+					<div class="wpsp-card-head">
+						<div class="wpsp-left">
+							<h3 class="wpsp-card-title">Online Classes</h3>
+						</div>
+					</div>
+					<?php require_once 'wpsp-dashboard-classes.php'; ?>
+				</div>
+			</div>
+			<div class="wpsp-col-lg-4  wpsp-col-xs-12">
+				<div class="wpsp-card">
+					<div class="wpsp-card-head">
+						<h3 class="wpsp-card-title">Important Notices</h3>
+					</div>
+					<div class="wpsp-card-body">
+						<marquee behavior="scroll" direction="up">
+							<h3>Covid- 19 Precautions. STAY HOME.SAVE LIVES.</h3>
+							<h5>Help stop coronavirus</h5>
+							<ul>
+								<li> KEEP a Safe Distance </li>							
+								<li> WASH Hands Often </li>									
+							</ul>
+						</marquee>
+					</div>
+				</div>
+			</div>
+		</div>
+	<?php } ?>
+	
 
 	<?php if( $current_user_role=='administrator' || $current_user_role == 'parent' ){?> <div class="wpsp-row "><?php } else { ?>
 	<div class="wpsp-row">

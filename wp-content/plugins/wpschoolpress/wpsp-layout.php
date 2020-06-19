@@ -104,7 +104,7 @@ function wpsp_topbar(){
               <?php if($roles[0]!='administrator') {?><?php echo "<li class='wpsp-back-wp-editprofile'><a href='".site_url('wp-admin/admin.php?page=sch-editprofile')."'>".__('Edit Profile','WPSchoolPress')."</a></li>"; }
 
               echo "<li class='wpsp-back-wp-changepassword'><a href='".site_url('wp-admin/admin.php?page=sch-changepassword')."'>".__('Change Password','WPSchoolPress')."</a></li>"; ?>
-              <li><a href='<?php echo wp_logout_url();?>'>Sign out</a></li>
+              <li><a href='<?php echo wp_logout_url( site_url() );?>'>Sign out</a></li>
               <?php if ( !empty($schoolyear ) ) { ?>
                 <button class="btn">Academic year <span class="badge"> <?php echo $schoolyear; ?></span></button>
               <?php } ?>

@@ -1,5 +1,6 @@
 <?php
 if (!defined( 'ABSPATH' ) )exit('No Such File');
+global $objUser;
 wpsp_header();
 	if( is_user_logged_in() ) {
 		global $current_user, $wpdb;
@@ -49,7 +50,7 @@ wpsp_header();
 									<?php
 									$ctable=$wpdb->prefix."wpsp_class";
 									$stable=$wpdb->prefix."wpsp_student";
-									$wpsp_classes =$wpdb->get_results("select * from $ctable order by cid DESC");
+									$wpsp_classes = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
 									$sno=1;
 									$teacher_table=	$wpdb->prefix."wpsp_teacher";
 									$teacher_data = $wpdb->get_results("select wp_usr_id,CONCAT_WS(' ', first_name, middle_name, last_name ) AS full_name from $teacher_table order by tid");
@@ -93,7 +94,7 @@ wpsp_header();
 											<td><?php echo $class_students_count;?></td>
 											<td><?php echo $wpsp_class->c_capacity;?></td>
 											<td>
-												<a target='__blank' href="<?php echo ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( '-', '', str_replace(' ', '-', $wpsp_class->c_name ) .'-' . $wpsp_class->cid ); ?>">Join</a>
+												<a target='__blank' href="<?php echo ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( '-', '', str_replace(' ', '-', $wpsp_class->c_name ) .'-' . $wpsp_class->cid ); ?>" class="wpsp-btn wpsp-btn-success">Begin</a>
 											</td>
 											
 											<?php  if( $current_user_role=='administrator' ) { ?>
@@ -183,7 +184,7 @@ wpsp_header();
 										    <td><?php echo isset( $teacherlist[$teach_id] ) ? $teacherlist[$teach_id] : '';?></td>
 											<td><?php echo $class_students_count;?></td>
 											<td>
-												<a target='__blank' href="<?php echo ESCHOOL_CLASS_ROOM_BASE_URL . str_replace('-', '', str_replace(' ', '-', $wpsp_class->c_name ) .'-' . $wpsp_class->cid ); ?>">Join</a>
+												<a target='__blank' href="<?php echo ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( '-', '', str_replace(' ', '-', $wpsp_class->c_name ) .'-' . $wpsp_class->cid ); ?>" class="wpsp-btn wpsp-btn-success">Begin</a>
 											</td>>
 										</tr>
 										<?php

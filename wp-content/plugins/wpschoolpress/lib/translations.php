@@ -10,6 +10,7 @@ function _t( $strText ) {
         'Teacher Name'  => 'Instructor Name',
         'All Teachers'  => 'All Instructors',
         'Teacher Incharge'  => 'Instructor Incharge',
+        'Trade Teacher'     => 'Trade Instructor',
         'Teachers Attendance'   => 'Instructors Attendance',
         'Class Teacher Name'    => 'Class Instructor Name',
         'Teacher Email'         => 'Instructor Email',

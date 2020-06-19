@@ -612,7 +612,7 @@ foreach($courses as $key => $value) {
                 </a>
                 <ul class='sub-menu'>
                 <li class='".$leave_page."'>
-                     <a target='__blank' href='" . ESCHOOL_CLASS_ROOM_BASE_URL . preg_replace('/[^A-Za-z0-9\-]/', '',  str_replace('-', '', $wpsp_class->c_name ) . $clasname->cid ) . "'>
+                     <a target='__blank' href='" . ESCHOOL_CLASS_ROOM_BASE_URL . preg_replace('/[^A-Za-z0-9\-]/', '',  str_replace('-', '', $clasname->c_name ) . $clasname->cid ) . "'>
                     <span>Online Class Room</span></a>
                 </li>
                 <li class='".$timetable_page."'>
@@ -880,7 +880,7 @@ foreach($courses as $key => $value) {
                 </a>
                 <ul class='sub-menu ".((isset($nonemenu)? $nonemenu : ''))."'>
                 <li class='".$leave_page."'>
-                  <a target='__blank' href='" . ESCHOOL_CLASS_ROOM_BASE_URL . preg_replace('/[^A-Za-z0-9\-]/', '',  str_replace('-', '', $wpsp_class->c_name ) . $clasname->cid ) ."'>
+                  <a target='__blank' href='" . ESCHOOL_CLASS_ROOM_BASE_URL . preg_replace('/[^A-Za-z0-9\-]/', '',  str_replace('-', '', $clasname->c_name ) . $clasname->cid ) ."'>
                  <span>Online Class Room</span></a>
                 </li>    
                 <li class='".$timetable_page."'>

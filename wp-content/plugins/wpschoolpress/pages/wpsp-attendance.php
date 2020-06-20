@@ -49,7 +49,8 @@ wpsp_header();
 															$current_user_id = get_current_user_id();
 														$selid=0;
 													$ctname=$wpdb->prefix.'wpsp_class';
-													$clt=$wpdb->get_results("select `cid`,`c_name` from `$ctname` where teacher_id = '$current_user_id' ");
+													global $objUser;
+													$clt = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
 													foreach($clt as $cnm){?>
 														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$selid) echo "selected";?>><?php echo $cnm->c_name;?></option>
 													<?php }
@@ -165,7 +166,8 @@ foreach ($stl as $key => $value) {
 															$current_user_id = get_current_user_id();
 														$selid=0;
 													$ctname=$wpdb->prefix.'wpsp_class';
-													$clt=$wpdb->get_results("select `cid`,`c_name` from `$ctname` where teacher_id = '$current_user_id' ");
+													global $objUser;
+													$clt = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
 													foreach($clt as $cnm){?>
 														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$selid) echo "selected";?>><?php echo $cnm->c_name;?></option>
 													<?php }

@@ -194,10 +194,7 @@ if (!defined('ABSPATH'))
                                         <?php
     if ($edit) {
 ?>
-                                        <textarea name="Address" class="wpsp-form-control" rows="1">
-                                          <?php
-        echo $tinfo->address;
-?>
+                                        <textarea name="Address" class="wpsp-form-control" rows="1"><?php echo $tinfo->address; ?>
                                         </textarea>
                                         <?php
     } else
@@ -431,10 +428,7 @@ if (!defined('ABSPATH'))
                                                     <?php
     if ($edit) {
 ?>
-                                                    <input type="text" name="whours" class="wpsp-form-control" value="
-                                                      <?php
-        echo $tinfo->whours;
-?>">
+                                                    <input type="text" name="whours" class="wpsp-form-control" value="<?php echo $tinfo->whours; ?>">
                                                       <?php
     } else
         echo $tinfo->whours;

@@ -800,7 +800,18 @@ $plugins_url=plugins_url();
 
 
 
-								<td><?php echo $tinfo->first_name." ".$tinfo->last_name;?></td>
+								<td style="text-align: center">
+									<?php echo $tinfo->first_name." ".$tinfo->last_name;?>
+									<br>
+									<strong>
+									<?php 
+    									$arrstrDesignations = ( new CDesignations() )->arrstrDesignations;
+    									if( true == isset( $arrstrDesignations[$tinfo->designation_id] ) ) {
+    									    echo $arrstrDesignations[$tinfo->designation_id];
+    									}
+    								?>
+    								</strong>
+								</td>
 
 
 

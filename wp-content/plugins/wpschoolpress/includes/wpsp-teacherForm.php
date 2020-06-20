@@ -524,6 +524,18 @@
                         <span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span></label>
                     <input type="text" data-is_required="<?php echo $is_required; ?>" class="wpsp-form-control" id="Position" name="Position" placeholder="<?php echo $pl; ?>">
                 </div>
+                 <div class="wpsp-form-group">
+                    <label class="wpsp-label" for="designation">Designation
+                        <span class="wpsp-required"></span></label>
+                    	<select class="wpsp-form-control" id="Designation" name="Designation">
+                    		<option value="">Select Designation</option>
+                    		<?php 
+                    		foreach( ( new CDesignations )->arrstrDesignations as $intDesignationId => $strDesigntion ) {
+                    		    echo '<option value="' . $intDesignationId . '">' . $strDesigntion . '</option>';
+                    		}
+                    		?>
+                    	</select>
+                </div>
                 <div class="wpsp-row">
                     <div class="wpsp-col-md-6 wpsp-col-xs-12">
                         <div class="wpsp-form-group">

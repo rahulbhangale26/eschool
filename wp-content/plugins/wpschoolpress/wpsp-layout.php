@@ -1,6 +1,7 @@
 <?php
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
+global $objUser;
 
 /* This function used in wpsp_header() call this function */
 function wpsp_customcss(){
@@ -269,14 +270,18 @@ function wpsp_sidebar(){
             </a>
             </li>";
           }
+          global $objUser;
+          if( 'administrator' == $current_user_role || CDesignations::PRINCIPAL == $objUser->getTeacher()->designation_id || CDesignations::CLERK == $objUser->getTeacher()->designation_id ) {
+              echo "<li class='".$teacher_page."'>
+                        <a href='".site_url('wp-admin/admin.php?page=sch-teacher')."'>
+                            <i class='dashicons dashicons-businessman icon'></i>
+                            <span>Staff Management</span>
+                        </a>
+                    </li>";
+              
+          }
 
-          echo "<li class='".$teacher_page."'>
-                <a href='".site_url('wp-admin/admin.php?page=sch-teacher')."'>
-                <i class='dashicons dashicons-businessman icon'></i>
-                <span>".$sch_teacher."</span>
-                </a>
-                </li>
-                <li class='".$student_page."'>
+          echo "<li class='".$student_page."'>
                   <a href='".site_url('wp-admin/admin.php?page=sch-student')."'>
                     <i class='dashicons dashicons-id icon'></i>
                     <span>".$sch_student."</span>
@@ -977,8 +982,8 @@ function wpsp_body_start()
       $addurl = $base_url.'sch-message&tab=addmessage';
       break;
     case 'teacher':
-      $pagetitle = _t( 'Teacher' );
-      $pagetitle = $sch_teacher;
+      $pagetitle = _t( 'Staff Management' );
+    //$pagetitle = $sch_teacher;
       $addurl = $base_url.'sch-teacher&tab=addteacher';
       break;
     case 'student':
@@ -1155,7 +1160,8 @@ if(isset($_GET['cid'])){
                   echo "<a class=' wpsp-btn wpsp-popclick' href='$addurl'><i class='fa fa-plus-circle'></i> Create New</a>";
                 }
               endif;
-              if(($current_user_role=='administrator')):
+              global $objUser;
+              if(($current_user_role=='administrator') || CDesignations::PRINCIPAL == $objUser->getTeacher()->designation_id || CDesignations::CLERK == $objUser->getTeacher()->designation_id):
                 if($result == 'teacherattendance' || $result == 'attendance' || $result == 'marks' || $_GET['tab'] == 'addteacher' || $_GET['tab'] == 'addstudent'  || $_GET['tab'] == 'addclass' || $_GET['tab'] == 'addsubject' || $result == 'leavecalendar' || $_GET['tab'] == 'addexam' || $_GET['ac'] == 'add' ||  $result == 'settings' || $result == 'messages'){} else{
                     echo "<a class='wpsp-btn $current_user_role' href='$addurl'><i class='fa fa-plus-circle'></i> Create New</a>";
                 }

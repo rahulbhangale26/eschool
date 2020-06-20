@@ -29,7 +29,7 @@ function wpsp_AddTeacher()
 	$city = sanitize_text_field($_POST['city']);
 	$phone = sanitize_text_field($_POST['Phone']);
 	$qual = sanitize_text_field($_POST['Qual']);
-	$position = sanitize_text_field($_POST['Position']);
+	$position = sanitize_text_field($_POST['Position']);		$designation = sanitize_text_field($_POST['Designation']);
 	$bloodgroup = sanitize_text_field($_POST['Bloodgroup']);
 	$empcode = sanitize_text_field($_POST['EmpCode']);
 	$dob = !empty($_POST['Dob']) ? date('Y-m-d', strtotime(sanitize_text_field($_POST['Dob']))) : '';
@@ -82,7 +82,7 @@ function wpsp_AddTeacher()
 			'qualification' => $qual,
 			'gender' => $gender,
 			'bloodgrp' => $bloodgroup,
-			'position' => $position
+			'position' => $position,		    		    'designation_id'  => $designation
 		);
 		$tch_ins = $wpdb->insert($wpsp_teacher_table, $teacher_data);
 
@@ -245,7 +245,7 @@ function wpsp_UpdateTeacher()
 	$country = sanitize_text_field($_POST['country']);
 	$city = sanitize_text_field($_POST['city']);
 	$zipcode = intval($_POST['zipcode']);
-	$position = sanitize_text_field($_POST['Position']);
+	$position = sanitize_text_field($_POST['Position']);		$designation = sanitize_text_field($_POST['Designation']);	
 	$empcode = sanitize_text_field($_POST['Empcode']);
 	$whours = sanitize_text_field($_POST['whours']);
 	$dob = !empty($_POST['Dob']) ? wpsp_StoreDate(sanitize_text_field($_POST['Dob'])) : '';
@@ -293,7 +293,7 @@ if ($teachereditprofile == 'teachereditprofile')
 			'qualification' => $qual,
 			'gender' => $gender,
 			'bloodgrp' => $bloodgroup,
-			'position' => $position,
+			'position' => $position,		    'designation_id' => $designation,		    
 			'dol' => !empty($_POST['dol']) ? date('Y-m-d', strtotime(sanitize_text_field($_POST['dol']))) : '',
 			'whours' => sanitize_text_field($_POST['whours'])
 		);

@@ -281,12 +281,84 @@ function wpsp_sidebar(){
               
           }
 
-          echo "<li class='".$student_page."'>
+          echo "<li class='has-submenu ".$student_page."'>
                   <a href='".site_url('wp-admin/admin.php?page=sch-student')."'>
-                    <i class='dashicons dashicons-id icon'></i>
+                    <i class='dashicons dashicons dashicons-welcome-widgets-menus icon icon'></i>
                     <span>".$sch_student."</span>
                   </a>
-                </li>";
+                </li>
+                <li class='has-submenu  ".$student_page."'>
+                            <a href='#'>
+                                <i class='dashicons dashicons-welcome-write-blog icon'></i>
+                                <span>Trainee Record</span>
+                            </a>
+                            <ul class='sub-menu'>
+                                <li>
+                                    <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Daily Diary</a>
+                                </li>
+                                <li>
+                                    <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Drafting Book</a>
+                                </li>
+                                <li>
+                                    <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Theory File</a>
+                                </li>
+                                <li>
+                                    <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Job Sheetbook</a>
+                                </li>
+                                <li>
+                                    <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Assignment Books</a>
+                                </li>
+                                <li>
+                                    <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Practical Book</a>
+                                </li>
+                                <li>
+                                    <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Leave Record</a>
+                                </li>
+                            </ul>
+                  </li>
+                  <li class='has-submenu  ".$student_page."'>
+                        <a href='#'>
+                            <i class='dashicons dashicons-welcome-write-blog icon'></i>
+                            <span>Instructor Record</span>
+                        </a>
+                        <ul class='sub-menu'>
+                            <li>
+                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Syllabus(split syllabus monthly yearly)</a>
+                            </li>
+                            <li>
+                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Timetable</a>
+                            </li>
+                            <li>
+                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Lesson Plan</a>
+                            </li>
+                            <li>
+                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Demostration Plan</a>
+                            </li>
+                            <li>
+                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Daily Diary</a>
+                            </li>
+                            <li>
+                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "' title='Job Evaluation Register'>Job Evaluation</a>
+                            </li>
+                            <li>
+                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Skill Chart</a>
+                            </li>
+                            <li>
+                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Progress Chart</a>
+                            </li>
+                            <li>
+                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Question Bank</a>
+                            </li>
+                            <li>
+                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Hand Tool Distribution</a>
+                            </li>
+                            <li>
+                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "' title='Audio Video Aids in Training'>A/V Aids</a>
+                            </li>
+                        </ul>
+                    </li>
+    
+                    ";
           if($current_user_role == 'administrator'){
             if($proversion1['status']){
               echo "<li class='".$request_page."'>
@@ -352,13 +424,13 @@ function wpsp_sidebar(){
               <li class='".$attendance_page."'><a href='".site_url('wp-admin/admin.php?page=sch-attendance')."'>
                 <span>".$sch_student_attendance."</span>
               </a></li>";
-            if($current_user_role=='administrator' || $current_user_role=='teacher'){
+            /* if($current_user_role=='administrator' || $current_user_role=='teacher'){
               echo "<li class='".$teacher_attendance_page."'>
                 <a href='".site_url('wp-admin/admin.php?page=sch-teacherattendance')."'>
                  <span>".$sch_teacher_attendance."</span>
                 </a>
                </li>";
-            }
+            } */
           echo"</ul>
           </li>
           <li class='".$event_page."'>

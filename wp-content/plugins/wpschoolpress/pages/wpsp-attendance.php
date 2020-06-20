@@ -10,6 +10,14 @@ wpsp_header();
 			wpsp_sidebar();
 			wpsp_body_start();
 		?>
+		
+		<script>
+			function validateAndUncheckAttend( intUserId, idCheck ) {
+			}
+		</script>
+		
+		
+		
 		<div class="wpsp-card">
 						<div class="wpsp-card-head">
 							<h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_student_attendance_heading_detail', esc_html__( 'Attendance Report', 'WPSchoolPress' )); ?></h3>
@@ -68,8 +76,9 @@ wpsp_header();
 									<div class="wpsp-row wpsp-text-center">
 										<div class="wpsp-col-sm-12">
 											<div class="wpsp-form-group">
-												<button id="AttendanceEnter" name="attendance" class="wpsp-btn wpsp-btn-success">Add/Update</button>
-												<button id="Attendanceview" name="attendanceview" class="wpsp-btn wpsp-btn-primary">View</button>
+												<button id="AttendanceEnter" name="attendance" class="wpsp-btn wpsp-btn-success">Add</button>
+												<button id="AttendanceEdit" name="attendance" class="wpsp-btn wpsp-btn-success">Edit</button>
+												<button id="Attendanceview" name="attendanceview" class="wpsp-btn wpsp-btn-primary">Quick View</button>
 											</div>
 										</div>
 									</div>
@@ -85,7 +94,8 @@ wpsp_header();
 									$class_table		=	$wpdb->prefix."wpsp_class";
 									$student_table		=	$wpdb->prefix."wpsp_student";
 									$attendance_table	=	$wpdb->prefix."wpsp_attendance";
-									$class_info			=	$wpdb->get_results("select cid,c_name from $class_table");
+									global $objUser;
+									$class_info			=	( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
 
 									$stl = array();
 									foreach($class_info as $cls){
@@ -140,7 +150,53 @@ foreach ($stl as $key => $value) {
 									}
 								}
 								?>
+								
 								<div class="wpsp-col-sm-12">
+									<h3 class="wpsp-card-title">View Attendance Report</h3>
+									<div class="line_box">
+										<div class="box-body">
+										<select name="classid" id="attendance_report_class" class="wpsp-form-control">
+												<option value="">Select Class</option>
+													<?php
+													if(isset($_POST['classid']) && intval($_POST['classid'])!='')
+														$selid=intval($_POST['classid']);
+													else
+														if($current_user_role=='teacher'){
+															$current_user_id = get_current_user_id();
+														$selid=0;
+													$ctname=$wpdb->prefix.'wpsp_class';
+													$clt=$wpdb->get_results("select `cid`,`c_name` from `$ctname` where teacher_id = '$current_user_id' ");
+													foreach($clt as $cnm){?>
+														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$selid) echo "selected";?>><?php echo $cnm->c_name;?></option>
+													<?php }
+														} else {
+														$selid=0;
+													$ctname=$wpdb->prefix.'wpsp_class';
+													$clt=$wpdb->get_results("select `cid`,`c_name` from `$ctname`");
+													foreach($clt as $cnm){?>
+														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$selid) echo "selected";?>><?php echo $cnm->c_name;?></option>
+													<?php } } ?>
+											</select>
+											<br>
+											<select id="attendance_report_month" name="month" class="wpsp-form-control" >
+												<option value="">Select Month</option>
+												<option value="6">Jun</option> 
+											</select>
+											<br>
+											<select id="attendance_report_year" name="year" class="wpsp-form-control" >
+												<option value="">Select Year</option>
+												<option value="2020">2020</option> 
+											</select>
+											
+											<br>
+											<span id="error_message" class="wpsp-text-red"></span>
+											<br>
+											<button id="monthly_muster" name="monthly_muster" class="wpsp-btn wpsp-btn-success" data-reportUrl="<?php echo site_url( 'wp-admin/admin.php?page=sch-attendance&report=monthly_muster' );?>">View Monthly Muster</button>
+										</div>
+									</div>
+								</div>
+								
+								<!--  <div class="wpsp-col-sm-12">
 									<h3 class="wpsp-card-title">View Attendance Report</h3>
 									<div class="line_box">
 										<div class="box-body">
@@ -174,6 +230,7 @@ $i=0;
 										</div>
 									</div>
 								</div>
+								 -->
 						</div>
 					</div>
 		<div class="modal modal-wide" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModal" aria-hidden="true">
@@ -184,6 +241,34 @@ $i=0;
 		</div>
 	</div>
 </div>
+
+<script>
+function printDiv() {
+    var divToPrint = document.getElementById('muster-print');
+    var htmlToPrint = '' +
+        '<style type="text/css">' +
+        'table th, table td {' +
+        'border:1px solid #555; !important' +
+        'padding:0.5em;' +
+        '}' +
+        '</style>';
+    htmlToPrint += divToPrint.outerHTML;
+    newWin = window.open("");
+    newWin.document.write(htmlToPrint);
+}
+</script>
+	<div  class="wpsp-card">
+			<div style="padding:20px 30px"><button  style="padding: 10px 30px !important;font-size: large;"onclick="printDiv();" name="print_report" class="wpsp-btn wpsp-btn-success">Print</button></div>
+			<div class="wpsp-card-body">
+			<section id="muster-print" class="content">
+	<?php 
+								 if( true == isset( $_GET['report'] ) && 'monthly_muster' == $_GET['report'] ) {
+        					   $filename	=	WPSP_PLUGIN_PATH .'includes/monthly-muster.php';
+        					   include_once($filename); }?>
+			</section>
+        					   
+</div>
+	</div>
 	 	<?php
 			wpsp_body_end();
 			wpsp_footer();

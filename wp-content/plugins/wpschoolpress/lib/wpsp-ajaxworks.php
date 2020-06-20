@@ -1127,8 +1127,7 @@ function wpsp_ExamInfo()
 	else echo "false";
 	wp_die();
 }
-function wpsp_StudentCount()
-{
+function wpsp_StudentCount() {
 	global $wpdb;
 	$classid = intval($_POST['cid']);
 	$student_table = $wpdb->prefix . "wpsp_student";
@@ -1180,7 +1179,7 @@ function wpsp_getStudentsList()
 		}
 	}
 
-	$check_attend = $wpdb->get_row("SELECT ab.absents,ab.aid,cls.c_name FROM $att_table ab LEFT JOIN $class_table cls ON cls.cid=ab.class_id  WHERE ab.class_id=$classid and ab.date = '$entry_date'");
+	$check_attend = $wpdb->get_row("SELECT ab.absents,ab.aid,cls.c_name, ab.casual_leave, ab.sick_leave, ab.special_leave FROM $att_table ab LEFT JOIN $class_table cls ON cls.cid=ab.class_id  WHERE ab.class_id=$classid and ab.date = '$entry_date'");
 
 
 	$ex_absents = array();
@@ -1190,20 +1189,39 @@ function wpsp_getStudentsList()
 	{
 		$title = __('Update Attendance Entry', 'WPSchoolPress');
 		$warning = __('Already attendance were entered!', 'WPSchoolPress');
-		if ($check_attend->absents != 'Nil')
-		{
+		if ($check_attend->absents != 'Nil') {
 			$abs = json_decode($check_attend->absents);
-			foreach($abs as $ab)
-			{
+			foreach($abs as $ab) {
 				$ex_absents[$ab->sid] = $ab->reason;
 			}
+		} 
+		
+		if ($check_attend->sick_leave != 'Nil') {
+		    $sls = json_decode($check_attend->sick_leave);
+		    foreach($sls as $sl) {
+		        $ex_sls[$sl->sid] = $sl->reason;
+		    }
 		}
-		else
-		if ($check_attend->absents == 'Nil')
 
-		{
-			$nil = 'checked';
+		if ($check_attend->casual_leave != 'Nil') {
+		    print_r( $cls );
+		    $cls = json_decode($check_attend->casual_leave);
+		    foreach($cls as $cl) {
+		        $ex_cls[$cl->sid] = $cl->reason;
+		    }
 		}
+		
+		if ($check_attend->special_leave != 'Nil') {
+		    $spls = json_decode($check_attend->special_leave);
+		    foreach($spls as $spl) {
+		        $ex_spls[$spl->sid] = $spl->reason;
+		    }
+		}
+		
+		if( true == empty( $ex_spls ) || true == empty( $ex_cls ) || true == empty( $ex_sls ) || true == empty( $ex_absents ) ) {
+		    $nil = '';
+		}
+		
 	}
 
 	$stl = [];
@@ -1250,6 +1268,9 @@ function wpsp_getStudentsList()
 										<th>Roll No.</th>
 										<th>Name </th>
 										<th>Absent </th>
+                                        <th>Casual Leave </th>
+                                        <th>Sick Leave </th>
+                                        <th>Special Leave </th>
 										<th>Reason </th>
 									</tr>
                                 </thead>
@@ -1258,13 +1279,18 @@ function wpsp_getStudentsList()
 								foreach($stl as $sid)
 								{
 									$st = $wpdb->get_row("select wp_usr_id,s_rollno ,CONCAT_WS(' ', s_fname, s_mname, s_lname ) AS full_name from $student_table where sid='$sid' order by s_rollno ASC");
-
 									$checked = array_key_exists($st->wp_usr_id, $ex_absents) ? 'checked' : '';
+									$clsChecked = array_key_exists($st->wp_usr_id, $ex_cls) ? 'checked' : '';
+									$slsChecked = array_key_exists($st->wp_usr_id, $ex_sls) ? 'checked' : '';
+									$splsChecked = array_key_exists($st->wp_usr_id, $ex_spls) ? 'checked' : '';
 									$content.= '<tr>
 												<td>' . $sno . '</td>
 												<td>' . $st->s_rollno . '</td>
 												<td>' . $st->full_name . '</td>
-												<td><input type="checkbox" ' . $checked . ' class="ccheckbox wpsp-checkbox" name="absent[]" value="' . $st->wp_usr_id . '"> Absent </td>
+<td><input type="checkbox" ' . $checked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'"  name="absent[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'absent\');" id="absent-' . $st->wp_usr_id .'"> Absent </td>
+<td><input type="checkbox" ' . $clsChecked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'" name="cl[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'cl\');" id="cl-' . $st->wp_usr_id .'"> Casual Leave </td>
+<td><input type="checkbox" ' . $slsChecked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'" name="sl[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'sl\');" id="sl-' . $st->wp_usr_id .'"> Sick Leave </td>
+<td><input type="checkbox" ' . $splsChecked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'" name="spl[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'spl\');" id="spl-' . $st->wp_usr_id .'"> Special Leave </td>
 												<td><input type="text"  name="reason[' . $st->wp_usr_id . ']" value="' . stripslashes($ex_absents[$st->wp_usr_id]) . '" class="wpsp-form-control"></td>
 											</tr>';
 									$sno++;
@@ -1331,6 +1357,9 @@ function wpsp_AttendanceEntry()
 	else
 	{
 		$abs = sanitize_price_array($_POST['absent']);
+		$cls = sanitize_price_array($_POST['cl']);
+		$spls = sanitize_price_array($_POST['spl']);
+		$sls = sanitize_price_array($_POST['sl']);
 		$reason = sanitize_price_array($_POST['reason']);
 		$attend = array();
 		foreach($abs as $stid)
@@ -1354,10 +1383,35 @@ function wpsp_AttendanceEntry()
 				}
 			}
 		}
+		
+		foreach( $cls AS $cl ) {
+		    $clAttend[] = [
+		        'sid'     => $cl,
+		        'reason'  => $reason[$cl]
+		    ];
+		}
+		
+		foreach( $sls AS $sl ) {
+		    $slAttend[] = [
+		        'sid'     => $sl,
+		        'reason'  => $reason[$sl]
+		    ];
+		}
+		
+		foreach( $spls AS $spl ) {
+		    $splAttend[] = [
+		        'sid'     => $spl,
+		        'reason'  => $reason[$spl]
+		    ];
+		}
+		
 		$attendance = json_encode($attend);
 		$att1_data = array(
 			'class_id' => $class,
 			'absents' => $attendance,
+		    'sick_leave'  => json_encode( $slAttend ),
+		    'casual_leave'    => json_encode( $clAttend ),
+		    'special_leave'   => json_encode( $splAttend ),
 			'date' => $entry_date
 		);
 		$ins_attend = $wpdb->insert($att_table, $att1_data);
@@ -4102,6 +4156,27 @@ function wpsp_getStudentsAttendanceList()
 					$absentList[$value->sid] = $value->reason;
 				}
 			}
+			
+			if( true == isset( $attendance['sick_leave'] ) &&  $attendance['sick_leave'] != 'Nil' ) {
+			    $slAttend = json_decode(  $attendance['sick_leave'] );
+			    foreach($slAttend as $key => $value) {
+			        $slList[$value->sid] = $value->reason;
+			    }
+			}
+			
+			if( true == isset( $attendance['casual_leave'] ) &&  $attendance['casual_leave'] != 'Nil' ) {
+			    $clAttend = json_decode(  $attendance['casual_leave'] );
+			    foreach($clAttend as $key => $value) {
+			        $clList[$value->sid] = $value->reason;
+			    }
+			}
+			
+			if( true == isset( $attendance['special_leave'] ) &&  $attendance['special_leave'] != 'Nil' ) {
+			    $splAttend = json_decode(  $attendance['special_leave'] );
+			    foreach($splAttend as $key => $value) {
+			        $splList[$value->sid] = $value->reason;
+			    }
+			}
 
 			$studentData = [];
 			$studentArray = $wpdb->get_results("SELECT class_id, sid from $student_table");
@@ -4134,12 +4209,23 @@ function wpsp_getStudentsAttendanceList()
 								$studentList = $wpdb->get_results("SELECT CONCAT_WS(' ', s_fname, s_mname, s_lname ) AS full_name, wp_usr_id,s_rollno from $student_table where sid='$student'", ARRAY_A);
 
 
-								foreach($studentList as $key => $value)
-					{
-						$userID = $value['wp_usr_id'];
+								foreach($studentList as $key => $value) {
+						          $userID = $value['wp_usr_id'];
 						$s_rollno = $value['s_rollno'];
 						$userName = $value['full_name'];
-						$sattendance = count($absentList) > 0 && array_key_exists($userID, $absentList) ? __('Absent', 'WPSchoolPress') : __('Present', 'WPSchoolPress');
+
+						if( count($absentList) > 0 && array_key_exists($userID, $absentList) ) {
+						    $sattendance = __('Absent', 'WPSchoolPress');
+						} elseif(count($slList) > 0 && array_key_exists($userID, $slList) ) {
+						    $sattendance = __('Sick Leave', 'WPSchoolPress');
+						} elseif(count($clList) > 0 && array_key_exists($userID, $clList) ) {
+						    $sattendance = __('Casual Leave', 'WPSchoolPress');
+						} elseif( count($splList) > 0 && array_key_exists($userID, $splList) ) {
+						    $sattendance =  __('Special Leave', 'WPSchoolPress');
+						} else {
+						    $sattendance =  __('Present', 'WPSchoolPress');
+						}
+						
 						$commnet = isset($absentList[$userID]) ? stripslashes($absentList[$userID]) : '';
 						echo '<tr><td>' . $s_rollno . '</td>
 									<td>' . $userName . '</td>

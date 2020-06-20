@@ -25,5 +25,15 @@ class CStudents extends CModel {
         return $this->objDatabase->get_results( $strSql );
                 
     }
+    
+    public function fetchStudentsByClassId( $intClassId ) {
+        $strSql = 'SELECT
+                        s.*
+                    FROM ' . $this->strTableName . ' s
+                    WHERE
+                        s.class_id LIKE CONCAT ( \'%\', \'' . ( int ) $intClassId . '\', \'%\' )';
+        
+        return $this->objDatabase->get_results( $strSql );
+    }
 }
 

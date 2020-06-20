@@ -1,4 +1,27 @@
 $(document).ready(function() {
+	$('#monthly_muster').click( function(e) {
+		if( $('#attendance_report_class').val() == '' ) {
+			$('#error_message').html( 'Please select class.' );
+			return false;
+		}
+		
+		if( $('#attendance_report_month').val() == '' ) {
+			$('#error_message').html( 'Please select month.' );
+			return false;
+		}
+
+		if( $('#attendance_report_year').val() == '' ) {
+			$('#error_message').html( 'Please select year.' );
+			return false;
+		}
+		
+		window.location.href = $('#monthly_muster').attr('data-reportUrl') + '&class_id=' + $('#attendance_report_class').val() + '&month=' +  $('#attendance_report_month').val()  + '&year=' + $('#attendance_report_year').val();
+
+	});
+
+});
+
+$(document).ready(function() {
   $(".clserror").hide(), $(".clsdate").hide(), $(document).on("click", ".checkAll", function(e) {
     $(this).prop("checked") && $("input[name=absent\\[\\]]").prop("checked", !1)
   }), $(document).on("click", "input[name=absent\\[\\]]", function(e) {
@@ -10,7 +33,7 @@ $(document).ready(function() {
     changeMonth: !0,
     changeYear: !0,
     maxDate: 0
-  }), $("#AttendanceEnter").click(function() {
+  }), $("#AttendanceEnter, #AttendanceEdit").click(function() {
     $("#AttendanceClass").parent().parent().find(".clserror").removeClass("error"), $("#AttendanceDate").parent().parent().find(".clsdate").removeClass("error"), $("#AddModalContent").html(""), $("#wpsp-error-msg").html("");
     var e = $("#AttendanceClass").val(),
       a = $("#AttendanceDate").val();

@@ -573,7 +573,7 @@ if( $current_user_role=='administrator' || $current_user_role == 'parent'){?> <d
 	</div>
 	<!-- Info boxes -->
 	
-	<?php if( CRole::TEACHER == $objUser->getRole() ) { ?>
+	<?php if( CRole::TEACHER == $objUser->getRole() || CRole::STUDENT == $objUser->getRole()) { ?>
 		<div class="wpsp-row">
 			<div class="wpsp-col-lg-8  wpsp-col-xs-12">
 				<div class="wpsp-card">
@@ -604,7 +604,6 @@ if( $current_user_role=='administrator' || $current_user_role == 'parent'){?> <d
 			</div>
 		</div>
 	<?php } ?>
-	
 
 	<?php if( $current_user_role=='administrator' || $current_user_role == 'parent' ){?> <div class="wpsp-row "><?php } else { ?>
 	<div class="wpsp-row">

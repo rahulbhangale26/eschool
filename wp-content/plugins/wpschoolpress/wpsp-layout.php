@@ -639,7 +639,7 @@ foreach($courses as $key => $value) {
                   <a href='".site_url('wp-admin/admin.php?page=sch-subject&cid=').$id."'>
                     <span>".$sch_subject."</span>
                   </a>
-                </li>
+                </li><!--
                 <li class='".$exam_page."'>
                   <a href='".site_url('wp-admin/admin.php?page=sch-exams&cid=').$id."'>
                     <span>".$sch_exams."</span>
@@ -658,7 +658,7 @@ foreach($courses as $key => $value) {
                 <li class='".$leave_page."'>
                   <a href='".site_url('wp-admin/admin.php?page=sch-leavecalendar&cid=').$id."'>
                  <span>".$sch_leavecalendar."</span></a>
-                </li>
+                </li> -->
               </ul>
           </li></li></ul>";
           }

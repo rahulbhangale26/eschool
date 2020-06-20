@@ -23,6 +23,18 @@ class CClasses extends CModel {
         return $this->objDatabase->get_results( $strSql );
     }
     
+    public function fetchClassesByStudentUserId( $intStudentUserId ) {
+        $strSql = 'SELECT
+                        DISTINCT c.*
+                    FROM
+                        ' . $this->strTableName . ' c
+                        JOIN ' . ( new CStudents() )->strTableName . ' s ON  s.class_id LIKE CONCAT( \'%\', c.cid , \'%\' )
+                    WHERE
+                        s.wp_usr_id = ' . ( int ) $intStudentUserId;
+        
+        return $this->objDatabase->get_results( $strSql );
+    }
+    
     public function fetchAllClasses() {
         return $this->objDatabase->get_results( 'SELECT * FROM ' .$this->strTableName );
     }

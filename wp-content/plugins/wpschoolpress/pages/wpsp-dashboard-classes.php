@@ -1,5 +1,5 @@
 <?php 
-global $objUser;
+    global $objUser;
 ?>
 
 <div class="wpsp-card-body">
@@ -14,7 +14,11 @@ global $objUser;
 									<?php
 									$ctable=$wpdb->prefix."wpsp_class";
 									$stable=$wpdb->prefix."wpsp_student";
-									$wpsp_classes = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
+									if( CRole::STUDENT == $objUser->getRole() ) {
+									       $wpsp_classes = ( new CClasses() )->fetchClassesByStudentUserId( $objUser->getUserId() );  
+									} else {
+		                                  $wpsp_classes = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
+									}
 									$sno=1;
 									$teacher_table=	$wpdb->prefix."wpsp_teacher";
 									$teacher_data = $wpdb->get_results("select wp_usr_id,CONCAT_WS(' ', first_name, middle_name, last_name ) AS full_name from $teacher_table order by tid");
@@ -54,7 +58,13 @@ global $objUser;
 										<tr id="<?php echo intval($wpsp_class->cid);?>" class="pointer">
 											<td><?php echo $wpsp_class->c_name;?></td>
 											<td>
-												<a target='__blank' href="<?php echo ESCHOOL_CLASS_ROOM_BASE_URL . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace('-', '', $wpsp_class->c_name ) . $wpsp_class->cid ); ?>" class="wpsp-btn wpsp-btn-success">Begin</a>
+												<a target='__blank' href="<?php echo ESCHOOL_CLASS_ROOM_BASE_URL . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace('-', '', $wpsp_class->c_name ) . $wpsp_class->cid ); ?>" class="wpsp-btn wpsp-btn-success">
+													<?php if( CRole::STUDENT == $objUser->getRole() ) {
+													    echo 'Join';
+													} else {?>
+														Begin
+													<?php }?>
+												</a>
 											</td>									
 										</tr>
 									<?php

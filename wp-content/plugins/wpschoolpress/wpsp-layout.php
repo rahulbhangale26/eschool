@@ -312,7 +312,7 @@ function wpsp_sidebar(){
                                     <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Practical Book</a>
                                 </li>
                                 <li>
-                                    <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Leave Record</a>
+                                    <a href='" . site_url('wp-admin/admin.php?page=sch-leave_record') . "'>Leave Record</a>
                                 </li>
                             </ul>
                   </li>
@@ -1168,6 +1168,10 @@ function wpsp_body_start()
      case 'history' :
     $pagetitle="History";
     break;
+     case 'leave_record':
+         $pagetitle = 'Leave Record';
+         $breadcum = $base_url.'sch-leave_record';
+         break;
   }
   // echo $addurl;
    //echo $result;
@@ -1221,6 +1225,7 @@ if(isset($_GET['cid'])){
           //echo $result;
             if(!empty($addurl)):
               if(!isset($_GET['tab'])){
+                  
                 $_GET['tab'] = '';
               }
               if(!isset($_GET['ac'])){

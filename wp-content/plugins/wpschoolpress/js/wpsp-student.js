@@ -396,9 +396,15 @@ $(document).ready(function() {
       });
     }
   });
+  
+  $('#BatchId').change(function() {
+	    $('#StudentClass').submit();
+  });
+  
   $('#ClassID').change(function() {
     $('#StudentClass').submit();
   });
+
   $(document).on('click', '.ViewStudent', function(e) {
     e.preventDefault();
     var data = [];

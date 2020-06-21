@@ -68,6 +68,12 @@ function wpsp_admin_menu()
 		    $this,
 		    'wpsp_callback_underconstruction'
 		));
+		
+		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-businessman icon"></i>&nbsp; Parents', 'edit_posts', 'sch-leave_record', array(
+		    $this,
+		    'wpsp_callback_leave_record'
+		));
+		
 		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-welcome-widgets-menus icon"></i>&nbsp; Classes', 'edit_posts', 'sch-class', array(
 			$this,
 			'wpsp_callback_classes'
@@ -208,6 +214,11 @@ function wpsp_admin_menu()
 	function wpsp_callback_underconstruction() {
 	    require_once (WPSP_PLUGIN_PATH . 'pages/underconstruction.php');
 	}
+	
+	function wpsp_callback_leave_record() {
+	    require_once ( WPSP_PLUGIN_PATH . 'pages/wpsp-leave_record.php' );    
+	}
+	
 	function wpsp_callback_classes()
 	{
 		require_once (WPSP_PLUGIN_PATH . 'pages/wpsp-class.php');

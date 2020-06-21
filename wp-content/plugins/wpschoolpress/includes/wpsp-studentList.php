@@ -2,6 +2,7 @@
 if (!defined( 'ABSPATH' ) )exit('No Such File');
 
 global $objUser;
+$intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
  $proversion	=	wpsp_check_pro_version();
 	  $proclass		=	!$proversion['status'] && isset( $proversion['class'] )? $proversion['class'] : '';
 	  $protitle		=	!$proversion['status'] && isset( $proversion['message'] )? $proversion['message']	: '';
@@ -34,6 +35,8 @@ global $objUser;
 
        $prohistory    =    wpsp_check_pro_version('wpsp_mc_version');
     $prodisablehistory    =    !$prohistory['status'] ? 'notinstalled'    : 'installed';
+    
+        $arrobjBatches = ( new CBatches() )->fetchAllBatches();
        ?>
 <div class="wpsp-card">
 		<div class="wpsp-card-head">
@@ -45,13 +48,24 @@ global $objUser;
 		?>
 		<div class="subject-inner wpsp-left wpsp-class-filter">
 			<form name="StudentClass" id="StudentClass" method="post" action="">
+			
+				<label class="wpsp-labelMain">Batch</label>
+				<select name="BatchId" id = "BatchId" class="wpsp-form-control">
+					<option value="">Select Batch</option>
+					<?php 
+					foreach ( $arrobjBatches AS $objBatch ) {
+					    echo '<option value="' . $objBatch->id . '" ' . ( $objBatch->id == $intBatchId ? 'selected="selected"' : '' ) . '>' . $objBatch->name . '</option>';
+					}
+					?>
+				</select>
+				
 				<label class="wpsp-labelMain"><?php _e( 'Select Class Name', 'WPSchoolPress' ); ?></label>
 				<select name="ClassID" id="ClassID" class="wpsp-form-control">
 					<?php
 					$sel_classid	=	isset( $_POST['ClassID'] ) ? intval($_POST['ClassID']) : '';
-					//$class_table	=	$wpdb->prefix."wpsp_class";
-					//$sel_class		=	$wpdb->get_results("select cid,c_name from $class_table Order By cid ASC");
+					
 					global $objUser;
+					
 					if( CRole::TEACHER == $objUser->getRole() ) {		    
     					$sel_class = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
 					} elseif( CRole::ADMIN == $objUser->getRole() ) {
@@ -164,11 +178,12 @@ global $objUser;
 							<?php
 							$student_table	=	$wpdb->prefix."wpsp_student";
 							$users_table	=	$wpdb->prefix."users";
+							
 							$class_id='';
 							if( isset($_POST['ClassID'] ) && $_POST['ClassID'] != 'all' ) {
 								$class_id=intval($_POST['ClassID']);
 								$stl = [];
-								$studentlists	=	$wpdb->get_results("select class_id, sid from $student_table");
+								$studentlists	= ( new CStudents() )->fetchStudentByFilters( [ 'role' => $objUser->getRole(), 'batch_id' => $intBatchId, 'user_id' => $objUser->getUserId() ] ); 
 									foreach ($studentlists as $stu) {
 										if(is_numeric($stu->class_id) ){
 											if($stu->class_id == $class_id){
@@ -185,14 +200,8 @@ global $objUser;
 
 								}
 								else if(!isset($_POST['ClassID']) || $_POST['ClassID'] == 'all' ){
-								    
-								    if( CRole::TEACHER == $objUser->getRole() ) {
-								        $studentlists	=	( new CStudents() )->fetchStudentsByUserId( $objUser->getUserId() );
-								    } elseif( CRole::ADMIN == $objUser->getRole() ) {
-								        $studentlists	=	$wpdb->get_results("select sid from $student_table");
-								    }
-								    
-									foreach ($studentlists as $stu) {
+								    $studentlists	= ( new CStudents() )->fetchStudentByFilters( [ 'role' => $objUser->getRole(), 'batch_id' => $intBatchId, 'user_id' => $objUser->getUserId() ] ); 							    
+								    foreach ($studentlists as $stu) {
 										 $stl[] = $stu->sid;
 									}
 

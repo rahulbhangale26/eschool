@@ -1,5 +1,6 @@
 <?php if (!defined( 'ABSPATH' ) ) exit('No Such File');
 
+$arrobjBatches = ( new CBatches() )->fetchAllBatches();
 $student_table = $wpdb->prefix."wpsp_student";
 $class_table = $wpdb->prefix."wpsp_class";
 $users_table = $wpdb->prefix."users";
@@ -204,7 +205,34 @@ if( !empty( $stinfo ) ) {
                                     <option <?php if ($stinfo->s_bloodgrp == 'AB-') echo "selected"; ?> value="AB-">AB -</option>
                                 </select>
                             </div>
-                               </div>
+                         </div>
+                         <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
+                            <div class="wpsp-form-group">
+                                <label class="wpsp-label" for="bloodgroup">
+                                   Category <span class="wpsp-required"> *</span>
+                                  </label>
+                                <select class="wpsp-form-control" data-is_required="1" id="Category" name="category">
+                                    <option value="">Select Category</option>
+                                    <option value="NT1" <?php echo ( 'NT1' == $stinfo->category ? 'selected="selected"' : '' )?> >NT1</option>
+                                    <option value="NT2" <?php echo ( 'NT2' == $stinfo->category ? 'selected="selected"' : '' )?> >NT2</option>
+                                    <option value="NT3" <?php echo ( 'NT3' == $stinfo->category ? 'selected="selected"' : '' )?> >NT3</option>                                   
+                                    <option value="OBC" <?php echo ( 'OBC' == $stinfo->category ? 'selected="selected"' : '' )?> >OBC</option>
+                                    <option value="OPEN" <?php echo ( 'OPEN' == $stinfo->category ? 'selected="selected"' : '' )?> >OPEN</option>
+                                    <option value="SBC" <?php echo ( 'SBC' == $stinfo->category ? 'selected="selected"' : '' )?> >SBC</option>
+                                    <option value="SC" <?php echo ( 'SC' == $stinfo->category ? 'selected="selected"' : '' )?> >SC</option>
+                                    <option value="ST" <?php echo ( 'ST' == $stinfo->category ? 'selected="selected"' : '' )?> >ST</option>
+									<option value="VJ" <?php echo ( 'VJ' == $stinfo->category ? 'selected="selected"' : '' )?> >VJ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
+                            <div class="wpsp-form-group">
+                                <label class="wpsp-label" for="bloodgroup">
+                                   Qualification
+                                  </label>
+                                  <input class="wpsp-form-control" type="text" name="qualification" value="<?php echo $stinfo->qualification;?>" placeholder="Qualification" />
+                            </div>
+                        </div>
                             <div class="wpsp-col-lg-3 wpsp-col-md-3 wpsp-col-sm-4 wpsp-col-xs-12">
                                 <div class="wpsp-form-group">
                                         <label class="wpsp-label" for="s_p_phone"><?php $item =  apply_filters( 'wpsp_student_personal_title_item',esc_html("Phone Number","WPSchoolPress"));
@@ -791,7 +819,7 @@ if( !empty( $stinfo ) ) {
                           /*Required field Hook*/
                           $is_required_school = apply_filters('wpsp_student_school_is_required',array());
                       ?>
-                    <div class="wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
+                    <div class="wpsp-col-md-3 wpsp-col-sm-3 wpsp-col-xs-12">
                         <div class="wpsp-form-group">
                             <label class="wpsp-label" for="dateofbirth"><?php $item =  apply_filters( 'wpsp_student_school_title_item',esc_html("Joining Date","WPSchoolPress"));
                                 $pl = "";
@@ -813,7 +841,7 @@ if( !empty( $stinfo ) ) {
                             <input type="text" data-is_required="<?php echo $is_required; ?>" class="wpsp-form-control select_date" id="Doj" value="<?php echo !empty( $stinfo->s_doj ) ? wpsp_ViewDate($stinfo->s_doj) : '' ; ?>" name="s_doj" placeholder="<?php echo $pl; ?>">
                         </div>
                     </div>
-                    <div class="wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
+                    <div class="wpsp-col-md-3 wpsp-col-sm-3 wpsp-col-xs-12">
                       <?php
                       $classes = [];
                       $classIDArray = [];
@@ -866,29 +894,31 @@ if( !empty( $stinfo ) ) {
 
                           <input type="hidden" name="prev_select_class" value="<?php echo $stinfo->class_id;?>">
                         </div>
-                        <div class="date-input-block">
-                          <table class="table table-bordered" width="100%" cellspacing="0" cellpadding="5">
-                          <?php
+                        <div class="wpsp-col-md-3 wpsp-col-sm-3 wpsp-col-xs-12">
+                        	<div class="date-input-block">
+                         		 <table class="table table-bordered" width="100%" cellspacing="0" cellpadding="5">
+                          			<?php
 
-                          foreach ($classes as $class) {
-                            $class_data = $wpdb->get_results("select * from $class_mapping_table where sid=$student_index AND cid = $class->cid");
-                            if(!empty($classIDArray)){
-                            if (in_array( $class->cid , $classIDArray )){
-                            ?>
-                            <tr>
-                              <td style="border:1px solid;padding:5px;">
-                                <strong><?php echo $class->c_name; ?></strong>
-                              </td>
-                              <td style="border:1px solid;padding:5px;">
-                              <input type='text' class='someclass datepicker' name='Classdata[]' placeholder='yyyy-mm-dd' <?php echo (((isset($class_data[0]->date) && ($class_data[0]->date != ''))) ? 'value="'.$class_data[0]->date.'"' : ''); ?>>
-                            </td>
-                            </tr>
-                          <?php } }
-                           }?>
-                            </table>
+                                        foreach ($classes as $class) {
+                                            $class_data = $wpdb->get_results("select * from $class_mapping_table where sid=$student_index AND cid = $class->cid");
+                                            if(!empty($classIDArray)){
+                                            if (in_array( $class->cid , $classIDArray )){
+                                    ?>
+                    				<tr>
+                      					<td style="border:1px solid;padding:5px;">
+                        					<strong><?php echo $class->c_name; ?></strong>
+                      					</td>
+                      					<td style="border:1px solid;padding:5px;">
+                      						<input type='text' class='someclass datepicker' name='Classdata[]' placeholder='yyyy-mm-dd' <?php echo (((isset($class_data[0]->date) && ($class_data[0]->date != ''))) ? 'value="'.$class_data[0]->date.'"' : ''); ?>>
+                    					</td>
+                    				</tr>
+                  						<?php } }
+                                        }?>
+                            	</table>
+                        	</div>
                         </div>
-                    </div>
-                    <div class="wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
+	               </div>
+                    <div class="wpsp-col-md-3 wpsp-col-sm-3 wpsp-col-xs-12">
                         <div class="wpsp-form-group">
                             <label class="wpsp-label" for="dateofbirth">  <?php $item =  apply_filters( 'wpsp_student_school_title_item',esc_html("Roll Number","WPSchoolPress"));
                                   $pl = "";
@@ -908,6 +938,22 @@ if( !empty( $stinfo ) ) {
                                   <span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span>
                                 </label>
                             <input type="text" data-is_required="<?php echo $is_required; ?>" class="wpsp-form-control" id="Rollno" value="<?php echo $stinfo->s_rollno; ?>" name="s_rollno" placeholder="<?php echo $pl; ?>">
+                        </div>
+                    </div>
+                    
+					<div class="wpsp-col-md-3 wpsp-col-sm-3 wpsp-col-xs-12">
+                        <div class="wpsp-form-group">
+                            <label class="wpsp-label" for="dateofbirth">  Batch Year
+                                  <span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span>
+                            </label>
+                            <select name="BatchId" id = "BatchId" class="wpsp-form-control">
+								<option value="">Select Batch</option>
+								<?php 
+                					foreach ( $arrobjBatches AS $objBatch ) {
+                					    echo '<option value="' . $objBatch->id . '" ' . ( $objBatch->id == $stinfo->batch_id ? 'selected="selected"' : '' ) . '>' . $objBatch->name . '</option>';
+					               }
+					            ?>
+							</select>
                         </div>
                     </div>
                      <?php

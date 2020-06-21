@@ -1,5 +1,5 @@
 <?php if (!defined( 'ABSPATH' ) )exit('No Such File');
-
+$arrobjBatches = ( new CBatches() )->fetchAllBatches();
 
 
 ?>
@@ -200,6 +200,33 @@
                                     <option value="AB+">AB +</option>
                                     <option value="AB-">AB -</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
+                            <div class="wpsp-form-group">
+                                <label class="wpsp-label" for="bloodgroup">
+                                   Category <span class="wpsp-required"> *</span>
+                                  </label>
+                                <select class="wpsp-form-control" data-is_required="1" id="Category" name="category">
+                                    <option value="">Select Category</option>
+                                    <option value="NT1">NT1</option>
+                                    <option value="NT2">NT2</option>
+                                    <option value="NT3">NT3</option>                                   
+                                    <option value="OBC">OBC</option>
+                                    <option value="OPEN">OPEN</option>
+                                    <option value="SBC">SBC</option>
+                                    <option value="SC">SC</option>
+                                    <option value="ST">ST</option>
+									<option value="VJ">VJ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
+                            <div class="wpsp-form-group">
+                                <label class="wpsp-label" for="bloodgroup">
+                                   Qualification
+                                  </label>
+                                  <input class="wpsp-form-control" type="text" name="qualification" value="" placeholder="Qualification" />
                             </div>
                         </div>
                         <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
@@ -996,6 +1023,22 @@
                                 <span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span>
                                 </label>
                             <input type="text" data-is_required="<?php echo $is_required; ?>" class="wpsp-form-control" id="Rollno" name="s_rollno" placeholder="<?php $pl; ?>">
+                        </div>
+                    </div>
+                    
+                    <div class="wpsp-col-md-12 wpsp-col-xs-12">
+                        <div class="wpsp-form-group">
+                            <label class="wpsp-label" for="dateofbirth">  Batch Year
+                                  <span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span>
+                            </label>
+                            <select name="BatchId" id = "BatchId" class="wpsp-form-control">
+								<option value="">Select Batch</option>
+								<?php 
+                					foreach ( $arrobjBatches AS $objBatch ) {
+				                	    echo '<option value="' . $objBatch->id . '" ' . ( $objBatch->id == $intBatchId ? 'selected="selected"' : '' ) . '>' . $objBatch->name . '</option>';
+					               }
+					            ?>
+							</select>
                         </div>
                     </div>
                 </div>

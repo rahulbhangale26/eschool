@@ -65,6 +65,16 @@ function wpsp_AddStudent(){
 		echo "Both Email Address Should Not Be same";
 		exit;
 	}
+	
+	if( false == isset( $_POST['BatchId'] ) || "" == $_POST['BatchId'] ) {
+	    echo "Please select the batch.";
+	    exit;   
+	}
+	
+	if( false == isset( $_POST['category'] ) || "" == $_POST['category'] ) {
+	    echo "Please select category.";
+	    exit;
+	}
 
   if(($_POST['pEmail'] == '') AND (($_POST['pPassword'] != '') OR ($_POST['pConfirmPassword'] != '') OR ($_POST['pUsername'] != ''))){
     echo "Please enter parent email";
@@ -75,8 +85,6 @@ function wpsp_AddStudent(){
     echo "Please enter parent username";
     exit;
   }
-
-
 
 	global $wpdb;
 	$wpsp_student_table = $wpdb->prefix . "wpsp_student";
@@ -253,6 +261,7 @@ function wpsp_AddStudent(){
 			'class_id' => isset($_POST['Class']) ? serialize($_POST['Class']) : '0',
 			'class_date' => isset($_POST['Classdata']) ? serialize($_POST['Classdata']) : '0',
 			's_rollno' => isset($_POST['s_rollno']) ? intval($_POST['s_rollno']) : '',
+		    'batch_id' => sanitize_text_field( $_POST['BatchId'] ),
 			's_fname' => $firstname,
 			's_mname' => isset($_POST['s_mname']) ? sanitize_text_field($_POST['s_mname']) : '',
 			's_lname' => isset($_POST['s_lname']) ? sanitize_text_field($_POST['s_lname']) : '',
@@ -264,6 +273,8 @@ function wpsp_AddStudent(){
 			's_dob' => isset($_POST['s_dob']) && !empty($_POST['s_dob']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_dob'])) : '',
 			's_doj' => isset($_POST['s_doj']) && !empty($_POST['s_doj']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_doj'])) : '',
 			's_phone' => isset($_POST['s_phone']) ? sanitize_text_field($_POST['s_phone']) : '',
+		    'category'    => sanitize_text_field(  $_POST['category'] ),
+		    'qualification'   => ( true == isset( $_POST['qualification'] ) ) ? sanitize_text_field(  $_POST['qualification'] ) : '',
 			'p_fname' => $pfirstname,
 			'p_mname' => $pmiddlename,
 			'p_lname' => $plastname,
@@ -645,7 +656,10 @@ function wpsp_UpdateStudent(){
 		's_bloodgrp' => isset($_POST['s_bloodgrp']) ? sanitize_text_field($_POST['s_bloodgrp']) : '',
 		's_dob' => isset($_POST['s_dob']) && !empty($_POST['s_dob']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_dob'])) : '',
 		's_city' => isset($_POST['s_city']) ? sanitize_text_field($_POST['s_city']) : '',
-		'p_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : ''
+		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
+		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
+		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
+		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
 	);
 
 		$stu_upd = $wpdb->update($wpsp_student_table, $studenttable, array(
@@ -655,7 +669,7 @@ function wpsp_UpdateStudent(){
  
 
 
-	} elseif ($studentprofileparentnew == 'studentprofileparentnew'){
+	} elseif ($studentprofileparentnew == 'studentprofileparentnew') {
 
 		$studenttable = array(
 
@@ -677,7 +691,10 @@ function wpsp_UpdateStudent(){
 		's_pcountry' => isset($_POST['s_pcountry']) ? sanitize_text_field($_POST['s_pcountry']) : '',
 		's_pcity' => isset($_POST['s_pcity']) ? sanitize_text_field($_POST['s_pcity']) : '',
 		's_pzipcode' => isset($_POST['s_pzipcode']) ? intval($_POST['s_pzipcode']) : '',
-		'p_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : ''
+		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
+		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
+		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
+		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
 
 	);
 
@@ -834,7 +851,10 @@ function wpsp_UpdateStudent(){
 		's_pcountry' => isset($_POST['s_pcountry']) ? sanitize_text_field($_POST['s_pcountry']) : '',
 		's_pcity' => isset($_POST['s_pcity']) ? sanitize_text_field($_POST['s_pcity']) : '',
 		's_pzipcode' => isset($_POST['s_pzipcode']) ? intval($_POST['s_pzipcode']) : '',
-		'p_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : ''
+		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
+		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
+		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
+		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
 	);
 
 		$parenttable = array(

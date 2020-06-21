@@ -67,7 +67,13 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 					global $objUser;
 					
 					if( CRole::TEACHER == $objUser->getRole() ) {		    
-    					$sel_class = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
+    					
+    					if( CDesignations::CLERK == $objUser->getTeacher()->designation_id  || CDesignations::PRINCIPAL == $objUser->getTeacher()->designation_id  ) {
+    					    $sel_class = ( new CClasses() )->fetchAllClasses();
+    					} else {
+    					    $sel_class = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
+    					}
+    					
 					} elseif( CRole::ADMIN == $objUser->getRole() ) {
 					    $sel_class = ( new CClasses() )->fetchAllClasses();
 					}
@@ -157,13 +163,19 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 						<table id="student_table" class="wpsp-table" cellspacing="0" width="100%" style="width:100%">
 						<thead>
 							<tr>
+								
+								<?php if ( in_array( 'administrator', $role ) ) { ?>
 								<th class="nosort">
-								<?php if ( in_array( 'administrator', $role ) ) { ?><input type="checkbox" id="selectall" name="selectall" class="ccheckbox"><?php } else echo 'Sr. No.'; ?>
+									<input type="checkbox" id="selectall" name="selectall" class="ccheckbox">
 								</th>
+								<?php } ?>
+
 								<th><?php echo apply_filters( 'wpsp_student_table_rollno_heading',esc_html__('Roll No.','WPSchoolPress'));?></th>
 								<th><?php echo apply_filters( 'wpsp_student_table_fullname_heading',esc_html__('Full Name','WPSchoolPress'));?></th>
-								<th><?php echo apply_filters( 'wpsp_student_table_parent_heading',esc_html__('Parent','WPSchoolPress'));?></th>
-								<th><?php echo apply_filters( 'wpsp_student_table_streetaddress_heading',esc_html__('Street Address','WPSchoolPress'));?></th>
+								<th width="70">Birth Date</th>
+								<th>Qualification</th>
+								<th>Category</th>
+								<th>Address</th>
 								<?php  if($propayment =='installed'){?>
 								<th><?php echo apply_filters( 'wpsp_student_table_paymentstatus_heading',esc_html__('Payment Status','WPSchoolPress'));?></th>
 							<?php } ?>
@@ -171,6 +183,7 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 										 <th><?php echo apply_filters( 'wpsp_student_table_class_status_heading',esc_html__('Class Status','WPSchoolPress'));?></th>
 									<?php } ?>
 								<th><?php echo apply_filters( 'wpsp_student_table_phone_heading',esc_html__('Phone','WPSchoolPress'));?></th>
+								<th>Email</th>
 								<th align="center" class="nosort"><?php echo apply_filters( 'wpsp_student_table_action_heading',esc_html__('Action','WPSchoolPress'));?></th>
 							</tr>
 						</thead>
@@ -183,7 +196,11 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 							if( isset($_POST['ClassID'] ) && $_POST['ClassID'] != 'all' ) {
 								$class_id=intval($_POST['ClassID']);
 								$stl = [];
-								$studentlists	= ( new CStudents() )->fetchStudentByFilters( [ 'role' => $objUser->getRole(), 'batch_id' => $intBatchId, 'user_id' => $objUser->getUserId() ] ); 
+								$studentlists	= ( new CStudents() )->fetchStudentByFilters( [ 
+								        'role' => $objUser->getRole(), 
+								        'batch_id' => $intBatchId, 
+								        'user_id' => $objUser->getUserId()
+								] ); 
 									foreach ($studentlists as $stu) {
 										if(is_numeric($stu->class_id) ){
 											if($stu->class_id == $class_id){
@@ -276,23 +293,33 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 									<tr>
 								  	<?php } ?>
 
-									<td>
+									
 									<?php if ( in_array( 'administrator', $role ) ) { ?>
+									<td>
 										<input type="checkbox" class="ccheckbox strowselect" name="UID[]" value="<?php echo $stinfo->wp_usr_id;?>">
-									<?php }else echo $key; ?>
 									</td>
+									<?php } ?>
+									
 									<td><?php echo $stinfo->s_rollno;?></td>
 									<td><?php
+									$loc_avatar = get_user_meta($stinfo->wp_usr_id, 'simple_local_avatar', true);
+									$img_url = isset($loc_avatar['full']) && !empty($loc_avatar['full']) ? $loc_avatar['full'] : WPSP_PLUGIN_URL . 'img/avatar.png';
+									
+									echo "<img src='$img_url' height='50px' width='50px' class='wpsp-userPic'/>";
 										$mname = $stinfo->s_mname;
 							            $lname = $stinfo->s_lname;
-									echo $stinfo->s_fname .' '. $mname .' '.  $lname;?></td>
-									<td><?php  echo $stinfo->p_fname." ".$stinfo->p_lname; ?>
+									echo $stinfo->s_fname .' '. $mname .' '.  $lname . '';
+									?>
 									</td>
-									<td><?php
-										$country = !empty( $stinfo->s_country ) ? ", ".$stinfo->s_country : '';
-										$city    = !empty( $stinfo->s_city ) ? ", ".$stinfo->s_city : '';
-										$zipcode    = !empty( $stinfo->s_zipcode ) ? ", ".$stinfo->s_zipcode : '';
-										echo $stinfo->s_address.' '.$city. ' ' . $country.' '.$zipcode;
+									<td><?php echo date( 'd M Y', strtotime( $stinfo->s_doj ));?></td>
+									<td><?php echo $stinfo->qualification; ?></td>
+									<td><?php echo $stinfo->category; ?></td>
+									<td>
+									<?php
+    									$country = !empty( $stinfo->s_country ) ? ", ".$stinfo->s_country : '';
+	   								    $city    = !empty( $stinfo->s_city ) ? ", <br>".$stinfo->s_city : '';
+									   $zipcode    = !empty( $stinfo->s_zipcode ) ? ", ".$stinfo->s_zipcode : '';
+									   echo $stinfo->s_address.' '.$city. ' ' . $country.' '.$zipcode;
 									?></td>
 									<?php  if($propayment == 'installed'){?>
 									<td><?php echo $paid;
@@ -300,6 +327,7 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 										<a href="<?php echo wpsp_admin_url();?>sch-payment&id=<?php echo base64_encode($stinfo->wp_usr_id);?>" class="wpsp-popclick1" title="View"><i class="icon dashicons dashicons-visibility wpsp-view-icon"></i></a>
 
 									</td>
+									
 								<?php } ?>
 									<?php  if($proversion1['status']){?>
 									<td>
@@ -323,6 +351,7 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
                   </td>
 									<?php } ?>
 									<td><?php echo $stinfo->s_phone;?></td>
+									<td><?php echo $stinfo->user_email;?></td>
 									<td align="center">
 										<div class="wpsp-action-col">
 											<a href="javascript:;" class="ViewStudent wpsp-popclick" data-pop="ViewModal" data-id="<?php echo $stinfo->wp_usr_id;?>" title="View"><i class="icon dashicons dashicons-visibility wpsp-view-icon"></i></a>
@@ -354,12 +383,13 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 						</tbody>
 						<tfoot>
 						  <tr>
-							<th><?php if ( in_array( 'administrator', $role ) ) { }
-								else echo 'Sr. No'; ?></th>
+							<?php if ( in_array( 'administrator', $role ) ) { echo '<th></th>';} ?>
 							<th>Roll No.</th>
 							<th>Full Name</th>
-							<th>Parent</th>
-							<th>Street Address</th>
+							<th>Birth Date</th>
+							<th>Qualification</th>
+							<th>Category</th>
+							<th>Address</th>
 							<?php  if($propayment =='installed'){?>
 								<th>Payment Status</th>
 							<?php } ?>
@@ -367,6 +397,7 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 								 <th>Class Status</th>
 							<?php } ?>
 							<th>Phone</th>
+							<th>Email</th>
 							<th  align="center">Action</th>
 						  </tr>
 						</tfoot>

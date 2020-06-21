@@ -177,7 +177,7 @@ foreach ($stl as $key => $value) {
 													global $objUser;
 													$clt = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
 													foreach($clt as $cnm){?>
-														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$selid) echo "selected";?>><?php echo $cnm->c_name;?></option>
+														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$intClassId) echo "selected";?>><?php echo $cnm->c_name;?></option>
 													<?php }
 														} else {
 														$selid=0;

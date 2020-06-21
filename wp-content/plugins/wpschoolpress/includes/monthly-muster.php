@@ -3,6 +3,10 @@
     $intClassId = ( int ) $_GET['class_id']; 
     $intMonthNumber = ( int ) $_GET['month'];
     $intYear = ( int ) $_GET['year'];
+    $objClasses = new CClasses();
+    $objClass = $objClasses->fetchClassByClassId( $intClassId );
+    $objTeacher = ( new CTeachers() )->fetchTeacherByUserId( $objClass->teacher_id );
+    
     $arrobjStudents = ( new CStudents() )->fetchStudentsByClassId( $intClassId );
     $arrobjAttendances = ( new CAttendance() )->fetchAttendanceByMonthByYearByClassId( $intMonthNumber, $intYear, $intClassId );
     $arrmixProcessedAttendance = [];
@@ -19,7 +23,7 @@
     }
     
     $arrobjLastAttendances = ( new CAttendance() )->fetchAttendanceByMonthByYearByClassId( $intLastMonth, $intYear, $intClassId );
-    
+    $arrmixProcessedLastAttendance = [];
     foreach ( $arrobjLastAttendances AS $objAttendance ) {
         $arrintLastDates = explode( ',', $objAttendance->dates );
         $arrintLastAttendences = explode( ',', $objAttendance->attendances_by_dates );
@@ -75,24 +79,24 @@ border: none !important;
          <tr style='height:19px;'>
             <td class="s1 border-left" colspan="5">निर्देशकाचे नाव </td>
             <td class="s1">:-</td>
-            <td class="s1" colspan="3">श्री राजेश धनाजी इंगळे</td>
+            <td class="s1" colspan="3"><?php echo $objTeacher->first_name . ' ' . $objTeacher->middle_name . ' '. $objTeacher->last_name; ?></td>
             <td class="s1" colspan="8">गटनिर्देशकाचे नाव </td>
             <td class="s1">:-</td>
-            <td class="s1" colspan="9">श्री राजेश धनाजी इंगळे</td>
+            <td class="s1" colspan="9"><?php echo $objTeacher->first_name . ' ' . $objTeacher->middle_name . ' '. $objTeacher->last_name; ?></td>
             <td class="s1" colspan="4">व्यवसाय -</td>
-            <td class="s2" colspan="6">वीजतंत्री निर्देशक </td>
+            <td class="s2" colspan="6"><?php echo $objClass->c_name; ?> Instructor </td>
             <td class="s1"></td>
             <td class="s1" colspan="2">सत्र- </td>
             <td class="s1" colspan="2">पहिले</td>
             <td class="s1" colspan="2">विभाग -</td>
-            <td class="s1" colspan="3">विजतंत्री</td>
+            <td class="s1" colspan="3"><?php echo $objClass->c_name; ?></td>
          </tr>
          <tr style='height:19px;'>
             <td class="s3 border-left" colspan="6">मागील महिन्याचाहजेरीचा तपशील </td>
             <td class="s4 padding10" rowspan="2">टक्केवारी</td>
             <td class="s4 padding10" rowspan="2">अ.न</td>
             <td class="s4 padding10" rowspan="2">प्रशिक्षणार्थी चे नाव </td>
-            <td class="s4 " colspan="31">महिना :---  मार्च २०२०</td>
+            <td class="s4 " colspan="31">महिना :---  <?php echo ( new DateTime )->createFromFormat('!m', $intMonthNumber )->format( 'F' ); ?> <?php echo $intYear; ?></td>
             <td class="s4" colspan="7">चालू महिन्याचा  हजेरीचा  तपशील </td>
          </tr>
          <tr style='height:58px;'>
@@ -168,7 +172,17 @@ border: none !important;
          <?php foreach( $arrobjStudents as $objStudent ) { ?>
          <tr style='height:16px;'>
          	<?php 
+         	if( true == isset( $arrmixProcessedLastAttendance[$objStudent->s_rollno]) ) {        	    
          	  $arrintLastAttendanceCount = array_count_values( $arrmixProcessedLastAttendance[$objStudent->s_rollno] );
+         	} else {
+         	    $arrintLastAttendanceCount = [
+         	          'P'     => 0,
+         	          'A'     => 0,
+         	          'SL'    => 0,
+         	          'CL'    => 0,
+         	          'SPL'   => 0
+         	    ];
+         	}
             ?>
             <td class="s5 border-left text-center">
             <?php
@@ -201,7 +215,7 @@ border: none !important;
             <td class="s5 text-center"><?php echo ( true == isset( $arrintLastAttendanceCount['CL'] ) ? $arrintLastAttendanceCount['CL'] : 0 ); ?></td>
             <td class="s5 text-center"><?php echo ( true == isset( $arrintLastAttendanceCount['SL'] ) ? $arrintLastAttendanceCount['SL'] : 0 ); ?></td>
             <td class="s5 text-center"><?php echo ( true == isset( $arrintLastAttendanceCount['SPL'] ) ? $arrintLastAttendanceCount['SPL'] : 0 ); ?></td>
-            <td class="s5"><?php echo ceil( $arrintLastAttendanceCount['P'] / $intLastWorkingDays * 100 ); ?></td>
+            <td class="s5"><?php echo ( 0 != $intLastWorkingDaysecho ) ? ceil( $arrintLastAttendanceCount['P'] / $intLastWorkingDays * 100 ) : 0; ?></td>
             <td class="s6"><?php echo $objStudent->s_rollno; ?></td>
             <td class="s5"><?php echo $objStudent->s_fname . ' ' . $objStudent->s_mname . ' ' . $objStudent->s_lname; ?></td>
             <?php for( $i=1; $i<=31; $i++ ) {
@@ -212,7 +226,17 @@ border: none !important;
                 }
             }?>
             <?php 
-                $arrintAttendanceCount = array_count_values( $arrmixProcessedAttendance[$objStudent->s_rollno] );
+                if( true == isset( $arrmixProcessedAttendance[$objStudent->s_rollno] ) ) {
+                    $arrintAttendanceCount = array_count_values( $arrmixProcessedAttendance[$objStudent->s_rollno] );
+                } else {
+                    $arrintLastAttendanceCount = [
+                        'P'     => 0,
+                        'A'     => 0,
+                        'SL'    => 0,
+                        'CL'    => 0,
+                        'SPL'   => 0
+                    ];
+                }
             ?>
             <td class="s5 text-center">
             	<?php
@@ -245,7 +269,7 @@ border: none !important;
             <td class="s5 text-center"><?php echo ( true == isset( $arrintAttendanceCount['CL'] ) ? $arrintAttendanceCount['CL'] : 0 ); ?></td>
             <td class="s5 text-center"><?php echo ( true == isset( $arrintAttendanceCount['SL'] ) ? $arrintAttendanceCount['SL'] : 0 ); ?></td>
             <td class="s5 text-center"><?php echo ( true == isset( $arrintAttendanceCount['SPL'] ) ? $arrintAttendanceCount['SPL'] : 0 ); ?></td>
-            <td class="s5"><?php echo ceil( $arrintAttendanceCount['P'] / $intWorkingDays * 100 ); ?></td>
+            <td class="s5"><?php echo ( 0 != $intWorkingDays )  ? ceil( $arrintAttendanceCount['P'] / $intWorkingDays * 100 ) : 0; ?></td>
          </tr>
          <?php } ?>
          <tr style='height:16px;'>

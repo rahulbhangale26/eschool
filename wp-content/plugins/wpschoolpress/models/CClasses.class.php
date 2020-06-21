@@ -9,6 +9,10 @@ class CClasses extends CModel {
         $this->strTableName = $this->strTablePrefix . 'wpsp_class';
     }
     
+    public function fetchClassByClassId( $intClassId ) {
+        return array_pop( $arrobjClasses = $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName . ' WHERE cid = ' . $intClassId ) );
+    }
+    
     public function fetchClassesByUserId( $intUserId ) {
         
         

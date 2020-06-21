@@ -152,6 +152,14 @@ foreach ($stl as $key => $value) {
 								}
 								?>
 								
+								<?php 
+								
+								$intClassId = ( int ) $_GET['class_id'];
+								$intMonthNumber = ( int ) $_GET['month'];
+								$intYear = ( int ) $_GET['year'];
+								
+								?>
+								
 								<div class="wpsp-col-sm-12">
 									<h3 class="wpsp-card-title">View Attendance Report</h3>
 									<div class="line_box">
@@ -176,18 +184,33 @@ foreach ($stl as $key => $value) {
 													$ctname=$wpdb->prefix.'wpsp_class';
 													$clt=$wpdb->get_results("select `cid`,`c_name` from `$ctname`");
 													foreach($clt as $cnm){?>
-														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$selid) echo "selected";?>><?php echo $cnm->c_name;?></option>
+														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$intClassId) echo "selected";?>><?php echo $cnm->c_name;?></option>
 													<?php } } ?>
 											</select>
 											<br>
 											<select id="attendance_report_month" name="month" class="wpsp-form-control" >
 												<option value="">Select Month</option>
-												<option value="6">Jun</option> 
+												<option value="1" <?php echo ( 1 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Jan</option> 
+												<option value="2" <?php echo ( 2 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Feb</option> 
+												<option value="3" <?php echo ( 3 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Mar</option> 
+												<option value="4" <?php echo ( 4 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Apr</option> 
+												<option value="5" <?php echo ( 5 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>May</option> 
+												<option value="6" <?php echo ( 6 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Jun</option> 
+												<option value="7" <?php echo ( 7 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Jul</option> 
+												<option value="8" <?php echo ( 8 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Aug</option> 
+												<option value="9" <?php echo ( 9 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Sep</option> 
+												<option value="10" <?php echo ( 10 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Oct</option> 
+												<option value="11" <?php echo ( 11 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Nov</option> 
+												<option value="12" <?php echo ( 12 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Dec</option> 
+												
+												
 											</select>
 											<br>
 											<select id="attendance_report_year" name="year" class="wpsp-form-control" >
 												<option value="">Select Year</option>
-												<option value="2020">2020</option> 
+												<?php for( $i=2019; $i<=date('Y'); $i++) {?>
+												<option value="<?php echo $i;?>" <?php echo ( $i == $intYear ) ? 'selected="selected"' : ""; ?>><?php echo $i;?></option> 
+												<?php }?>
 											</select>
 											
 											<br>
@@ -259,19 +282,21 @@ function printDiv() {
     newWin.document.write(htmlToPrint);
 }
 </script>
+<?php 
+								 if( true == isset( $_GET['report'] ) && 'monthly_muster' == $_GET['report'] ) { ?>
 	<div  class="wpsp-card">
 			<div style="padding:20px 30px"><button  style="padding: 10px 30px !important;font-size: large;"onclick="printDiv();" name="print_report" class="wpsp-btn wpsp-btn-success">Print</button></div>
 			<div class="wpsp-card-body">
 			<section id="muster-print" class="content">
 	<?php 
-								 if( true == isset( $_GET['report'] ) && 'monthly_muster' == $_GET['report'] ) {
+
         					   $filename	=	WPSP_PLUGIN_PATH .'includes/monthly-muster.php';
-        					   include_once($filename); }?>
+        					   include_once($filename); ?>
 			</section>
         					   
 </div>
-	</div>
-	 	<?php
+	</div> 
+	 	<?php }
 			wpsp_body_end();
 			wpsp_footer();
 		}

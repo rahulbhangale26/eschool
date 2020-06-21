@@ -6,8 +6,7 @@ $(document).ready(function() {
     dateFormat: date_format,
     todayHighlight: !0,
     changeMonth: !0,
-    changeYear: !0,
-    startDate: "0m"
+    changeYear: !0
   }), $(".wpsp-start-date").on("change", function() {
     console.log($(".wpsp-start-date").val()), $(".wpsp-end-date").datepicker("remove"), $(".wpsp-end-date").datepicker({
       autoclose: !0,

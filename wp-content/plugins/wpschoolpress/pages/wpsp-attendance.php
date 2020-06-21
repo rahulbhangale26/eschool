@@ -13,6 +13,14 @@ wpsp_header();
 		
 		<script>
 			function validateAndUncheckAttend( intUserId, idCheck ) {
+				if( $('#' + idCheck + '-' + intUserId ).is(':checked') ) {
+					$('.attend-' + intUserId ).prop( 'checked', false );
+					$('#' + idCheck + '-' + intUserId ).prop( 'checked', true );
+					console.log( 'set to false' );
+				} else {
+					$('.attend-' + intUserId ).prop( 'checked', false );
+					console.log( 'set to true' );
+				}
 			}
 		</script>
 		

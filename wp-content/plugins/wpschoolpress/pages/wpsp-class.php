@@ -50,7 +50,11 @@ wpsp_header();
 									<?php
 									$ctable=$wpdb->prefix."wpsp_class";
 									$stable=$wpdb->prefix."wpsp_student";
-									$wpsp_classes = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
+									if( $current_user_role=='administrator' ) { 
+									    $wpsp_classes = ( new CClasses() )->fetchAllClasses();
+									} else {
+    									$wpsp_classes = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
+									}
 									$sno=1;
 									$teacher_table=	$wpdb->prefix."wpsp_teacher";
 									$teacher_data = $wpdb->get_results("select wp_usr_id,CONCAT_WS(' ', first_name, middle_name, last_name ) AS full_name from $teacher_table order by tid");

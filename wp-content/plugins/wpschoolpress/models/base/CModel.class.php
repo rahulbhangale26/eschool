@@ -1,8 +1,9 @@
 <?php
 
-class CModel {
+class CModel extends CAbstractModel {
 
     protected $objDatabase;
+    protected $strTableName;   
     protected $strTablePrefix;
     
     public function __construct() {
@@ -10,5 +11,11 @@ class CModel {
         $this->objDatabase = $wpdb;
         $this->strTablePrefix = $wpdb->prefix;
     }
+    
+    public static function getInstance() {
+        
+    }
+    
+    
 }
 

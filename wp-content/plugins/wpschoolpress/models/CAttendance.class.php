@@ -9,8 +9,8 @@ class CAttendance extends CModel {
         $this->strTableName = $this->strTablePrefix . 'wpsp_attendance';
     }
     
-    public function fetchAttendanceByMonthByYearByClassId( $intMonthNumber, $intYear, $intClassId ) {
-      $strSql = 'SELECT 
+    public function fetchAttendanceByMonthByYearByUnitId( $intMonthNumber, $intYear, $intUnitId  ) {
+        $strSql = 'SELECT 
 	                   s.s_rollno,
                         GROUP_CONCAT( ( CASE
     	                   WHEN a.absents LIKE CONCAT( \'%\', s.wp_usr_id ,\'%\' ) THEN \'A\' 
@@ -21,9 +21,9 @@ class CAttendance extends CModel {
                         END ) ORDER BY a.date ) AS attendances_by_dates,
                         GROUP_CONCAT( DAY(a.date) ORDER BY a.date ) AS dates
                     FROM iti_wpsp_student s
-                        LEFT JOIN iti_wpsp_attendance a ON s.class_id LIKE CONCAT( \'%\', a.class_id, \'%\' )
+                        LEFT JOIN iti_wpsp_attendance a ON s.current_unit_id = a.unit_id
                     WHERE
-                        a.class_id = ' . $intClassId . '
+                        s.current_unit_id = ' . ( int ) $intUnitId . '
                         AND MONTH( a.date ) = ' .  $intMonthNumber . '
                         AND YEAR( a.date ) = ' .  $intYear . '
                     GROUP BY s.s_rollno';

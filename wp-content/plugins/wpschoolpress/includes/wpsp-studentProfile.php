@@ -843,78 +843,25 @@ if( !empty( $stinfo ) ) {
                     </div>
                     <div class="wpsp-col-md-3 wpsp-col-sm-3 wpsp-col-xs-12">
                       <?php
-                      $classes = [];
-                      $classIDArray = [];
-                      $class_table = $wpdb->prefix . "wpsp_class";
-                      $class_mapping_table = $wpdb->prefix . "wpsp_class_mapping";
-                      $classes = $wpdb->get_results("select cid,c_name from $class_table");
+                        $units = CUnits::getInstance()->fetchAllUnits();
                       ?>
                         <div class="wpsp-form-group">
-                            <label class="wpsp-label" for="Class"><?php $item =  apply_filters( 'wpsp_student_school_title_item',esc_html("Class","WPSchoolPress"));
-                                $pl = "";
-                                if(isset($item['section']) && $item['section'] == "school" && isset($item['Class'])){
-                                      echo $pl = esc_html($item['Class'],"WPSchoolPress");
-
-                                }else{
-                                    echo $pl = esc_html("Class","WPSchoolPress");
-                                }
-                                /*Check Required Field*/
-                                if(isset($is_required_school['section']) && $is_required_school['section'] == "school" && isset($is_required_school['Class'])){
-                                    $is_required =  $is_required_school['Class'];
-                                }else{
-                                    $is_required = false;
-                                }
-                                ?>
-                                <span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span>
-                              </label>
+                            <label class="wpsp-label" for="Class">Unit<span class="wpsp-required">*</span></label>
                             <?php
-
-                            if (is_numeric($stinfo->class_id)){
-                              $classIDArray[] = $stinfo->class_id;
-                            }else{
-                              $classIDArray = unserialize($stinfo->class_id);
-                            }
-                            $prohistory    =    wpsp_check_pro_version('wpsp_mc_version');
-                            $prodisablehistory    =    ! $prohistory['status'] ? 'notinstalled' : 'installed';
-
-                            if( $prodisablehistory == 'installed'){
-                              echo '<select data-is_required="'.$is_required.'" class="wpsp-form-control multiselect student-profile" multiple="multiple" name="Class[]">';
-                            }else{
-                              echo '<select data-is_required="'.$is_required.'" class="wpsp-form-control" name="Class[]">';
+                              echo '<select data-is_required="true" class="wpsp-form-control" name="current_unit_id">';
                               echo '<option value="" disabled selected>Select Class</option>';
-                            }
 
-                            foreach ($classes as $class) {
+                            foreach ($units as $unit) {
                             ?>
-                              <option value="<?php echo $class->cid; ?>" <?php if(!empty($classIDArray)){ if (in_array( $class->cid , $classIDArray )) echo 'selected'; }?>>
-                                <?php echo $class->c_name; ?>
+                              <option value="<?php echo $unit->id; ?>" <?php echo ( $stinfo->current_unit_id == $unit->id ) ? 'selected' : ''; ?>>
+                                <?php echo $unit->unit_name; ?>
                               </option>
                             <?php }?>
                           </select>
-
-                          <input type="hidden" name="prev_select_class" value="<?php echo $stinfo->class_id;?>">
                         </div>
                         <div class="wpsp-col-md-3 wpsp-col-sm-3 wpsp-col-xs-12">
                         	<div class="date-input-block">
-                         		 <table class="table table-bordered" width="100%" cellspacing="0" cellpadding="5">
-                          			<?php
 
-                                        foreach ($classes as $class) {
-                                            $class_data = $wpdb->get_results("select * from $class_mapping_table where sid=$student_index AND cid = $class->cid");
-                                            if(!empty($classIDArray)){
-                                            if (in_array( $class->cid , $classIDArray )){
-                                    ?>
-                    				<tr>
-                      					<td style="border:1px solid;padding:5px;">
-                        					<strong><?php echo $class->c_name; ?></strong>
-                      					</td>
-                      					<td style="border:1px solid;padding:5px;">
-                      						<input type='text' class='someclass datepicker' name='Classdata[]' placeholder='yyyy-mm-dd' <?php echo (((isset($class_data[0]->date) && ($class_data[0]->date != ''))) ? 'value="'.$class_data[0]->date.'"' : ''); ?>>
-                    					</td>
-                    				</tr>
-                  						<?php } }
-                                        }?>
-                            	</table>
                         	</div>
                         </div>
 	               </div>

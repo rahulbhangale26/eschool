@@ -1149,25 +1149,23 @@ function wpsp_StudentCount() {
 	wp_die();
 }
 /**************************** Attendance Functions ***********************/
-function wpsp_getStudentsList()
-{
+function wpsp_getStudentsList() {
 	global $wpdb;
-	$classid = intval($_POST['classid']);
+	$intUnitId = intval($_REQUEST['unit_id']);
 	$entry_date = date('Y-m-d', strtotime(sanitize_text_field($_POST['date'])));
 	$show_date = wpsp_ViewDate($entry_date);
 	$att_table = $wpdb->prefix . "wpsp_attendance";
 	$student_table = $wpdb->prefix . "wpsp_student";
-	$class_table = $wpdb->prefix . "wpsp_class";
-	$check_date = $wpdb->get_row("SELECT * FROM $class_table WHERE cid=$classid");
+	$unit_table    = $wpdb->prefix . 'wpsp_units';
+	$check_date = $wpdb->get_row("SELECT * FROM $unit_table WHERE id=$intUnitId");
 
 	$startdate = isset($check_date->c_sdate) && !empty($check_date->c_sdate) ? strtotime($check_date->c_sdate) : '';
 	$enddate = isset($check_date->c_edate) && !empty($check_date->c_edate) ? strtotime($check_date->c_edate) : '';
-	$classname = isset($check_date->c_name) ? $check_date->c_name : '';
 	$selected = strtotime($_POST['date']);
+
 	if (!empty($startdate) && !empty($enddate))
 	{
-		if ($startdate <= $selected && $enddate >= $selected)
-		{
+		if ($startdate <= $selected && $enddate >= $selected) {
 		}
 		else
 		{
@@ -1178,9 +1176,7 @@ function wpsp_getStudentsList()
 			exit();
 		}
 	}
-
-	$check_attend = $wpdb->get_row("SELECT ab.absents,ab.aid,cls.c_name, ab.casual_leave, ab.sick_leave, ab.special_leave FROM $att_table ab LEFT JOIN $class_table cls ON cls.cid=ab.class_id  WHERE ab.class_id=$classid and ab.date = '$entry_date'");
-
+	$check_attend = $wpdb->get_row("SELECT ab.absents,ab.aid,cls.unit_name, ab.casual_leave, ab.sick_leave, ab.special_leave FROM $att_table ab LEFT JOIN $unit_table cls ON cls.id=ab.unit_id  WHERE ab.unit_id=$intUnitId and ab.date = '$entry_date'");
 
 	$ex_absents = array();
 	$title = __('New Attendance Entry', 'WPSchoolPress');
@@ -1225,23 +1221,8 @@ function wpsp_getStudentsList()
 	}
 
 	$stl = [];
-
-	// $stl = $wpdb->get_results("select wp_usr_id,s_rollno ,CONCAT_WS(' ', s_fname, s_mname, s_lname ) AS full_name from $student_table where class_id='$classid' order by s_rollno ASC");
-	 $st_array = $wpdb->get_results("select sid, class_id from $student_table");
-
-	 foreach ($st_array as $st) {
-		 if(is_numeric($st->class_id) ){
-			 if($st->class_id == $classid){
-			 	$stl[] = $st->sid;
-		 	}
-		 }else{
-			  $class_id_array = unserialize($st->class_id);
-				if(in_array($classid, $class_id_array)){
-					$stl[] = $st->sid;
-				}
-		 }
-	 }
-
+	$st_array  = $wpdb->get_results("select sid, current_unit_id from $student_table WHERE current_unit_id = " . $intUnitId );
+    $unit      = CUnits::getInstance()->fetchUnitById( $intUnitId );
 	$content = '		<h3 class="wpsp-card-title">' . $title . '</h3>
 					<div class="wpsp-row">
 					<div class="wpsp-col-md-12">
@@ -1250,7 +1231,7 @@ function wpsp_getStudentsList()
                         <p><span class="wpsp-text-red">' . $warning . '</span></p>
                         <div>
                             <input type="hidden" value="' . $entry_date . '" name="AttendanceDate">
-                            <input type="hidden" value="' . $classid . '" name="AttendanceClass">
+                            <input type="hidden" value="' . $unit->id . '" name="AttendanceUnit">
                             <input type="checkbox" class="checkAll ccheckbox wpsp-checkbox" ' . $nil . ' name="Nil" value="Nil"> <span class="wpsp-text-green MRTen" style="
 								vertical-align: middle;
 							">All Present</span>
@@ -1261,7 +1242,7 @@ function wpsp_getStudentsList()
                             <table class="wpsp-table wpsp-table-bordered" id="addAttendanceTable" cellspacing="0" width="100%" style="width:100%">
                                 <thead>
                                     <tr><td colspan="5">
-									<span class="pull-left">Class: <span class="wpsp-f500">' . $classname . '</span></span><span class="pull-right">Date: <span class="wpsp-f500">' . $show_date . '</span></span></td>
+									<span class="pull-left">Class: <span class="wpsp-f500">' . $unit->unit_name . '</span></span><span class="pull-right">Date: <span class="wpsp-f500">' . $show_date . '</span></span></td>
 									</tr>
                                     <tr>
 										<th>#</th>
@@ -1276,8 +1257,10 @@ function wpsp_getStudentsList()
                                 </thead>
                                 <tbody>';
 								$sno = 1;
-								foreach($stl as $sid)
+								foreach($st_array as $st)
 								{
+								    $sid = $st->sid;
+								    
 									$st = $wpdb->get_row("select wp_usr_id,s_rollno ,CONCAT_WS(' ', s_fname, s_mname, s_lname ) AS full_name from $student_table where sid='$sid' order by s_rollno ASC");
 									$checked = array_key_exists($st->wp_usr_id, $ex_absents) ? 'checked' : '';
 									$clsChecked = array_key_exists($st->wp_usr_id, $ex_cls) ? 'checked' : '';
@@ -1287,10 +1270,10 @@ function wpsp_getStudentsList()
 												<td>' . $sno . '</td>
 												<td>' . $st->s_rollno . '</td>
 												<td>' . $st->full_name . '</td>
-<td><input type="checkbox" ' . $checked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'"  name="absent[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'absent\');" id="absent-' . $st->wp_usr_id .'"> Absent </td>
-<td><input type="checkbox" ' . $clsChecked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'" name="cl[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'cl\');" id="cl-' . $st->wp_usr_id .'"> Casual Leave </td>
-<td><input type="checkbox" ' . $slsChecked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'" name="sl[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'sl\');" id="sl-' . $st->wp_usr_id .'"> Sick Leave </td>
-<td><input type="checkbox" ' . $splsChecked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'" name="spl[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'spl\');" id="spl-' . $st->wp_usr_id .'"> Special Leave </td>
+                                                <td><input type="checkbox" ' . $checked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'"  name="absent[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'absent\');" id="absent-' . $st->wp_usr_id .'"> Absent </td>
+                                                <td><input type="checkbox" ' . $clsChecked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'" name="cl[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'cl\');" id="cl-' . $st->wp_usr_id .'"> Casual Leave </td>
+                                                <td><input type="checkbox" ' . $slsChecked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'" name="sl[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'sl\');" id="sl-' . $st->wp_usr_id .'"> Sick Leave </td>
+                                                <td><input type="checkbox" ' . $splsChecked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'" name="spl[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'spl\');" id="spl-' . $st->wp_usr_id .'"> Special Leave </td>
 												<td><input type="text"  name="reason[' . $st->wp_usr_id . ']" value="' . stripslashes($ex_absents[$st->wp_usr_id]) . '" class="wpsp-form-control"></td>
 											</tr>';
 									$sno++;
@@ -1318,8 +1301,7 @@ function wpsp_getStudentsList()
 	wp_die();
 }
 
-function wpsp_AttendanceEntry()
-{
+function wpsp_AttendanceEntry() {
 	if (!isset($_POST['sattendance_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['sattendance_nonce']) , 'StudentAttendance'))
 	{
 		echo "Unauthorized Submission";
@@ -1327,15 +1309,15 @@ function wpsp_AttendanceEntry()
 	}
 	wpsp_Authenticate();
 	global $wpdb, $wpsp_settings_data;
-	$class = sanitize_text_field($_POST['AttendanceClass']);
+	$intUnitId = sanitize_text_field($_POST['AttendanceUnit']);
 	$entry_date = date('Y-m-d', strtotime(sanitize_text_field($_POST['AttendanceDate'])));
 	$att_table = $wpdb->prefix . "wpsp_attendance";
 	$stud_table = $wpdb->prefix . "wpsp_student";
 	$class_table = $wpdb->prefix . "wpsp_class";
-	$check_attend = $wpdb->get_row("SELECT * FROM $att_table WHERE class_id= $class and date = '$entry_date'");
+	$check_attend = $wpdb->get_row("SELECT * FROM $att_table WHERE unit_id= $intUnitId and date = '$entry_date'");
 
 
-	$classname = $wpdb->get_var("SELECT c_name FROM $class_table where cid=$class");
+	$unit = CUnits::getInstance()->fetchUnitById( $intUnitId );
 	$previousList = $previoudids = array();
 	if (!empty($check_attend) && isset($check_attend->aid))
 	{
@@ -1348,7 +1330,7 @@ function wpsp_AttendanceEntry()
 	if (isset($_POST['Nil']) && $_POST['Nil'] == 'Nil')
 	{
 		$att_data = array(
-			'class_id' => $class,
+			'unit_id' => $unit->id,
 			'absents' => Nil,
 			'date' => $entry_date
 		);
@@ -1374,7 +1356,7 @@ function wpsp_AttendanceEntry()
 				$studInfo = $wpdb->get_row("SELECT s_phone, s_fname  FROM  $stud_table ws WHERE ws.wp_usr_id=$stid");
 				if (isset($studInfo->s_phone) && !empty($studInfo->s_phone))
 				{
-					$absentreason = 'Your Child ' . $studInfo->s_fname . ' of class ' . $classname . ' is absent on ' . $entry_date . ' for reason ' . $reason[$stid];
+					$absentreason = 'Your Child ' . $studInfo->s_fname . ' of class ' . $unit->unit_name . ' is absent on ' . $entry_date . ' for reason ' . $reason[$stid];
 					if($wpsp_settings_data['sch_sms_slaneuser']!= ""){
 					$status = apply_filters('wpsp_send_notification_msg', false, $studInfo->s_phone, $absentreason);
 					} else {
@@ -1407,7 +1389,7 @@ function wpsp_AttendanceEntry()
 		
 		$attendance = json_encode($attend);
 		$att1_data = array(
-			'class_id' => $class,
+			'unit_id' => $unit->id,
 			'absents' => $attendance,
 		    'sick_leave'  => json_encode( $slAttend ),
 		    'casual_leave'    => json_encode( $clAttend ),

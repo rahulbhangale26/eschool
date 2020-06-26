@@ -4,10 +4,21 @@ class CStudents extends CModel {
     
     public $strTableName;
     
+    protected static $_INSTANCE;
+    
     public function __construct() {
         parent::__construct();
         $this->strTableName = $this->strTablePrefix . 'wpsp_student';
     }
+    
+    public static function getInstance() {
+        if( true == is_object( self::$_INSTANCE ) ) {
+            return self::$_INSTANCE;
+        }
+        
+        return  self::$_INSTANCE = new self();
+    }
+    
     
     public function fetchAllStudents() {
         return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName );
@@ -49,34 +60,32 @@ class CStudents extends CModel {
                 
     }
     
-    public function fetchStudentsByClassId( $intClassId ) {
-        $strSql = 'SELECT
+    public function fetchStudentsByBatchIdByTradeId( $intBatchId, $intTradeId ) {
+       $strSql = 'SELECT 
+	                       s.*,
+                           u.user_email 
+                        FROM 
+	                       iti_wpsp_student s 
+                        JOIN iti_users u ON u.id = s.wp_usr_id 
+                        WHERE 
+                            s.trade_id = ' . ( int ) $intTradeId .'
+                            AND s.batch_id = ' . ( int ) $intBatchId;
+        return $this->objDatabase->get_results( $strSql );
+        
+    }
+    
+    public function fetchStudentsByUnitId( $intUnitId ) {
+         $strSql = 'SELECT
                         s.*
                     FROM ' . $this->strTableName . ' s
                     WHERE
-                        s.class_id LIKE CONCAT ( \'%\', \'' . ( int ) $intClassId . '\', \'%\' )';
+                        s.current_unit_id = ' . ( int ) $intUnitId;
         
         return $this->objDatabase->get_results( $strSql );
     }
     
     public function fetchStudentByFilters( $arrmixFilters ) {
-        global $objUser;
-        if( true == isset( $arrmixFilters['role'] ) ) {
-            switch ( $arrmixFilters['role'] ) {
-                case CRole::TEACHER:
-                    
-                    if( CDesignations::CLERK == $objUser->getTeacher()->designation_id  || CDesignations::PRINCIPAL == $objUser->getTeacher()->designation_id  ) {
-                        return $this->fetchStudentsByBatchId( $arrmixFilters[ 'batch_id' ] );
-                    }
-                    
-                    return $this->fetchStudentsByUserIdByBatchId($arrmixFilters[ 'user_id' ] , $arrmixFilters[ 'batch_id' ] );
-                    break;
-                    
-                case CRole::ADMIN:
-                   return $this->fetchStudentsByBatchId( $arrmixFilters[ 'batch_id' ] );
-                    break;
-            }
-        }
+        return $this->fetchStudentsByBatchIdByTradeId( $arrmixFilters[ 'batch_id' ], $arrmixFilters['trade_id'] );
     }
 }
 

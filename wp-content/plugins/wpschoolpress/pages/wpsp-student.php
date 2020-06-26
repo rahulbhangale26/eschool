@@ -9,7 +9,7 @@ wpsp_header();
 			wpsp_sidebar();
 			wpsp_body_start();
 			$filename	=	WPSP_PLUGIN_PATH .'includes/wpsp-studentList.php';
-			if( isset( $_GET['tab'] ) && $_GET['tab'] == 'addstudent' ) {
+			if( isset( $_GET['page_action'] ) && $_GET['page_action'] == 'addstudent' ) {
 				$label	=	__( 'Add New ' . _t( 'Student' ), 'WPSchoolPress');
 				$filename	=	WPSP_PLUGIN_PATH .'includes/wpsp-studentForm.php';
 			} else if( isset($_GET['id']) && is_numeric($_GET['id']) ) {
@@ -32,8 +32,8 @@ wpsp_header();
 			?>
 			<?php
 			include_once ( $filename );
-			if(isset($_GET['tab'])){
-				if($_GET['tab'] != 'addstudent' ) {
+			if(isset($_GET['page_action'])){
+				if($_GET['page_action'] != 'addstudent' ) {
 					do_action('wpsp_student_import_html');
 				}
 			}

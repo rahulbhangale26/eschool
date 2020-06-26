@@ -401,7 +401,7 @@ $(document).ready(function() {
 	    $('#StudentClass').submit();
   });
   
-  $('#ClassID').change(function() {
+  $('#TradeId').change(function() {
     $('#StudentClass').submit();
   });
 

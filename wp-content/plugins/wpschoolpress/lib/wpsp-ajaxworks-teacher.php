@@ -152,7 +152,7 @@ function wpsp_AddTeacher()
 function wpsp_TeacherPublicProfile()
 {
 	global $wpdb;
-	$tid = $_POST['id'];
+	$tid = $_POST['id'];		$msg = '';
 	$teacher_table = $wpdb->prefix . "wpsp_teacher";
 	$users_table = $wpdb->prefix . "users";
 	$tinfo = $wpdb->get_row("select teacher.*,user.user_email from $teacher_table teacher LEFT JOIN $users_table user ON user.ID=teacher.wp_usr_id where teacher.wp_usr_id='$tid'");
@@ -209,13 +209,10 @@ function wpsp_TeacherPublicProfile()
 	wp_die();
 }
 /* This function is used for Update Teacher Information */
-function wpsp_UpdateTeacher()
-{
-
+function wpsp_UpdateTeacher() {
 	$user_id = intval($_POST['UserID']);
 	global $wpdb;
-	$wpsp_teacher_table = $wpdb->prefix . "wpsp_teacher";
-
+	$wpsp_teacher_table = $wpdb->prefix . "wpsp_teacher";		$msg = '';	
 
 	$errors = wpsp_validation(array(
 		sanitize_text_field($_POST['firstname']) => 'required',
@@ -252,7 +249,6 @@ function wpsp_UpdateTeacher()
 	$doj = !empty($_POST['Doj']) ? wpsp_StoreDate(sanitize_text_field($_POST['Doj'])) : '';
 
 	$teachereditprofile = sanitize_text_field($_POST['teachereditprofile']);
-
 if ($teachereditprofile == 'teachereditprofile')
 	{
 
@@ -373,6 +369,6 @@ if ($teachereditprofile == 'teachereditprofile')
 	{
 		$msg = "success";
 	}
-	echo $msg;
+	echo $msg;
 }
 ?>

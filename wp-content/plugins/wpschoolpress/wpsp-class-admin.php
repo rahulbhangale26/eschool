@@ -9,8 +9,7 @@ if (!defined('ABSPATH')) exit;
  * @package WPSchoolPress
  * @since 2.0.0
  */
-class Wpsp_Admin
-{
+class Wpsp_Admin {
 	public
 	function __construct()
 	{
@@ -20,8 +19,7 @@ class Wpsp_Admin
 	* @package WPSchoolPress
 	* @since 2.0.0
 	*/
-function wpsp_admin_menu()
-	{
+function wpsp_admin_menu() {
 		global $current_user;
 		$current_user_role=$current_user->roles[0];
 		$proversion1    =    wpsp_check_pro_version('wpsp_addon_version');
@@ -106,8 +104,7 @@ function wpsp_admin_menu()
 			$this,
 			'wpsp_callback_importhistory'
 		));
-		if( $current_user_role=='administrator' || $current_user_role=='teacher')
-		{
+		if( $current_user_role=='administrator' || $current_user_role=='teacher') {
 			add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-bullhorn"></i>&nbsp; Notify', 'edit_posts', 'sch-notify', array(
 				$this,
 				'wpsp_callback_notify'
@@ -153,6 +150,38 @@ function wpsp_admin_menu()
 			$this,
 			'wpsp_callback_schhistory'
 		));
+		
+		/** MVC Strarted **/
+		
+		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trades', 'edit_posts', 'sch-trades', array(
+		    $this,
+		    'wpsp_callback'
+		));
+		
+		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trades', 'edit_posts', 'sch-meetingroom', array(
+		    $this,
+		    'wpsp_callback'
+		));
+		
+		
+		
+		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trainees', 'edit_posts', 'sch-trainees', array(
+		    $this,
+		    'wpsp_callback'
+		));
+		
+		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; Subjets', 'edit_posts', 'sch-subjects-new', array(
+		    $this,
+		    'wpsp_callback'
+		));
+		
+		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; Subjets', 'edit_posts', 'sch-units', array(
+		    $this,
+		    'wpsp_callback'
+		));
+		
+		/** MVC FInished **/
+
 		if($propayment == "installed"){
 			add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-strikethrough"></i>&nbsp; Payment', 'edit_posts', 'sch-payment', array(
 			$this,
@@ -171,6 +200,11 @@ function wpsp_admin_menu()
 	* @package WPSchoolPress
 	* @since 2.0.0
 	*/
+	
+	public function wpsp_callback() {
+	   require_once( WPSP_PLUGIN_PATH . '/modules/autoload.php' );
+	}
+	
 	function wpsp_admin_details()
 	{
 		require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-admin-options.php');
@@ -408,6 +442,12 @@ function wpsp_admin_menu()
 				'jquery'
 			) , '1.0.0', true);
 		}
+		
+		
+		if ($hook == 'wpschoolpress_page_sch-trainees' || $hook == 'wpschoolpress_page_sch-subjects-new' || $hook == 'wpschoolpress_page_sch-units' ) {
+		    wp_enqueue_script('student_list', WPSP_PLUGIN_URL . 'js/common/wpsp-common.js', ['jquery'] , '1.0.0', true); 
+		}
+		
 		if ($hook == 'wpschoolpress_page_sch-student' )
 		{
 			// wp_enqueue_script('wpsp_wp_admin_jquery15', WPSP_PLUGIN_URL . 'plugins/fileupload/jquery.iframe-transport.js', array(

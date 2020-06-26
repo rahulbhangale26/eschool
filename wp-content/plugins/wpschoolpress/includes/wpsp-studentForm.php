@@ -959,42 +959,19 @@ $arrobjBatches = ( new CBatches() )->fetchAllBatches();
                     <div class="wpsp-col-md-12 wpsp-col-xs-12">
                         <div class="wpsp-form-group">
                             <label class="wpsp-label" for="empcode">
-                              <?php
-                                $item =  apply_filters( 'wpsp_student_school_title_item',esc_html("Class","WPSchoolPress"));
-                                  $pl = "";
-                                  if(isset($item['section']) && $item['section'] == "school" && isset($item['Class'])){
-                                        echo $pl = esc_html($item['Class'],"WPSchoolPress");
-
-                                  }else{
-                                      echo $pl = esc_html("Class","WPSchoolPress");
-                                  }
-                                  /*Check Required Field*/
-                                  if(isset($is_required_school['section']) && $is_required_school['section'] == "school" && isset($is_required_school['Class'])){
-                                      $is_required =  $is_required_school['Class'];
-                                  }else{
-                                      $is_required = false;
-                                  }
-                                  ?>
-                                  <span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span>
+                              		Unit
+                                  	<span class="wpsp-required">*</span>
                                 </label>
                             <?php
-                              $class_table = $wpdb->prefix . "wpsp_class";
-                              $classes = $wpdb->get_results("select cid,c_name from $class_table");
-                              $prohistory    =    wpsp_check_pro_version('wpsp_mc_version');
-                              $prodisablehistory    =    !$prohistory['status'] ? 'notinstalled'    : 'installed';
-                              if($prodisablehistory == 'installed'){
-                                echo '<select class="wpsp-form-control data-is_required="'.$is_required.'" multiselect" multiple="multiple" name="Class[]">';
-                              }else{
-                                echo '<select class="wpsp-form-control" data-is_required="'.$is_required.'"  name="Class[]">';
-                                echo '<option value="" disabled selected>Select Class</option>';
-                              }
-                              foreach($classes as $class)
-                              {
+                              $units = CUnits::getInstance()->fetchAllUnits();
+                                echo '<select class="wpsp-form-control" data-is_required="true"  name="CurrentUnitId">';
+                                echo '<option value="" disabled selected>Select Unit</option>';
+                                foreach($units as $unit) {
                              ?>
-                              <option value="<?php echo $class->cid; ?>"><?php echo $class->c_name; ?></option>
-                          <?php
-                            }
-                           ?>
+                              	<option value="<?php echo $unit->id; ?>"><?php echo $unit->unit_name; ?></option>
+                          	<?php
+                                }
+                            ?>
                           </select>
                            <div class="date-input-block">
                              <table class="table table-bordered" width="100%" cellspacing="0" cellpadding="5"></table>

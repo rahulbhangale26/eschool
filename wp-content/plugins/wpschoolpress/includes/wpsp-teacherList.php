@@ -138,15 +138,20 @@ if( !empty( $sel_classid ) && $sel_classid!='all' ){
 
 
 
-$sub_han		=	$wpdb->get_results("select sub_name,sub_teach_id,c.c_name from $subjects_table s, $class_table c where sub_teach_id>0 AND c.cid=s.class_id $classquery order by c.cid");
-
-
+$sub_han		=	$wpdb->get_results("
+                                        SELECT
+                                            s.sub_name,
+                                            si.instructor_id as sub_teach_id,
+                                            u.unit_name
+                                        FROM $subjects_table s
+                                            JOIN " . $wpdb->prefix . 'wpsp_subject_instructors si ON si.subject_id = s.id
+                                            JOIN ' . CUnits::getInstance()->strTableName . ' u ON u.id = si.unit_id' );
 
 foreach($sub_han as $subhan) {
 
 
 
-	$sub_handling[$subhan->sub_teach_id][]=$subhan->sub_name.' ('.$subhan->c_name.')';
+    $sub_handling[$subhan->sub_teach_id][]=$subhan->sub_name . ' ( ' . $subhan->unit_name . ' )';
 
 
 
@@ -155,7 +160,7 @@ foreach($sub_han as $subhan) {
 
 
 }
-
+ 
 
 
 $incharges=$wpdb->get_results("select c.c_name,c.teacher_id from $class_table c LEFT JOIN $teacher_table t ON t.wp_usr_id=c.teacher_id where c.teacher_id>0 $classquery");
@@ -186,7 +191,7 @@ if( !empty( $teacher ) && !empty( $sel_classid ) && $sel_classid!='all' ) {
 
 
 
-$teachers=$wpdb->get_results("select * from $teacher_table WHERE $teacherQuery  first_name != 'teacher' order by tid DESC");
+$teachers=$wpdb->get_results("select * from $teacher_table WHERE $teacherQuery  first_name != 'teacher' order by designation_id ASC");
 
 
 
@@ -207,59 +212,6 @@ $plugins_url=plugins_url();
 
 
             <div class="subject-inner wpsp-left wpsp-class-filter">
-
-
-
-				<form name="TeacherClass" id="TeacherClass" method="post" action="">
-
-
-
-					<label class="wpsp-labelMain"><?php _e( 'Select Class Name', 'WPSchoolPress' ); ?></label>
-
-
-
-					<select name="ClassID" id="ClassID" class="wpsp-form-control">										
-
-
-
-						<option value="all" <?php if($sel_classid=='all') echo "selected"; ?>><?php _e( 'All', 'WPSchoolPress' ); ?></option>
-
-
-
-						 <?php
-
-
-
-						$class_table	=	$wpdb->prefix."wpsp_class";
-
-
-
-						$sel_class		=	$wpdb->get_results("select cid,c_name from $class_table Order By cid ASC");
-
-
-
-						foreach( $sel_class as $classes ) {
-
-
-
-						?> 
-
-
-
-							<option value="<?php echo intval($classes->cid);?>" <?php if($sel_classid==$classes->cid) echo "selected"; ?>><?php echo $classes->c_name;?></option>
-
-
-
-						<?php } ?>										 
-
-
-
-					</select>
-
-
-
-				</form>								
-
 
 
 			</div>
@@ -736,7 +688,7 @@ $plugins_url=plugins_url();
 
 
 
-						<th> <?php _e( 'Incharge Class', 'WPSchoolPress' );?></th>
+						<th> <?php _e( 'Unit Incharge', 'WPSchoolPress' );?></th>
 
 
 
@@ -815,11 +767,20 @@ $plugins_url=plugins_url();
 
 
 
-								<td><?php if( isset( $cincharge[$tinfo->wp_usr_id] ) ) { echo implode( ", ", $cincharge[$tinfo->wp_usr_id] ); } else { echo '-';} ?></td>
+								<td><?php 
+								$arrobjUnit = CUnits::getInstance()->fetchUnitByInstructorUserId( $tinfo->tid );
+								$strUnits = '';
+								foreach ( $arrobjUnit as $objUnit ) {
+								    $strUnits .= $objUnit->unit_name . ',';
+								}
+								
+								echo ( '' != trim( $strUnits, ',' ) ) ? trim( $strUnits, ',' ) : '-';
+								
+								?></td>
 
 
 
-								<td><?php if( isset( $sub_handling[$tinfo->wp_usr_id] ) ) { echo implode( "<br> ", $sub_handling[$tinfo->wp_usr_id] ); } else { echo '-';} ?></td>									
+								<td><?php if( isset( $sub_handling[$tinfo->tid] ) ) { echo implode( "<br> ", $sub_handling[$tinfo->tid] ); } else { echo '-';} ?></td>									
 
 
 
@@ -884,63 +845,6 @@ $plugins_url=plugins_url();
 
 
 				</tbody>
-
-
-
-				<tfoot>
-
-
-
-					<tr>
-
-
-
-						<th><?php if(  $current_user_role=='teacher' ) { ?>
-
-
-
-								Sr. No.
-
-
-
-						<?php } ?>
-
-
-
-						</th>
-
-
-
-						<th> <?php _e( 'Employee Code', 'WPSchoolPress' );?></th>							
-
-
-
-						<th><?php _e( 'Name', 'WPSchoolPress' );?> </th>
-
-
-
-						<th> <?php _e( 'Incharge Class', 'WPSchoolPress' );?></th>
-
-
-
-						<th> <?php _e( 'Subjects Handling', 'WPSchoolPress' );?></th>								
-
-
-
-						<th> <?php _e( 'Phone', 'WPSchoolPress' );?></th>
-
-
-
-						<th  align="center">Action</th>
-
-
-
-					</tr>
-
-
-
-				</tfoot>
-
 
 
 		 	</table>

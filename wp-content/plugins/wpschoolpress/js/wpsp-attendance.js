@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$('#monthly_muster').click( function(e) {
-		if( $('#attendance_report_class').val() == '' ) {
-			$('#error_message').html( 'Please select class.' );
+		if( $('#attendance_report_unit').val() == '' ) {
+			$('#error_message').html( 'Please select unit.' );
 			return false;
 		}
 		
@@ -15,75 +15,99 @@ $(document).ready(function() {
 			return false;
 		}
 		
-		window.location.href = $('#monthly_muster').attr('data-reportUrl') + '&class_id=' + $('#attendance_report_class').val() + '&month=' +  $('#attendance_report_month').val()  + '&year=' + $('#attendance_report_year').val();
+		window.location.href = $('#monthly_muster').attr('data-reportUrl') + '&unit_id=' + $('#attendance_report_unit').val() + '&month=' +  $('#attendance_report_month').val()  + '&year=' + $('#attendance_report_year').val();
 
 	});
 
 });
 
 $(document).ready(function() {
-  $(".clserror").hide(), $(".clsdate").hide(), $(document).on("click", ".checkAll", function(e) {
-    $(this).prop("checked") && $("input[name=absent\\[\\]]").prop("checked", !1)
-  }), $(document).on("click", "input[name=absent\\[\\]]", function(e) {
-    $(this).prop("checked") && $(".checkAll").prop("checked", !1)
-  }), $(".select_date").datepicker({
-    autoclose: !0,
-    dateFormat: date_format,
-    todayHighlight: !0,
-    changeMonth: !0,
-    changeYear: !0,
-    maxDate: 0
-  }), $("#AttendanceEnter, #AttendanceEdit").click(function() {
-    $("#AttendanceClass").parent().parent().find(".clserror").removeClass("error"), $("#AttendanceDate").parent().parent().find(".clsdate").removeClass("error"), $("#AddModalContent").html(""), $("#wpsp-error-msg").html("");
-    var e = $("#AttendanceClass").val(),
-      a = $("#AttendanceDate").val();
-    if ("" == e && ($(".clserror").show(), $("#AttendanceClass").parent().parent().find(".clserror").addClass("error")), "" == a && ($(".clsdate").show(), $("#AttendanceDate").parent().parent().find(".clsdate").addClass("error")), "" != e && "" != a) {
-      var t = [];
-      t.push({
-        name: "action",
-        value: "getStudentsList"
-      }, {
-        name: "classid",
-        value: e
-      }, {
-        name: "date",
-        value: a
-      }), $.ajax({
-        type: "POST",
-        url: ajax_url,
-        data: t,
-        beforeSend: function() {
-          $("#AttendanceEnter").attr("disabled", "disabled")
-        },
-        success: function(e) {
-          $("#AttendanceEnter").removeAttr("disabled");
-          var a = jQuery.parseJSON(e);
-          0 == a.status ? ($("#wpsp-error-msg").html(a.msg), location.reload(!0)) : $("#AddModalContent").html(a.msg)
-        },
-        error: function() {
-          $("#AttendanceEnter").removeAttr("disabled"), $(".wpsp-popup-return-data").html("Something went wrong. Try after refreshing page.."), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
-        },
-        complete: function() {
-          $("#AttendanceEnter").removeAttr("disabled")
-        }
-      })
-    }
-  }), $(document).on("click", "#AttendanceSubmit", function(e) {
+	
+	$(".clserror").hide(), 
+	$(".clsdate").hide(), 
+	
+	$(document).on("click", ".checkAll", function(e) {
+		$(this).prop("checked") && $("input[name=absent\\[\\]]").prop("checked", !1)
+		$(this).prop("checked") && $("input[name=cl\\[\\]]").prop("checked", !1)
+		$(this).prop("checked") && $("input[name=sl\\[\\]]").prop("checked", !1)
+		$(this).prop("checked") && $("input[name=spl\\[\\]]").prop("checked", !1)
+	}), 
+	
+	$(document).on("click", "input[name=absent\\[\\]], input[name=spl\\[\\]], input[name=sl\\[\\]], input[name=cl\\[\\]]", function(e) {
+		$(this).prop("checked") && $(".checkAll").prop("checked", !1)
+	}), 
+	
+	$(".select_date").datepicker({
+		autoclose: !0,
+		dateFormat: date_format,
+		todayHighlight: !0,
+		changeMonth: !0,
+		changeYear: !0,
+		maxDate: 0
+	}), 
+	
+	$("#AttendanceEnter, #AttendanceEdit").click(function() {
+		$("#AttendanceClass").parent().parent().find(".clserror").removeClass("error"), 
+		$("#AttendanceClass").parent().parent().find(".clsbatch").removeClass("error"), 
+		$("#AttendanceDate").parent().parent().find(".clsdate").removeClass("error"), 
+		$("#AddModalContent").html(""), $("#wpsp-error-msg").html("");
+		
+		var e = $("#AttendanceClass").val(),
+			a = $("#AttendanceDate").val();
+		
+		var unit_id = $('#UnitId').val();	
+		
+		if (
+				"" == e && ($(".clserror").show(), $("#AttendanceClass").parent().parent().find(".clserror").addClass("error")), 
+				"" == a && ($(".clsdate").show(), $("#AttendanceDate").parent().parent().find(".clsdate").addClass("error")), 
+				"" == unit_id && ($(".clsbatch").show(), $("#UnitId").parent().parent().find(".clsbatch").addClass("error")), 
+				"" != e && "" != a && "" != unit_id ) {
+			var t = [];
+			t.push({ name: "action", value: "getStudentsList" }, { name: "classid", value: e }, { name: "date", value: a }, { name: 'unit_id', value: unit_id}), 
+			
+			$.ajax({
+				type: "POST",
+				url: ajax_url,
+				data: t,
+				beforeSend: function() {		
+					$("#AttendanceEnter").attr("disabled", "disabled")
+				},
+				success: function(e) {
+					$("#AttendanceEnter").removeAttr("disabled");
+					var a = jQuery.parseJSON(e);
+					0 == a.status ? ($("#wpsp-error-msg").html(a.msg), location.reload(!0)) : $("#AddModalContent").html(a.msg)
+				},
+				error: function() {
+					$("#AttendanceEnter").removeAttr("disabled"), $(".wpsp-popup-return-data").html("Something went wrong. Try after refreshing page.."), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
+				},
+				complete: function() {
+					$("#AttendanceEnter").removeAttr("disabled")
+				}
+			})
+		}
+		
+	}), 
+	
+	$(document).on("click", "#AttendanceSubmit", function(e) {
     if (e.preventDefault(), $('input[type="checkbox"]:checked').length > 0) {
       var a = $("#AttendanceEntryForm").serializeArray();
       a.push({
         name: "action",
         value: "AttendanceEntry"
-      }), jQuery.post(ajax_url, a, function(e) {
-        "success" == e ? ($(".wpsp-popup-return-data").html("Attendance entered successfully!"),
-		$("#SuccessModal").css("display", "block"),
-		$("#SavingModal").css("display", "none"),
-		$("#SuccessModal").addClass("wpsp-popVisible"),
-		$("#AttendanceEntryForm").trigger("reset"), 
-		setTimeout(function() {
-		  $(".alert").remove(), 
-		  $("#SuccessModal").css("display", "none"),
-		  $("#Attendanceview").click()
+      }), 
+      
+      jQuery.post(ajax_url, a, function(e) {
+    	  "success" == e ? (
+    			  $(".wpsp-popup-return-data").html("Attendance entered successfully!"),
+    		$("#SuccessModal").css("display", "block"),
+    		$("#SavingModal").css("display", "none"),
+    		$("#SuccessModal").addClass("wpsp-popVisible"),
+    		$("#AttendanceEntryForm").trigger("reset"), 
+    		setTimeout(function() {
+    			$(".alert").remove(), 
+    			$("#SuccessModal").css("display", "none"),
+    			$("#Attendanceview").click()
+    			location.reload();
         }, 2e3)) : "updated" == e ? ($("#formresponse").html("<div class='alert alert-warning'>Attendance updated successfully!</div>"),
 		location.reload(!0)) : ($(".wpsp-popup-return-data").html("Something went "),
 		$("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"),

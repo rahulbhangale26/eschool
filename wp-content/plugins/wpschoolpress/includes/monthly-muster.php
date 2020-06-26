@@ -1,14 +1,13 @@
 <?php
     global $objUser;
-    $intClassId = ( int ) $_GET['class_id']; 
+    $intUnitId = ( int ) $_GET['unit_id']; 
     $intMonthNumber = ( int ) $_GET['month'];
     $intYear = ( int ) $_GET['year'];
-    $objClasses = new CClasses();
-    $objClass = $objClasses->fetchClassByClassId( $intClassId );
-    $objTeacher = ( new CTeachers() )->fetchTeacherByUserId( $objClass->teacher_id );
+    $objUnit = CUnits::getInstance()->fetchUnitById( $intUnitId );
+    $objTeacher = ( new CTeachers() )->fetchTeacherByUserId( $objUnit->instructor_id );
+    $arrobjStudents = CStudents::getInstance()->fetchStudentsByUnitId( $intUnitId );
+    $arrobjAttendances = ( new CAttendance() )->fetchAttendanceByMonthByYearByUnitId( $intMonthNumber, $intYear, $intUnitId );
     
-    $arrobjStudents = ( new CStudents() )->fetchStudentsByClassId( $intClassId );
-    $arrobjAttendances = ( new CAttendance() )->fetchAttendanceByMonthByYearByClassId( $intMonthNumber, $intYear, $intClassId );
     $arrmixProcessedAttendance = [];
     foreach ( $arrobjAttendances as $objAttendance ) {
         $arrintDates = explode( ',', $objAttendance->dates );
@@ -22,7 +21,7 @@
         $intLastMonth = 12; 
     }
     
-    $arrobjLastAttendances = ( new CAttendance() )->fetchAttendanceByMonthByYearByClassId( $intLastMonth, $intYear, $intClassId );
+    $arrobjLastAttendances = ( new CAttendance() )->fetchAttendanceByMonthByYearByUnitId( $intLastMonth, $intYear, $intUnitId );
     $arrmixProcessedLastAttendance = [];
     foreach ( $arrobjLastAttendances AS $objAttendance ) {
         $arrintLastDates = explode( ',', $objAttendance->dates );
@@ -84,12 +83,12 @@ border: none !important;
             <td class="s1">:-</td>
             <td class="s1" colspan="9"><?php echo $objTeacher->first_name . ' ' . $objTeacher->middle_name . ' '. $objTeacher->last_name; ?></td>
             <td class="s1" colspan="4">व्यवसाय -</td>
-            <td class="s2" colspan="6"><?php echo $objClass->c_name; ?> Instructor </td>
+            <td class="s2" colspan="6"><?php echo $objUnit->unit_name; ?> Instructor </td>
             <td class="s1"></td>
             <td class="s1" colspan="2">सत्र- </td>
             <td class="s1" colspan="2">पहिले</td>
             <td class="s1" colspan="2">विभाग -</td>
-            <td class="s1" colspan="3"><?php echo $objClass->c_name; ?></td>
+            <td class="s1" colspan="3"><?php echo $objUnit->unit_name; ?></td>
          </tr>
          <tr style='height:19px;'>
             <td class="s3 border-left" colspan="6">मागील महिन्याचाहजेरीचा तपशील </td>
@@ -118,37 +117,19 @@ border: none !important;
             <td class="s5 softmerge">
                <div class="softmerge-inner textRotate" style="width: 19px; left: -1px;">खा.दिवस</div>
             </td>
-            <td class="s6 padding10">01</td>
-            <td class="s6 padding10">02</td>
-            <td class="s6 padding10">03</td>
-            <td class="s6 padding10">04</td>
-            <td class="s6 padding10">05</td>
-            <td class="s6 padding10">06</td>
-            <td class="s6 padding10">07</td>
-            <td class="s6 padding10">08</td>
-            <td class="s6 padding10">09</td>
-            <td class="s6 padding10">10</td>
-            <td class="s6 padding10">11</td>
-            <td class="s6 padding10">12</td>
-            <td class="s6 padding10">13</td>
-            <td class="s6 padding10">14</td>
-            <td class="s6 padding10">15</td>
-            <td class="s6 padding10">16</td>
-            <td class="s6 padding10">17</td>
-            <td class="s6 padding10">18</td>
-            <td class="s6 padding10">19</td>
-            <td class="s6 padding10">20</td>
-            <td class="s6 padding10">21</td>
-            <td class="s6 padding10">22</td>
-            <td class="s6 padding10">23</td>
-            <td class="s6 padding10">24</td>
-            <td class="s6 padding10">25</td>
-            <td class="s6 padding10">26</td>
-            <td class="s6 padding10">27</td>
-            <td class="s6 padding10">28</td>
-            <td class="s6 padding10">29</td>
-            <td class="s6 padding10">30</td>
-            <td class="s6 padding10">31</td>
+            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
+                $intDaysInMonth = $i;
+            ?>
+            	<td class="s6 padding10" style="text-align:center"><?php echo sprintf( "%02d", $i ); ;?></td>            
+            <?php 
+                }
+                $intDaysInMonth++;
+                while( $intDaysInMonth <= 31 ) {
+                    echo '<td class="s6 padding10" style="width:23px; text-align:center"></td>';
+                    $intDaysInMonth++;
+                }
+            ?>
+            
             <td class="s5 softmerge">
                <div class="softmerge-inner textRotate" style="width: 19px; left: -1px;"><span style=" width:30px; transform: rotate(-90deg);">सं.दिवस </span></div>
             </td>
@@ -218,13 +199,39 @@ border: none !important;
             <td class="s5"><?php echo ( 0 != $intLastWorkingDaysecho ) ? ceil( $arrintLastAttendanceCount['P'] / $intLastWorkingDays * 100 ) : 0; ?></td>
             <td class="s6"><?php echo $objStudent->s_rollno; ?></td>
             <td class="s5"><?php echo $objStudent->s_fname . ' ' . $objStudent->s_mname . ' ' . $objStudent->s_lname; ?></td>
-            <?php for( $i=1; $i<=31; $i++ ) {
+            <?php 
+            $intSaturdayCount = 0;
+            for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
+                $intDaysInMonth = $i;
+                
+                if( 'Sunday' == date( 'l', strtotime( $intYear . '-' . $intMonthNumber . '-' . $i ) ) ) {
+                    echo '<td class="s5" style="background-color:#faada0;"></td>';
+                    continue;
+                }
+                
+                if( 'Saturday' == date( 'l', strtotime( $intYear . '-' . $intMonthNumber . '-' . $i ) ) ) {
+                    $intSaturdayCount++;
+                }
+                
+                if( 0 != $intSaturdayCount && 0 == $intSaturdayCount%2 ) {
+                    echo '<td class="s5" style="background-color:#faada0;"></td>';
+                    $intSaturdayCount=0;
+                    continue;
+                }
+                
                 if( true == isset( $arrmixProcessedAttendance[$objStudent->s_rollno][$i] ) ) {                  
                     echo '<td class="s5" style="text-align:center;">' .  $arrmixProcessedAttendance[$objStudent->s_rollno][$i] . '</td>';
                 } else {
                     echo '<td class="s5" style="text-align:center;">-</td>';
                 }
-            }?>
+            }
+                // Added to add blank cells if day is not exists in month.
+                $intDaysInMonth++;
+                while( $intDaysInMonth <= 31 ) {
+                    echo '<td class="s5" style="text-align:center"></td>';
+                    $intDaysInMonth++;
+                }
+            ?>
             <?php 
                 if( true == isset( $arrmixProcessedAttendance[$objStudent->s_rollno] ) ) {
                     $arrintAttendanceCount = array_count_values( $arrmixProcessedAttendance[$objStudent->s_rollno] );
@@ -282,8 +289,9 @@ border: none !important;
             <td class="s7"></td>
             <td class="s8"></td>
             <td class="s5">हजर </td>
-            <?php for( $i=1; $i<=31; $i++ ) {
+            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
                 $intPresentDayCount = 0;
+                $intDaysInMonth = $i;
                 foreach ( $arrmixProcessedAttendance AS $arrmixStudentAttendance ) {
                     if( $arrmixStudentAttendance[$i] == 'P' ) {
                         $intPresentDayCount++;
@@ -292,7 +300,13 @@ border: none !important;
                 
                 $arrintPresentDayCount[$i] = $intPresentDayCount;
                 echo '<td class="s5">' . $intPresentDayCount . '</td>';
-            }?>
+            }
+            $intDaysInMonth++;
+            while( $intDaysInMonth <= 31 ) {
+                echo '<td class="s5"></td>';
+                $intDaysInMonth++;
+            }
+            ?>
            
             <td class="s5" colspan="5" >एकूण मा.हजेरी</td>
             <td class="s4" colspan="2" id="MonthPresentCount"></td>
@@ -307,8 +321,9 @@ border: none !important;
             <td class="s7"></td>
             <td class="s8"></td>
             <td class="s5">कि.रजा</td>
-            <?php for( $i=1; $i<=31; $i++ ) {
+            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
                 $intCausalLeaveCount = 0;
+                $intDaysInMonth = $i;
                 foreach ( $arrmixProcessedAttendance AS $arrmixStudentAttendance ) {
                     if( $arrmixStudentAttendance[$i] == 'CL' ) {
                         $intCausalLeaveCount++;
@@ -316,7 +331,15 @@ border: none !important;
                 }
                 $arrintCasualLeaveCount[$i] = $intCausalLeaveCount;
                 echo '<td class="s5">' . $intCausalLeaveCount . '</td>';
-            }?>
+            }
+            
+            $intDaysInMonth++;
+            while( $intDaysInMonth <= 31 ) {
+                echo '<td class="s5"></td>';
+                $intDaysInMonth++;
+            }
+            
+            ?>
             <td class="s5" colspan="5" >एकूण मा गैरहजेरी  </td>
             <td class="s4" colspan="2" id="MonthAbsentCount"></td>
          </tr>
@@ -330,8 +353,9 @@ border: none !important;
             <td class="s7"></td>
             <td class="s8"></td>
             <td class="s5">आ.रजा </td>
-            <?php for( $i=1; $i<=31; $i++ ) {
+            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
                 $intSickLeaveCount = 0;
+                $intDaysInMonth = $i;
                 foreach ( $arrmixProcessedAttendance AS $arrmixStudentAttendance ) {
                     if( $arrmixStudentAttendance[$i] == 'SL' ) {
                         $intSickLeaveCount++;
@@ -339,7 +363,13 @@ border: none !important;
                 }
                 $arrintSickLeaveCount[$i] = $intSickLeaveCount;
                 echo '<td class="s5">' . $intSickLeaveCount . '</td>';
-            }?>
+            }
+            $intDaysInMonth++;
+            while( $intDaysInMonth <= 31 ) {
+                echo '<td class="s5" ></td>';
+                $intDaysInMonth++;
+            }
+            ?>
             <td class="s5" colspan="5">किरकोळ रजा </td>
             <td class="s4" colspan="2" id="MonthCasualLeaveCount"></td>
          </tr>
@@ -353,8 +383,9 @@ border: none !important;
             <td class="s7"></td>
             <td class="s8"></td>
             <td class="s5">खा.रजा </td>
-            <?php for( $i=1; $i<=31; $i++ ) {
+            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
                 $intSpecialLeaveCount = 0;
+                $intDaysInMonth = $i;
                 foreach ( $arrmixProcessedAttendance AS $arrmixStudentAttendance ) {
                     if( $arrmixStudentAttendance[$i] == 'SPL' ) {
                         $intSpecialLeaveCount++;
@@ -362,7 +393,14 @@ border: none !important;
                 }
                 $arrintSpecialLeaveCount[$i] = $intSpecialLeaveCount;
                 echo '<td class="s5">' . $intSpecialLeaveCount . '</td>';
-            }?>
+            }
+            
+            $intDaysInMonth++;
+            while( $intDaysInMonth <= 31 ) {
+                echo '<td class="s5" ></td>';
+                $intDaysInMonth++;
+            }
+            ?>
             <td class="s5" colspan="5">आजारी रजा</td>
             <td class="s4" colspan="2" id="MonthSickLeaveCount"></td>
          </tr>
@@ -376,8 +414,9 @@ border: none !important;
             <td class="s7"></td>
             <td class="s8"></td>
             <td class="s5">गैरहजर</td>
-            <?php for( $i=1; $i<=31; $i++ ) {
+            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
                 $intAbsentCount = 0;
+                $intDaysInMonth = $i;
                 foreach ( $arrmixProcessedAttendance AS $arrmixStudentAttendance ) {
                     if( $arrmixStudentAttendance[$i] == 'A' ) {
                         $intAbsentCount++;
@@ -385,7 +424,13 @@ border: none !important;
                 }
                 $arrintAbsentCount[$i] = $intAbsentCount;
                 echo '<td class="s5">' . $intAbsentCount . '</td>';
-            }?>
+            }
+            $intDaysInMonth++;
+            while( $intDaysInMonth <= 31 ) {
+                echo '<td class="s5" ></td>';
+                $intDaysInMonth++;
+            }
+            ?>
             <td class="s5" colspan="5">खास रजा</td>
             <td class="s4" colspan="2" id="MonthSpecialLeaveCount"></td>
          </tr>
@@ -411,7 +456,9 @@ border: none !important;
             $intMonthSickLeaveCount = 0;
             $intMonthSpecialCount = 0;
             
-                for( $i=1; $i<= 31; $i++) {
+            for( $i=1; $i<= cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++) {
+                    $intDaysInMonth = $i;
+                    
                 echo '<td class="s5">' . ( $arrintPresentDayCount[$i] + $arrintAbsentCount[$i] + $arrintCasualLeaveCount[$i] + $arrintSickLeaveCount[$i] + $arrintSpecialLeaveCount[$i] ) . '</td>';
                 
                 $intMonthPresentCount += $arrintPresentDayCount[$i];
@@ -420,7 +467,14 @@ border: none !important;
                 $intMonthSickLeaveCount += $arrintSickLeaveCount[$i];
                 $intMonthSpecialCount += $arrintSpecialLeaveCount[$i];
                 
-            }?>
+            }
+            
+            $intDaysInMonth++;
+            while( $intDaysInMonth <= 31 ) {
+                echo '<td class="s5" ></td>';
+                $intDaysInMonth++;
+            }
+            ?>
             <script>
 				document.getElementById('MonthPresentCount').innerHTML = '<?php echo $intMonthPresentCount; ?>';
 				document.getElementById('MonthAbsentCount').innerHTML = '<?php echo $intMonthAbsentCount; ?>';

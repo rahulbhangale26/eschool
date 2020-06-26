@@ -71,6 +71,11 @@ function wpsp_AddStudent(){
 	    exit;   
 	}
 	
+	if( false == isset( $_POST['CurrentUnitId'] ) || "" == $_POST['CurrentUnitId'] ) {
+	    echo "Please select the unit.";
+	    exit;
+	}
+	
 	if( false == isset( $_POST['category'] ) || "" == $_POST['category'] ) {
 	    echo "Please select category.";
 	    exit;
@@ -262,6 +267,7 @@ function wpsp_AddStudent(){
 			'class_date' => isset($_POST['Classdata']) ? serialize($_POST['Classdata']) : '0',
 			's_rollno' => isset($_POST['s_rollno']) ? intval($_POST['s_rollno']) : '',
 		    'batch_id' => sanitize_text_field( $_POST['BatchId'] ),
+		    'current_unit_id'     =>  intval( $_POST['CurrentUnitId'] ),
 			's_fname' => $firstname,
 			's_mname' => isset($_POST['s_mname']) ? sanitize_text_field($_POST['s_mname']) : '',
 			's_lname' => isset($_POST['s_lname']) ? sanitize_text_field($_POST['s_lname']) : '',
@@ -658,6 +664,7 @@ function wpsp_UpdateStudent(){
 		's_city' => isset($_POST['s_city']) ? sanitize_text_field($_POST['s_city']) : '',
 		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
 		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
+		'current_unit_id'     => isset( $_POST['current_unit_id'] ) ? sanitize_text_field( $_POST['current_unit_id'] ) : '',
 		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
 		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
 	);
@@ -693,6 +700,7 @@ function wpsp_UpdateStudent(){
 		's_pzipcode' => isset($_POST['s_pzipcode']) ? intval($_POST['s_pzipcode']) : '',
 		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
 		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
+        'current_unit_id'     => isset( $_POST['current_unit_id'] ) ? sanitize_text_field( $_POST['current_unit_id'] ) : '',
 		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
 		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
 
@@ -853,6 +861,7 @@ function wpsp_UpdateStudent(){
 		's_pzipcode' => isset($_POST['s_pzipcode']) ? intval($_POST['s_pzipcode']) : '',
 		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
 		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
+		'current_unit_id'     => isset( $_POST['current_unit_id'] ) ? sanitize_text_field( $_POST['current_unit_id'] ) : '',
 		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
 		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
 	);

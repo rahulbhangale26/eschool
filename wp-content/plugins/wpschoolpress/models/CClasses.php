@@ -4,9 +4,19 @@ class CClasses extends CModel {
     
     public $strTableName;
     
+    protected static $_INSTANCE;
+    
     public function __construct( ) {
         parent::__construct();
         $this->strTableName = $this->strTablePrefix . 'wpsp_class';
+    }
+    
+    public static function getInstance() {
+        if( true == is_object( self::$_INSTANCE ) ) {
+            return self::$_INSTANCE;
+        }
+        
+        return  self::$_INSTANCE = new self();
     }
     
     public function fetchClassByClassId( $intClassId ) {

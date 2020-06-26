@@ -1,5 +1,13 @@
 <?php
 if (!defined( 'ABSPATH' ) )exit('No Such File');
+
+global $objUser;
+
+if( CRole::TEACHER == $objUser->getRole() && CDesignations::PRINCIPAL != $objUser->getTeacher()->designation_id &&  CDesignations::CLERK != $objUser->getTeacher()->designation_id ) {
+    $units = CUnits::getInstance()->fetchUnitByUser( $objUser );
+} else {
+    $units = CUnits::getInstance()->fetchAllUnits();
+}
 wpsp_header();
 	if( is_user_logged_in() ) {
 		global $current_user, $wpdb;
@@ -16,10 +24,8 @@ wpsp_header();
 				if( $('#' + idCheck + '-' + intUserId ).is(':checked') ) {
 					$('.attend-' + intUserId ).prop( 'checked', false );
 					$('#' + idCheck + '-' + intUserId ).prop( 'checked', true );
-					console.log( 'set to false' );
 				} else {
 					$('.attend-' + intUserId ).prop( 'checked', false );
-					console.log( 'set to true' );
 				}
 			}
 		</script>
@@ -39,38 +45,18 @@ wpsp_header();
 							<div class="wpsp-col-lg-5 wpsp-col-md-5 wpsp-col-sm-12 wpsp-col-xs-12" id="AttendanceEnterForm">
 							<h3 class="wpsp-card-title">Attendance</h3>
 							<div class="line_box">
+							
 									<div class="wpsp-form-group">
-										<label for="Class">
-											<?php if( isset($item['classid'])){
-														echo esc_html($item['classid'],"WPSchoolPress");
-											}else{
-													echo esc_html("Select Class","WPSchoolPress");
-											}
-											?> </label>
-											<select name="classid" id="AttendanceClass" class="wpsp-form-control">
-												<option value="">Select Class</option>
-													<?php
-													if(isset($_POST['classid']) && intval($_POST['classid'])!='')
-														$selid=intval($_POST['classid']);
-													else
-														if($current_user_role=='teacher'){
-															$current_user_id = get_current_user_id();
-														$selid=0;
-													$ctname=$wpdb->prefix.'wpsp_class';
-													global $objUser;
-													$clt = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
-													foreach($clt as $cnm){?>
-														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$selid) echo "selected";?>><?php echo $cnm->c_name;?></option>
-													<?php }
-														} else {
-														$selid=0;
-													$ctname=$wpdb->prefix.'wpsp_class';
-													$clt=$wpdb->get_results("select `cid`,`c_name` from `$ctname`");
-													foreach($clt as $cnm){?>
-														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$selid) echo "selected";?>><?php echo $cnm->c_name;?></option>
-													<?php } } ?>
-											</select>
-											<span class="clserror wpsp-text-red">Please select Class</span>
+										<label class="wpsp-labelMain">Select Unit</label>
+										<select name="UnitId" id = "UnitId" class="wpsp-form-control">
+											<option value="" disabled selected>Select Unit</option>
+											<?php 
+											foreach ( $units AS $unit ) {
+											    echo '<option value="' . $unit->id . '" ' . ( $unit->id == $intUnitId ? 'selected="selected"' : '' ) . '>' . $unit->unit_name . '</option>';
+					                        }
+					                       ?>
+										</select>
+										<span class="clsbatch wpsp-text-red" style="display: none;    ">Please select Unit.</span>
 									</div>
 									<div class="wpsp-form-group">
 										<label for="date">	<?php if( isset($item['entry_date'])){
@@ -87,7 +73,7 @@ wpsp_header();
 											<div class="wpsp-form-group">
 												<button id="AttendanceEnter" name="attendance" class="wpsp-btn wpsp-btn-success">Add</button>
 												<button id="AttendanceEdit" name="attendance" class="wpsp-btn wpsp-btn-success">Edit</button>
-												<button id="Attendanceview" name="attendanceview" class="wpsp-btn wpsp-btn-primary">Quick View</button>
+												<!--  <button id="Attendanceview" name="attendanceview" class="wpsp-btn wpsp-btn-primary">Quick View</button> -->
 											</div>
 										</div>
 									</div>
@@ -99,65 +85,10 @@ wpsp_header();
 							</div>
 							<div class="wpsp-col-lg-6 wpsp-col-lg-offset-1 wpsp-col-md-5 wpsp-col-md-offset-1 wpsp-col-sm-12 wpsp-col-xs-12 AttendanceView">
 								<?php
-									$class_names		=	$c_stcount	=	$attendance	=	array();
-									$class_table		=	$wpdb->prefix."wpsp_class";
+									$c_stcount	=	$attendance	=	array();
 									$student_table		=	$wpdb->prefix."wpsp_student";
 									$attendance_table	=	$wpdb->prefix."wpsp_attendance";
 									global $objUser;
-									$class_info			=	( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
-
-									$stl = array();
-									foreach($class_info as $cls){
-										$class_names[$cls->cid]=$cls->c_name;
-
-												$studentlists	=	$wpdb->get_results("select class_id, sid from $student_table");
-
-												foreach ($studentlists as $stu) {
-													//$stl = [];
-													if(is_numeric($stu->class_id) ){
-														if($stu->class_id == $cls->cid){
-														 $stl[$cls->cid][$stu->sid] = $stu->sid;
-													 }
-													}
-													else{
-														 $class_id_array = unserialize( $stu->class_id );
-														 if(!empty($class_id_array)){
-														 if(in_array($cls->cid, $class_id_array)){
-															 $stl[$cls->cid][$stu->sid] = $stu->sid;
-														 }
-														}
-													}
-											}
-										}
-
-
-		$newArr = array();
-		$newArr1 = array();
-foreach ($stl as $key => $value) {
-	$newArr[] = count($value);
-	$newArr1[$key] = count($value);
-	}
-
-									$classwise_count	=	$wpdb->get_results("select class_id, count(*) as count from $student_table GROUP BY class_id",ARRAY_A);
-
-									foreach($classwise_count as $clwc){
-										$c_stcount[$clwc['class_id']]	=	$clwc['count'];
-									}
-									$date_today	=	date('Y-m-d');
-									$attendance_info	=	$wpdb->get_results("select class_id, absents from $attendance_table where date='$date_today'");
-
-									foreach($attendance_info as $attend){
-
-										foreach($newArr1 as  $key => $value)
-											if($key == $attend->class_id){
-										 $absents	=	json_decode($attend->absents);
-										 if(empty($absents)){}else {
-										  $present	=	$value-count($absents);
-										}
-										$percent	=	round(($present*100)/$value);
-										$attendance[$attend->class_id]	=	array('present'=>$present,'percentage'=>$percent);
-									}
-								}
 								?>
 								
 								<?php 
@@ -165,37 +96,25 @@ foreach ($stl as $key => $value) {
 								$intClassId = ( int ) $_GET['class_id'];
 								$intMonthNumber = ( int ) $_GET['month'];
 								$intYear = ( int ) $_GET['year'];
-								
+								$intUnitId = ( int ) $_GET['unit_id'];
 								?>
 								
 								<div class="wpsp-col-sm-12">
-									<h3 class="wpsp-card-title">View Attendance Report</h3>
+									<h3 class="wpsp-card-title">View Attendance Monthly Report</h3>
 									<div class="line_box">
 										<div class="box-body">
-										<select name="classid" id="attendance_report_class" class="wpsp-form-control">
-												<option value="">Select Class</option>
-													<?php
-													if(isset($_POST['classid']) && intval($_POST['classid'])!='')
-														$selid=intval($_POST['classid']);
-													else
-														if($current_user_role=='teacher'){
-															$current_user_id = get_current_user_id();
-														$selid=0;
-													$ctname=$wpdb->prefix.'wpsp_class';
-													global $objUser;
-													$clt = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
-													foreach($clt as $cnm){?>
-														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$intClassId) echo "selected";?>><?php echo $cnm->c_name;?></option>
-													<?php }
-														} else {
-														$selid=0;
-													$ctname=$wpdb->prefix.'wpsp_class';
-													$clt=$wpdb->get_results("select `cid`,`c_name` from `$ctname`");
-													foreach($clt as $cnm){?>
-														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$intClassId) echo "selected";?>><?php echo $cnm->c_name;?></option>
-													<?php } } ?>
-											</select>
-											<br>
+											<div class="wpsp-form-group">
+												<label class="wpsp-labelMain">Select Unit</label>
+													<select name="UnitId" id = "attendance_report_unit" class="wpsp-form-control">
+														<option value="" disabled selected>Select Unit</option>
+															<?php 
+                    											foreach ( $units AS $unit ) {
+                    											    echo '<option value="' . $unit->id . '" ' . ( $unit->id == $intUnitId ? 'selected="selected"' : '' ) . '>' . $unit->unit_name . '</option>';
+					                                            }
+					                                       ?>
+													</select>
+													<span class="clsbatch wpsp-text-red" style="display: none;    ">Please select Unit</span>
+											</div>
 											<select id="attendance_report_month" name="month" class="wpsp-form-control" >
 												<option value="">Select Month</option>
 												<option value="1" <?php echo ( 1 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Jan</option> 
@@ -210,8 +129,6 @@ foreach ($stl as $key => $value) {
 												<option value="10" <?php echo ( 10 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Oct</option> 
 												<option value="11" <?php echo ( 11 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Nov</option> 
 												<option value="12" <?php echo ( 12 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Dec</option> 
-												
-												
 											</select>
 											<br>
 											<select id="attendance_report_year" name="year" class="wpsp-form-control" >
@@ -228,42 +145,6 @@ foreach ($stl as $key => $value) {
 										</div>
 									</div>
 								</div>
-								
-								<!--  <div class="wpsp-col-sm-12">
-									<h3 class="wpsp-card-title">View Attendance Report</h3>
-									<div class="line_box">
-										<div class="box-body">
-											<?php
-$i=0;
-												foreach($class_names as $clid=>$cln){
-												$css_class='';
-												if(isset($attendance[$clid])){
-													if($attendance[$clid]['percentage']==100)
-														$css_class="wpsp-progress-bar-success";
-													else if($attendance[$clid]['percentage']<100 && $attendance[$clid]['percentage']>70)
-														$css_class="wpsp-progress-bar-warning";
-													else if($attendance[$clid]['percentage']<=70)
-														$css_class="wpsp-progress-bar-danger";
-													else
-														$css_class="wpsp-progress-bar-info";
-												}
-
-											?>
-												<div class="wpsp-progress-group">
-														<span class="wpsp-progress-text"><?php echo $cln;?></span>
-														<span class="wpsp-progress-number"><?php if(isset($attendance[$clid])){ echo $attendance[$clid]['present']; }?>/<?php echo (isset($newArr[$i]))?$newArr[$i]:'0';?></span>
-														<div class="wpsp-progress sm">
-															<div class="wpsp-progress-bar <?php echo $css_class;?>" style="width: <?php echo (isset($attendance[$clid]))?$attendance[$clid]['percentage']:'0'; ?>%">
-															</div>
-														</div>
-												</div>
-											<?php
-											$i++;
-										} ?>
-										</div>
-									</div>
-								</div>
-								 -->
 						</div>
 					</div>
 		<div class="modal modal-wide" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModal" aria-hidden="true">

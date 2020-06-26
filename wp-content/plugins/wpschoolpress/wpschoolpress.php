@@ -48,16 +48,33 @@ add_action('plugins_loaded', 'wpsp_plugins_loaded');
 
 function wpsp_plugins_loaded()
 {
+ 
+    
+  
+    global $current_user;
+    global $objUser;
+    
 	$wpsp_lang_dir = dirname(plugin_basename(__FILE__)) . '/languages/';
 	load_plugin_textdomain('WPSchoolPress', false, $wpsp_lang_dir);
 	// initialize settings of plugin Open required files for initialization
+	require_once WPSP_PLUGIN_PATH . 'includes/commonFunctions.php';
+	require_once WPSP_PLUGIN_PATH . 'models/base/CAbstractModel.php';
 	require_once WPSP_PLUGIN_PATH . 'models/base/CModel.class.php';
 
 	foreach (glob(WPSP_PLUGIN_PATH . "models/*.php") AS $strFile) {
 	    require_once $strFile;
 	}
-	
+
 	require_once (WPSP_PLUGIN_PATH . 'lib/translations.php');
+	$objUser                = new CUser();
+	$objUser->setUserId( $current_user->id );
+	$objUser->setRole( $current_user->roles[0] );
+	
+	if( 'teacher' == $objUser->strRole ) {
+	    $objUser->setTeacher( ( new CTeachers() )->fetchTeacherByUserId( $objUser->getUserId() ) );
+	}
+	
+	
 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks.php');
 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks-student.php');
 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks-teacher.php');
@@ -74,17 +91,7 @@ function wpsp_plugins_loaded()
 	// public class handles most of functionalities of plugin
 	include_once (WPSP_PLUGIN_PATH . 'wpsp-class-public.php');
 	$wpsp_public = new Wpsp_Public();
-	$wpsp_public->add_hooks();
-	
-	global $current_user;
-	global $objUser;
-	$objUser                = new CUser();
-	$objUser->setUserId( $current_user->id );
-	$objUser->setRole( $current_user->roles[0] );
-
-	if( 'teacher' == $objUser->strRole ) {
-	    $objUser->setTeacher( ( new CTeachers() )->fetchTeacherByUserId( $objUser->getUserId() ) );
-	}
+	$wpsp_public->add_hooks();		
 	
 }
 
@@ -92,6 +99,14 @@ function wpsp_plugins_loaded()
 add_action('admin_init', 'ajax_actions');
 function ajax_actions()
 {
+    
+    /**
+     * Ajax in MVC
+     */
+    add_action('wp_ajax_action', function() {
+        require_once( WPSP_PLUGIN_PATH . '/modules/autoload.php' );
+    });
+    
 	add_action('wp_ajax_listdashboardschedule', 'wpsp_listdashboardschedule');
 	add_action('wp_ajax_StudentProfile', 'wpsp_StudentProfile');
 	add_action('wp_ajax_AddStudent', 'wpsp_AddStudent');

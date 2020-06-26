@@ -1,0 +1,3421 @@
+diff --git a/wp-content/plugins/wpschoolpress/css/wpadmin.css b/wp-content/plugins/wpschoolpress/css/wpadmin.css
+index 8e78407..442ce78 100755
+--- a/wp-content/plugins/wpschoolpress/css/wpadmin.css
++++ b/wp-content/plugins/wpschoolpress/css/wpadmin.css
+@@ -1,4 +1,4 @@
+-/*
++/*
+ 	Add new custome style by WpSchoolPress
+ */
+ 
+diff --git a/wp-content/plugins/wpschoolpress/css/wpsp-style.css b/wp-content/plugins/wpschoolpress/css/wpsp-style.css
+index 6e8c5cb..5537660 100755
+--- a/wp-content/plugins/wpschoolpress/css/wpsp-style.css
++++ b/wp-content/plugins/wpschoolpress/css/wpsp-style.css
+@@ -2892,3 +2892,83 @@ td.drop.droppable {
+ .wpschoolpress .is-dismissible {
+   display: none;
+ }
++
++
++/**
++
++	ITI Project CSS
++*/
++
++.loaderOverlay {
++	position: fixed;
++    width: 100%;
++    height: 100%;
++    top: 0;
++    left: 0;
++    right: 0;
++    bottom: 0;
++    background: 0;
++    /* background-color: #000; */
++    /* opacity: 0.2; */
++    background-color: rgba(0,0,0,0.5);
++}
++
++.loader {
++  	border: 16px solid #f3f3f3;
++  	border-radius: 50%;
++	border-top: 16px solid #3498db;
++	width: 120px;
++    height: 120px;	
++  	-webkit-animation: spin 2s linear infinite; /* Safari */
++  	animation: spin 2s linear infinite;
++  	position: absolute;
++    top: 50%;
++    left: 50%;
++    opacity: 1;
++    z-index: 9999;
++}
++
++/* Safari */
++@-webkit-keyframes spin {
++  0% { -webkit-transform: rotate(0deg); }
++  100% { -webkit-transform: rotate(360deg); }
++}
++
++@keyframes spin {
++  0% { transform: rotate(0deg); }
++  100% { transform: rotate(360deg); }
++}
++
++.success_msg_span {
++	color: #4c7a05;
++}
++
++.success_msg_div {
++	display: block;
++    background-color: #f1fae3;
++    padding: 10px 42px;
++    width: 100%;
++    box-shadow: 0 0 8px rgba(0, 0, 0, 0.06);
++}
++
++
++.success_msg_span {
++	color: #4c7a05;
++}
++
++.error_msg_div {
++	display: block;
++    background-color: #fcdcd7;
++    padding: 10px 42px;
++    width: 100%;
++    box-shadow: 0 0 8px rgba(0, 0, 0, 0.06);
++}
++
++.error_msg_span {
++	color: #96200e;
++}
++
++.disabled {
++	background-color: #CCC !important	;
++}
++
+diff --git a/wp-content/plugins/wpschoolpress/includes/monthly-muster.php b/wp-content/plugins/wpschoolpress/includes/monthly-muster.php
+index 8bbac0f..6850280 100644
+--- a/wp-content/plugins/wpschoolpress/includes/monthly-muster.php
++++ b/wp-content/plugins/wpschoolpress/includes/monthly-muster.php
+@@ -1,14 +1,13 @@
+ <?php
+     global $objUser;
+-    $intClassId = ( int ) $_GET['class_id']; 
++    $intUnitId = ( int ) $_GET['unit_id']; 
+     $intMonthNumber = ( int ) $_GET['month'];
+     $intYear = ( int ) $_GET['year'];
+-    $objClasses = new CClasses();
+-    $objClass = $objClasses->fetchClassByClassId( $intClassId );
+-    $objTeacher = ( new CTeachers() )->fetchTeacherByUserId( $objClass->teacher_id );
++    $objUnit = CUnits::getInstance()->fetchUnitById( $intUnitId );
++    $objTeacher = ( new CTeachers() )->fetchTeacherByUserId( $objUnit->instructor_user_id );
++    $arrobjStudents = CStudents::getInstance()->fetchStudentsByUnitId( $intUnitId );
++    $arrobjAttendances = ( new CAttendance() )->fetchAttendanceByMonthByYearByUnitId( $intMonthNumber, $intYear, $intUnitId );
+     
+-    $arrobjStudents = ( new CStudents() )->fetchStudentsByClassId( $intClassId );
+-    $arrobjAttendances = ( new CAttendance() )->fetchAttendanceByMonthByYearByClassId( $intMonthNumber, $intYear, $intClassId );
+     $arrmixProcessedAttendance = [];
+     foreach ( $arrobjAttendances as $objAttendance ) {
+         $arrintDates = explode( ',', $objAttendance->dates );
+@@ -22,7 +21,7 @@
+         $intLastMonth = 12; 
+     }
+     
+-    $arrobjLastAttendances = ( new CAttendance() )->fetchAttendanceByMonthByYearByClassId( $intLastMonth, $intYear, $intClassId );
++    $arrobjLastAttendances = ( new CAttendance() )->fetchAttendanceByMonthByYearByUnitId( $intLastMonth, $intYear, $intUnitId );
+     $arrmixProcessedLastAttendance = [];
+     foreach ( $arrobjLastAttendances AS $objAttendance ) {
+         $arrintLastDates = explode( ',', $objAttendance->dates );
+@@ -84,12 +83,12 @@ border: none !important;
+             <td class="s1">:-</td>
+             <td class="s1" colspan="9"><?php echo $objTeacher->first_name . ' ' . $objTeacher->middle_name . ' '. $objTeacher->last_name; ?></td>
+             <td class="s1" colspan="4">व्यवसाय -</td>
+-            <td class="s2" colspan="6"><?php echo $objClass->c_name; ?> Instructor </td>
++            <td class="s2" colspan="6"><?php echo $objUnit->unit_name; ?> Instructor </td>
+             <td class="s1"></td>
+             <td class="s1" colspan="2">सत्र- </td>
+             <td class="s1" colspan="2">पहिले</td>
+             <td class="s1" colspan="2">विभाग -</td>
+-            <td class="s1" colspan="3"><?php echo $objClass->c_name; ?></td>
++            <td class="s1" colspan="3"><?php echo $objUnit->unit_name; ?></td>
+          </tr>
+          <tr style='height:19px;'>
+             <td class="s3 border-left" colspan="6">मागील महिन्याचाहजेरीचा तपशील </td>
+@@ -118,37 +117,19 @@ border: none !important;
+             <td class="s5 softmerge">
+                <div class="softmerge-inner textRotate" style="width: 19px; left: -1px;">खा.दिवस</div>
+             </td>
+-            <td class="s6 padding10">01</td>
+-            <td class="s6 padding10">02</td>
+-            <td class="s6 padding10">03</td>
+-            <td class="s6 padding10">04</td>
+-            <td class="s6 padding10">05</td>
+-            <td class="s6 padding10">06</td>
+-            <td class="s6 padding10">07</td>
+-            <td class="s6 padding10">08</td>
+-            <td class="s6 padding10">09</td>
+-            <td class="s6 padding10">10</td>
+-            <td class="s6 padding10">11</td>
+-            <td class="s6 padding10">12</td>
+-            <td class="s6 padding10">13</td>
+-            <td class="s6 padding10">14</td>
+-            <td class="s6 padding10">15</td>
+-            <td class="s6 padding10">16</td>
+-            <td class="s6 padding10">17</td>
+-            <td class="s6 padding10">18</td>
+-            <td class="s6 padding10">19</td>
+-            <td class="s6 padding10">20</td>
+-            <td class="s6 padding10">21</td>
+-            <td class="s6 padding10">22</td>
+-            <td class="s6 padding10">23</td>
+-            <td class="s6 padding10">24</td>
+-            <td class="s6 padding10">25</td>
+-            <td class="s6 padding10">26</td>
+-            <td class="s6 padding10">27</td>
+-            <td class="s6 padding10">28</td>
+-            <td class="s6 padding10">29</td>
+-            <td class="s6 padding10">30</td>
+-            <td class="s6 padding10">31</td>
++            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
++                $intDaysInMonth = $i;
++            ?>
++            	<td class="s6 padding10" style="text-align:center"><?php echo sprintf( "%02d", $i ); ;?></td>            
++            <?php 
++                }
++                $intDaysInMonth++;
++                while( $intDaysInMonth <= 31 ) {
++                    echo '<td class="s6 padding10" style="width:23px; text-align:center"></td>';
++                    $intDaysInMonth++;
++                }
++            ?>
++            
+             <td class="s5 softmerge">
+                <div class="softmerge-inner textRotate" style="width: 19px; left: -1px;"><span style=" width:30px; transform: rotate(-90deg);">सं.दिवस </span></div>
+             </td>
+@@ -218,13 +199,39 @@ border: none !important;
+             <td class="s5"><?php echo ( 0 != $intLastWorkingDaysecho ) ? ceil( $arrintLastAttendanceCount['P'] / $intLastWorkingDays * 100 ) : 0; ?></td>
+             <td class="s6"><?php echo $objStudent->s_rollno; ?></td>
+             <td class="s5"><?php echo $objStudent->s_fname . ' ' . $objStudent->s_mname . ' ' . $objStudent->s_lname; ?></td>
+-            <?php for( $i=1; $i<=31; $i++ ) {
++            <?php 
++            $intSaturdayCount = 0;
++            for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
++                $intDaysInMonth = $i;
++                
++                if( 'Sunday' == date( 'l', strtotime( $intYear . '-' . $intMonthNumber . '-' . $i ) ) ) {
++                    echo '<td class="s5" style="background-color:#faada0;"></td>';
++                    continue;
++                }
++                
++                if( 'Saturday' == date( 'l', strtotime( $intYear . '-' . $intMonthNumber . '-' . $i ) ) ) {
++                    $intSaturdayCount++;
++                }
++                
++                if( 0 != $intSaturdayCount && 0 == $intSaturdayCount%2 ) {
++                    echo '<td class="s5" style="background-color:#faada0;"></td>';
++                    $intSaturdayCount=0;
++                    continue;
++                }
++                
+                 if( true == isset( $arrmixProcessedAttendance[$objStudent->s_rollno][$i] ) ) {                  
+                     echo '<td class="s5" style="text-align:center;">' .  $arrmixProcessedAttendance[$objStudent->s_rollno][$i] . '</td>';
+                 } else {
+                     echo '<td class="s5" style="text-align:center;">-</td>';
+                 }
+-            }?>
++            }
++                // Added to add blank cells if day is not exists in month.
++                $intDaysInMonth++;
++                while( $intDaysInMonth <= 31 ) {
++                    echo '<td class="s5" style="text-align:center"></td>';
++                    $intDaysInMonth++;
++                }
++            ?>
+             <?php 
+                 if( true == isset( $arrmixProcessedAttendance[$objStudent->s_rollno] ) ) {
+                     $arrintAttendanceCount = array_count_values( $arrmixProcessedAttendance[$objStudent->s_rollno] );
+@@ -282,8 +289,9 @@ border: none !important;
+             <td class="s7"></td>
+             <td class="s8"></td>
+             <td class="s5">हजर </td>
+-            <?php for( $i=1; $i<=31; $i++ ) {
++            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
+                 $intPresentDayCount = 0;
++                $intDaysInMonth = $i;
+                 foreach ( $arrmixProcessedAttendance AS $arrmixStudentAttendance ) {
+                     if( $arrmixStudentAttendance[$i] == 'P' ) {
+                         $intPresentDayCount++;
+@@ -292,7 +300,13 @@ border: none !important;
+                 
+                 $arrintPresentDayCount[$i] = $intPresentDayCount;
+                 echo '<td class="s5">' . $intPresentDayCount . '</td>';
+-            }?>
++            }
++            $intDaysInMonth++;
++            while( $intDaysInMonth <= 31 ) {
++                echo '<td class="s5"></td>';
++                $intDaysInMonth++;
++            }
++            ?>
+            
+             <td class="s5" colspan="5" >एकूण मा.हजेरी</td>
+             <td class="s4" colspan="2" id="MonthPresentCount"></td>
+@@ -307,8 +321,9 @@ border: none !important;
+             <td class="s7"></td>
+             <td class="s8"></td>
+             <td class="s5">कि.रजा</td>
+-            <?php for( $i=1; $i<=31; $i++ ) {
++            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
+                 $intCausalLeaveCount = 0;
++                $intDaysInMonth = $i;
+                 foreach ( $arrmixProcessedAttendance AS $arrmixStudentAttendance ) {
+                     if( $arrmixStudentAttendance[$i] == 'CL' ) {
+                         $intCausalLeaveCount++;
+@@ -316,7 +331,15 @@ border: none !important;
+                 }
+                 $arrintCasualLeaveCount[$i] = $intCausalLeaveCount;
+                 echo '<td class="s5">' . $intCausalLeaveCount . '</td>';
+-            }?>
++            }
++            
++            $intDaysInMonth++;
++            while( $intDaysInMonth <= 31 ) {
++                echo '<td class="s5"></td>';
++                $intDaysInMonth++;
++            }
++            
++            ?>
+             <td class="s5" colspan="5" >एकूण मा गैरहजेरी  </td>
+             <td class="s4" colspan="2" id="MonthAbsentCount"></td>
+          </tr>
+@@ -330,8 +353,9 @@ border: none !important;
+             <td class="s7"></td>
+             <td class="s8"></td>
+             <td class="s5">आ.रजा </td>
+-            <?php for( $i=1; $i<=31; $i++ ) {
++            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
+                 $intSickLeaveCount = 0;
++                $intDaysInMonth = $i;
+                 foreach ( $arrmixProcessedAttendance AS $arrmixStudentAttendance ) {
+                     if( $arrmixStudentAttendance[$i] == 'SL' ) {
+                         $intSickLeaveCount++;
+@@ -339,7 +363,13 @@ border: none !important;
+                 }
+                 $arrintSickLeaveCount[$i] = $intSickLeaveCount;
+                 echo '<td class="s5">' . $intSickLeaveCount . '</td>';
+-            }?>
++            }
++            $intDaysInMonth++;
++            while( $intDaysInMonth <= 31 ) {
++                echo '<td class="s5" ></td>';
++                $intDaysInMonth++;
++            }
++            ?>
+             <td class="s5" colspan="5">किरकोळ रजा </td>
+             <td class="s4" colspan="2" id="MonthCasualLeaveCount"></td>
+          </tr>
+@@ -353,8 +383,9 @@ border: none !important;
+             <td class="s7"></td>
+             <td class="s8"></td>
+             <td class="s5">खा.रजा </td>
+-            <?php for( $i=1; $i<=31; $i++ ) {
++            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
+                 $intSpecialLeaveCount = 0;
++                $intDaysInMonth = $i;
+                 foreach ( $arrmixProcessedAttendance AS $arrmixStudentAttendance ) {
+                     if( $arrmixStudentAttendance[$i] == 'SPL' ) {
+                         $intSpecialLeaveCount++;
+@@ -362,7 +393,14 @@ border: none !important;
+                 }
+                 $arrintSpecialLeaveCount[$i] = $intSpecialLeaveCount;
+                 echo '<td class="s5">' . $intSpecialLeaveCount . '</td>';
+-            }?>
++            }
++            
++            $intDaysInMonth++;
++            while( $intDaysInMonth <= 31 ) {
++                echo '<td class="s5" ></td>';
++                $intDaysInMonth++;
++            }
++            ?>
+             <td class="s5" colspan="5">आजारी रजा</td>
+             <td class="s4" colspan="2" id="MonthSickLeaveCount"></td>
+          </tr>
+@@ -376,8 +414,9 @@ border: none !important;
+             <td class="s7"></td>
+             <td class="s8"></td>
+             <td class="s5">गैरहजर</td>
+-            <?php for( $i=1; $i<=31; $i++ ) {
++            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
+                 $intAbsentCount = 0;
++                $intDaysInMonth = $i;
+                 foreach ( $arrmixProcessedAttendance AS $arrmixStudentAttendance ) {
+                     if( $arrmixStudentAttendance[$i] == 'A' ) {
+                         $intAbsentCount++;
+@@ -385,7 +424,13 @@ border: none !important;
+                 }
+                 $arrintAbsentCount[$i] = $intAbsentCount;
+                 echo '<td class="s5">' . $intAbsentCount . '</td>';
+-            }?>
++            }
++            $intDaysInMonth++;
++            while( $intDaysInMonth <= 31 ) {
++                echo '<td class="s5" ></td>';
++                $intDaysInMonth++;
++            }
++            ?>
+             <td class="s5" colspan="5">खास रजा</td>
+             <td class="s4" colspan="2" id="MonthSpecialLeaveCount"></td>
+          </tr>
+@@ -411,7 +456,9 @@ border: none !important;
+             $intMonthSickLeaveCount = 0;
+             $intMonthSpecialCount = 0;
+             
+-                for( $i=1; $i<= 31; $i++) {
++            for( $i=1; $i<= cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++) {
++                    $intDaysInMonth = $i;
++                    
+                 echo '<td class="s5">' . ( $arrintPresentDayCount[$i] + $arrintAbsentCount[$i] + $arrintCasualLeaveCount[$i] + $arrintSickLeaveCount[$i] + $arrintSpecialLeaveCount[$i] ) . '</td>';
+                 
+                 $intMonthPresentCount += $arrintPresentDayCount[$i];
+@@ -420,7 +467,14 @@ border: none !important;
+                 $intMonthSickLeaveCount += $arrintSickLeaveCount[$i];
+                 $intMonthSpecialCount += $arrintSpecialLeaveCount[$i];
+                 
+-            }?>
++            }
++            
++            $intDaysInMonth++;
++            while( $intDaysInMonth <= 31 ) {
++                echo '<td class="s5" ></td>';
++                $intDaysInMonth++;
++            }
++            ?>
+             <script>
+ 				document.getElementById('MonthPresentCount').innerHTML = '<?php echo $intMonthPresentCount; ?>';
+ 				document.getElementById('MonthAbsentCount').innerHTML = '<?php echo $intMonthAbsentCount; ?>';
+diff --git a/wp-content/plugins/wpschoolpress/includes/wpsp-studentForm.php b/wp-content/plugins/wpschoolpress/includes/wpsp-studentForm.php
+index 88d8a90..0429a62 100755
+--- a/wp-content/plugins/wpschoolpress/includes/wpsp-studentForm.php
++++ b/wp-content/plugins/wpschoolpress/includes/wpsp-studentForm.php
+@@ -959,42 +959,19 @@ $arrobjBatches = ( new CBatches() )->fetchAllBatches();
+                     <div class="wpsp-col-md-12 wpsp-col-xs-12">
+                         <div class="wpsp-form-group">
+                             <label class="wpsp-label" for="empcode">
+-                              <?php
+-                                $item =  apply_filters( 'wpsp_student_school_title_item',esc_html("Class","WPSchoolPress"));
+-                                  $pl = "";
+-                                  if(isset($item['section']) && $item['section'] == "school" && isset($item['Class'])){
+-                                        echo $pl = esc_html($item['Class'],"WPSchoolPress");
+-
+-                                  }else{
+-                                      echo $pl = esc_html("Class","WPSchoolPress");
+-                                  }
+-                                  /*Check Required Field*/
+-                                  if(isset($is_required_school['section']) && $is_required_school['section'] == "school" && isset($is_required_school['Class'])){
+-                                      $is_required =  $is_required_school['Class'];
+-                                  }else{
+-                                      $is_required = false;
+-                                  }
+-                                  ?>
+-                                  <span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span>
++                              		Unit
++                                  	<span class="wpsp-required">*</span>
+                                 </label>
+                             <?php
+-                              $class_table = $wpdb->prefix . "wpsp_class";
+-                              $classes = $wpdb->get_results("select cid,c_name from $class_table");
+-                              $prohistory    =    wpsp_check_pro_version('wpsp_mc_version');
+-                              $prodisablehistory    =    !$prohistory['status'] ? 'notinstalled'    : 'installed';
+-                              if($prodisablehistory == 'installed'){
+-                                echo '<select class="wpsp-form-control data-is_required="'.$is_required.'" multiselect" multiple="multiple" name="Class[]">';
+-                              }else{
+-                                echo '<select class="wpsp-form-control" data-is_required="'.$is_required.'"  name="Class[]">';
+-                                echo '<option value="" disabled selected>Select Class</option>';
+-                              }
+-                              foreach($classes as $class)
+-                              {
++                              $units = CUnits::getInstance()->fetchAllUnits();
++                                echo '<select class="wpsp-form-control" data-is_required="true"  name="CurrentUnitId">';
++                                echo '<option value="" disabled selected>Select Unit</option>';
++                                foreach($units as $unit) {
+                              ?>
+-                              <option value="<?php echo $class->cid; ?>"><?php echo $class->c_name; ?></option>
+-                          <?php
+-                            }
+-                           ?>
++                              	<option value="<?php echo $unit->id; ?>"><?php echo $unit->unit_name; ?></option>
++                          	<?php
++                                }
++                            ?>
+                           </select>
+                            <div class="date-input-block">
+                              <table class="table table-bordered" width="100%" cellspacing="0" cellpadding="5"></table>
+diff --git a/wp-content/plugins/wpschoolpress/includes/wpsp-studentList.php b/wp-content/plugins/wpschoolpress/includes/wpsp-studentList.php
+index 5c76fc7..7dab014 100755
+--- a/wp-content/plugins/wpschoolpress/includes/wpsp-studentList.php
++++ b/wp-content/plugins/wpschoolpress/includes/wpsp-studentList.php
+@@ -27,16 +27,18 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
+ 	$role		=	 $current_user->roles;
+ 	$cuserId	=	 $current_user->ID;
+ ?>
+-<?php $proversion1    =    wpsp_check_pro_version('wpsp_addon_version');
+-  	  $prodisable1    =    !$proversion1['status'] ? 'notinstalled'    : 'installed';
++<?php 
++        $proversion1    =    wpsp_check_pro_version('wpsp_addon_version');
++        $prodisable1    =    !$proversion1['status'] ? 'notinstalled'    : 'installed';
+ 
+-  	   $propayment    =    wpsp_check_pro_version('pay_WooCommerce');
+-      $propayment    =    !$propayment['status'] ? 'notinstalled'    : 'installed';
++        $propayment    =    wpsp_check_pro_version('pay_WooCommerce');
++        $propayment    =    !$propayment['status'] ? 'notinstalled'    : 'installed';
+ 
+-       $prohistory    =    wpsp_check_pro_version('wpsp_mc_version');
+-    $prodisablehistory    =    !$prohistory['status'] ? 'notinstalled'    : 'installed';
++        $prohistory    =    wpsp_check_pro_version('wpsp_mc_version');
++        $prodisablehistory    =    !$prohistory['status'] ? 'notinstalled'    : 'installed';
+     
+         $arrobjBatches = ( new CBatches() )->fetchAllBatches();
++        $arrobjTrades = CTrade::getInstance()->fetchAllTrades();
+        ?>
+ <div class="wpsp-card">
+ 		<div class="wpsp-card-head">
+@@ -54,46 +56,29 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
+ 					<option value="">Select Batch</option>
+ 					<?php 
+ 					foreach ( $arrobjBatches AS $objBatch ) {
+-					    echo '<option value="' . $objBatch->id . '" ' . ( $objBatch->id == $intBatchId ? 'selected="selected"' : '' ) . '>' . $objBatch->name . '</option>';
++					    echo '<option  value="' . $objBatch->id . '" ' . ( $objBatch->id == $intBatchId ? 'selected="selected"' : '' ) . '>' . $objBatch->name . '</option>';
+ 					}
+ 					?>
+ 				</select>
+-				
+-				<label class="wpsp-labelMain"><?php _e( 'Select Class Name', 'WPSchoolPress' ); ?></label>
+-				<select name="ClassID" id="ClassID" class="wpsp-form-control">
+-					<?php
+-					$sel_classid	=	isset( $_POST['ClassID'] ) ? intval($_POST['ClassID']) : '';
+-					
+-					global $objUser;
+-					
+-					if( CRole::TEACHER == $objUser->getRole() ) {		    
+-    					
+-    					if( CDesignations::CLERK == $objUser->getTeacher()->designation_id  || CDesignations::PRINCIPAL == $objUser->getTeacher()->designation_id  ) {
+-    					    $sel_class = ( new CClasses() )->fetchAllClasses();
+-    					} else {
+-    					    $sel_class = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
+-    					}
+-    					
+-					} elseif( CRole::ADMIN == $objUser->getRole() ) {
+-					    $sel_class = ( new CClasses() )->fetchAllClasses();
+-					}
+-
+-					?>
+-					<option value="all" <?php if($sel_classid=='all') echo "selected"; ?>><?php _e( 'All', 'WPSchoolPress' ); ?></option>
+-					<?php foreach( $sel_class as $classes ) {
+-					?>
+-						<option value="<?php echo $classes->cid;?>" <?php if($sel_classid==$classes->cid) echo "selected"; ?>><?php echo $classes->c_name;?></option>
++			
++				<label class="wpsp-labelMain">Trade</label>
++				<select name="TradeId" id="TradeId" class="wpsp-form-control">
++					<option value="all" >Select Trade</option>
++					<?php 
++    					   $intTradeId = $_POST['TradeId'];
++					       foreach ( $arrobjTrades AS $objTrade ) { ?>
++								<option <?php echo ( $intTradeId == $objTrade->id ) ? 'selected="selected"' : ''; ?>value="<?php echo $objTrade->id; ?>"><?php echo $objTrade->name ?></option>
+ 					<?php } ?>
+ 				</select>
+ 			</form>
+ 		</div>
+ 		<div class="wpsp-right wpsp-import-export">
+-			<div class="wpsp-btn-lists" <?php echo $prodisable;?> title="<?php echo $protitle;?>">
++			<div class="wpsp-btn-lists" title="">
+ 
+-				<div class="wpsp-btn-list" <?php if($proversion['status'] != "1") {?> wpsp-tooltip="<?php echo $protitle;?>" <?php } ?>>
++				<div class="wpsp-btn-list" wpsp-tooltip="Under construction">
+ 
+ 					<div class="wpsp-button-group wpsp-dropdownmain wpsp-left">
+-						<button type="button" class="wpsp-btn wpsp-btn-success print" id="PrintStudent" <?php echo $prodisable;?> title="<?php //echo $protitle;?>">
++						<button type="button" class="wpsp-btn wpsp-btn-success print" id="PrintStudent" title="<?php //echo $protitle;?>">
+ 							<i class="fa fa-print" ></i> <?php _e( 'Print', 'WPSchoolPress'); ?>
+ 						</button>
+ 						<button type="button" class="wpsp-btn wpsp-btn-success wpsp-dropdown-toggle" <?php echo $prodisable;?> title="<?php //echo $protitle;?>">
+@@ -118,14 +103,15 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
+ 				</div>
+ 
+ 			</div>
++
+ <?php if ( in_array( 'administrator', $role ) ) {?>
+-			<div class="wpsp-btn-list"  <?php if($proversion['status'] != "1") {?> wpsp-tooltip="<?php echo $protitle;?>" <?php } ?>>
+-				<button id="ImportStudent" class="wpsp-btn wpsp-dark-btn wpsp-popclick impt" <?php echo $prodisable;?> title="<?php //echo $protitle;?>" data-pop="ImportModal"><i class="fa fa-upload"></i> Import </button></div>
++			<div class="wpsp-btn-list" >
++				<button id="ImportStudent" class="wpsp-btn wpsp-dark-btn wpsp-popclick impt" title="<?php //echo $protitle;?>" data-pop="ImportModal"><i class="fa fa-upload"></i> Import </button></div>
+ 					<?php }?>
+-			<div class="wpsp-btn-list"  <?php if($proversion['status'] != "1") {?> wpsp-tooltip="<?php echo $protitle;?>" <?php } ?>>
++			<div class="wpsp-btn-list"  wpsp-tooltip="Under construction" >
+ 				<div class="wpsp-dropdownmain wpsp-button-group">
+-					<button type="button" class="wpsp-btn print" id="ExportStudents" <?php echo $prodisable;?> title="<?php //echo $protitle;?>"><i class="fa fa-download"></i> <?php _e( 'Export', 'WPSchoolPress'); ?> </button>
+-					<button type="button" class="wpsp-btn wpsp-btn-blue wpsp-dropdown-toggle" <?php echo $prodisable;?> title="<?php //echo $protitle;?>">
++					<button type="button" class="wpsp-btn print" id="ExportStudents" title="<?php //echo $protitle;?>"><i class="fa fa-download"></i> <?php _e( 'Export', 'WPSchoolPress'); ?> </button>
++					<button type="button" class="wpsp-btn wpsp-btn-blue wpsp-dropdown-toggle" title="<?php //echo $protitle;?>">
+ 						<!-- <span class="sr-only"><?php _e( 'Toggle Dropdown', 'WPSchoolPress' );?></span> -->
+ 					</button>
+ 					 <div id="exportcontainer" style="display:none;"></div>
+@@ -172,7 +158,7 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
+ 
+ 								<th><?php echo apply_filters( 'wpsp_student_table_rollno_heading',esc_html__('Roll No.','WPSchoolPress'));?></th>
+ 								<th><?php echo apply_filters( 'wpsp_student_table_fullname_heading',esc_html__('Full Name','WPSchoolPress'));?></th>
+-								<th width="70">Birth Date</th>
++								<th>Unit</th>
+ 								<th>Qualification</th>
+ 								<th>Category</th>
+ 								<th>Address</th>
+@@ -189,170 +175,61 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
+ 						</thead>
+ 						<tbody>
+ 							<?php
+-							$student_table	=	$wpdb->prefix."wpsp_student";
+-							$users_table	=	$wpdb->prefix."users";
+-							
+-							$class_id='';
+-							if( isset($_POST['ClassID'] ) && $_POST['ClassID'] != 'all' ) {
+-								$class_id=intval($_POST['ClassID']);
+-								$stl = [];
++							    $units = CUnits::getInstance()->fetchAllUnits();
++							    foreach( $units AS $unit ) {
++							        $tempUnits[$unit->id] = $unit;
++							    }
++							    $units = $tempUnits;
++							    
++								$TradeId    = intval($_POST['TradeId']);
++								$intBatchId = intval($_POST['BatchId']);
+ 								$studentlists	= ( new CStudents() )->fetchStudentByFilters( [ 
+-								        'role' => $objUser->getRole(), 
+ 								        'batch_id' => $intBatchId, 
+-								        'user_id' => $objUser->getUserId()
++								        'trade_id'  => $TradeId
+ 								] ); 
+-									foreach ($studentlists as $stu) {
+-										if(is_numeric($stu->class_id) ){
+-											if($stu->class_id == $class_id){
+-											 $stl[] = $stu->sid;
+-										 }
+-										}
+-										else{
+-											 $class_id_array = unserialize( $stu->class_id );
+-											 if(in_array($class_id, $class_id_array)){
+-												 $stl[] = $stu->sid;
+-											 }
+-										}
+-									}
+-
+-								}
+-								else if(!isset($_POST['ClassID']) || $_POST['ClassID'] == 'all' ){
+-								    $studentlists	= ( new CStudents() )->fetchStudentByFilters( [ 'role' => $objUser->getRole(), 'batch_id' => $intBatchId, 'user_id' => $objUser->getUserId() ] ); 							    
+-								    foreach ($studentlists as $stu) {
+-										 $stl[] = $stu->sid;
+-									}
+-
+-								}
+-
+-								if (!empty($stl)) {
+-									$key =0;
+-								foreach ($stl as $id ) {
+-							$students	=	$wpdb->get_results("select * from $student_table s, $users_table u where u.ID=s.wp_usr_id AND sid = $id and user_login != 'student' order by sid desc");
+-							$plugins_url=plugins_url();
+-							$teacherId = '';
+-							if( $currentSelectClass != 'all' )
+-								$teacherId	=	$wpdb->get_var("select teacher_id from $class_table WHERE cid=$currentSelectClass");
+-
+-							$pendingcount =0;
+-							$cid = [];
+-							
+-							if( CRole::TEACHER == $objUser->getRole() ) {
+-							    $sel_class = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
+-							} elseif( CRole::ADMIN == $objUser->getRole() ) {
+-							    $sel_class = ( new CClasses() )->fetchAllClasses();
+-							}
+-							foreach($students as $stinfo)
+-							{
+-								//echo $stinfo->wp_usr_id;
+-
+-								if(is_numeric($stinfo->class_id) ){
+-									 $cid[] = $stinfo->class_id;
+-								}
+-								else{
+-									 $class_id_array = unserialize( $stinfo->class_id );
+-										 $cid[] = $class_id_array;
+-								}
+-								$courses = get_user_meta( $stinfo->wp_usr_id, '_pay_woocommerce_enrolled_class_access_counter', true );
+-								if(empty($courses))
+-								{
+-									$paid = "Pending";
+-								}
+-								else {
+-
+-									foreach($courses as $key => $value) {
+-										$coursekey[] = $key;
+-									}
+-									foreach ($class_id_array as $allids){
+-										 if(in_array($allids, $coursekey)){
+-
+-       										}
+-       									else {
+-
+-       										$clsid	=	$wpdb->get_var("select cid from $class_table WHERE cid=$allids and c_fee_type = 'paid'");
+-       										if($clsid != ''){
+-       											$pendingcount++;
+-       										}
+-       										 }
+-									}
+-									if($pendingcount > 0)
+-										{
+-										$paid = "Pending";
+-										}
+-									else {
+-										$paid = "Paid";
+-									}
+-
+-								}
+-								$key++;
+-								?>
++								
++								foreach ( $studentlists as $stinfo ) {
++							?>
+ 
+-									<?php  if($proversion1['status']){?>
+-									<tr <?php if($stinfo->s_lname == "") {echo "style='background-color:#fcdddd'";} else {
+-										echo "style='background-color:#c9f7c9'";}?>>
+-									<?php }else {?>
+ 									<tr>
+-								  	<?php } ?>
+-
++										<?php if ( in_array( 'administrator', $role ) ) { ?>
++											<td>
++												<input type="checkbox" class="ccheckbox strowselect" name="UID[]" value="<?php echo $stinfo->wp_usr_id;?>">						
++											</td>
++										<?php } ?>
++										<td><?php echo $stinfo->s_rollno;?></td>
++										<td>
++											<?php
++		  							             $loc_avatar = get_user_meta($stinfo->wp_usr_id, 'simple_local_avatar', true);
++									             $img_url = isset($loc_avatar['full']) && !empty($loc_avatar['full']) ? $loc_avatar['full'] : WPSP_PLUGIN_URL . 'img/avatar.png';
++									             echo "<img src='$img_url' height='50px' width='50px' class='wpsp-userPic'/>";
++										         $mname = $stinfo->s_mname;
++							                     $lname = $stinfo->s_lname;
++									             echo $stinfo->s_fname .' '. $mname .' '.  $lname . '';
++									       ?>
++										</td>
++										<td><?php echo $units[$stinfo->current_unit_id]->unit_name; ?></td>
++										<td><?php echo $stinfo->qualification; ?></td>
++										<td><?php echo $stinfo->category; ?></td>
++										<td>
++										<?php
++    									   $country = !empty( $stinfo->s_country ) ? ", ".$stinfo->s_country : '';
++	   								        $city    = !empty( $stinfo->s_city ) ? ", <br>".$stinfo->s_city : '';
++									       $zipcode    = !empty( $stinfo->s_zipcode ) ? ", ".$stinfo->s_zipcode : '';
++									       echo $stinfo->s_address.' '.$city. ' ' . $country.' '.$zipcode;
++									   ?></td>
++										<?php  if($propayment == 'installed'){?>
++										<td><?php echo $paid; ?>
++											<a href="<?php echo wpsp_admin_url();?>sch-payment&id=<?php echo base64_encode($stinfo->wp_usr_id);?>" class="wpsp-popclick1" title="View"><i class="icon dashicons dashicons-visibility wpsp-view-icon"></i></a>
++										</td>
+ 									
+-									<?php if ( in_array( 'administrator', $role ) ) { ?>
+-									<td>
+-										<input type="checkbox" class="ccheckbox strowselect" name="UID[]" value="<?php echo $stinfo->wp_usr_id;?>">
+-									</td>
+ 									<?php } ?>
+-									
+-									<td><?php echo $stinfo->s_rollno;?></td>
+-									<td><?php
+-									$loc_avatar = get_user_meta($stinfo->wp_usr_id, 'simple_local_avatar', true);
+-									$img_url = isset($loc_avatar['full']) && !empty($loc_avatar['full']) ? $loc_avatar['full'] : WPSP_PLUGIN_URL . 'img/avatar.png';
+-									
+-									echo "<img src='$img_url' height='50px' width='50px' class='wpsp-userPic'/>";
+-										$mname = $stinfo->s_mname;
+-							            $lname = $stinfo->s_lname;
+-									echo $stinfo->s_fname .' '. $mname .' '.  $lname . '';
+-									?>
+-									</td>
+-									<td><?php echo date( 'd M Y', strtotime( $stinfo->s_doj ));?></td>
+-									<td><?php echo $stinfo->qualification; ?></td>
+-									<td><?php echo $stinfo->category; ?></td>
+-									<td>
+-									<?php
+-    									$country = !empty( $stinfo->s_country ) ? ", ".$stinfo->s_country : '';
+-	   								    $city    = !empty( $stinfo->s_city ) ? ", <br>".$stinfo->s_city : '';
+-									   $zipcode    = !empty( $stinfo->s_zipcode ) ? ", ".$stinfo->s_zipcode : '';
+-									   echo $stinfo->s_address.' '.$city. ' ' . $country.' '.$zipcode;
+-									?></td>
+-									<?php  if($propayment == 'installed'){?>
+-									<td><?php echo $paid;
+-									?>
+-										<a href="<?php echo wpsp_admin_url();?>sch-payment&id=<?php echo base64_encode($stinfo->wp_usr_id);?>" class="wpsp-popclick1" title="View"><i class="icon dashicons dashicons-visibility wpsp-view-icon"></i></a>
+-
+-									</td>
+-									
+-								<?php } ?>
+ 									<?php  if($proversion1['status']){?>
+-									<td>
+-                    <?php
+-                  $stl = [];
+-                  if($stinfo->class_id != ''){
+-                    if(is_numeric($stinfo->class_id) ){
+-                       $stl[] = $stinfo->class_id;
+-                    }else{
+-                       $class_id_array = unserialize($stinfo->class_id);
+-                       foreach ($class_id_array as $id) {
+-                         $stl[] = $id;
+-                       }
+-                    }
+-                  }else{
+-                    $stl[] = 0;
+-                  }
+-
+-                  if($stl[0] == 0 ){ echo "Unassigned"; } else {echo "Assigned"; }
+-                  ?>
+-                  </td>
++										<td></td>
+ 									<?php } ?>
+-									<td><?php echo $stinfo->s_phone;?></td>
+-									<td><?php echo $stinfo->user_email;?></td>
+-									<td align="center">
++										<td><?php echo $stinfo->s_phone;?></td>
++										<td><?php echo $stinfo->user_email;?></td>
++										<td align="center">
+ 										<div class="wpsp-action-col">
+ 											<a href="javascript:;" class="ViewStudent wpsp-popclick" data-pop="ViewModal" data-id="<?php echo $stinfo->wp_usr_id;?>" title="View"><i class="icon dashicons dashicons-visibility wpsp-view-icon"></i></a>
+ 
+@@ -378,29 +255,9 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
+ 									</td>
+ 								</tr>
+ 							<?php
+-							}}}
++							}
+ 							?>
+ 						</tbody>
+-						<tfoot>
+-						  <tr>
+-							<?php if ( in_array( 'administrator', $role ) ) { echo '<th></th>';} ?>
+-							<th>Roll No.</th>
+-							<th>Full Name</th>
+-							<th>Birth Date</th>
+-							<th>Qualification</th>
+-							<th>Category</th>
+-							<th>Address</th>
+-							<?php  if($propayment =='installed'){?>
+-								<th>Payment Status</th>
+-							<?php } ?>
+-							<?php  if($proversion1['status']){?>
+-								 <th>Class Status</th>
+-							<?php } ?>
+-							<th>Phone</th>
+-							<th>Email</th>
+-							<th  align="center">Action</th>
+-						  </tr>
+-						</tfoot>
+ 					  </table>
+ 					  </div>
+ 					</div><!-- /.box-body -->
+diff --git a/wp-content/plugins/wpschoolpress/includes/wpsp-studentProfile.php b/wp-content/plugins/wpschoolpress/includes/wpsp-studentProfile.php
+index 3efdd65..4a1c767 100755
+--- a/wp-content/plugins/wpschoolpress/includes/wpsp-studentProfile.php
++++ b/wp-content/plugins/wpschoolpress/includes/wpsp-studentProfile.php
+@@ -843,78 +843,25 @@ if( !empty( $stinfo ) ) {
+                     </div>
+                     <div class="wpsp-col-md-3 wpsp-col-sm-3 wpsp-col-xs-12">
+                       <?php
+-                      $classes = [];
+-                      $classIDArray = [];
+-                      $class_table = $wpdb->prefix . "wpsp_class";
+-                      $class_mapping_table = $wpdb->prefix . "wpsp_class_mapping";
+-                      $classes = $wpdb->get_results("select cid,c_name from $class_table");
++                        $units = CUnits::getInstance()->fetchAllUnits();
+                       ?>
+                         <div class="wpsp-form-group">
+-                            <label class="wpsp-label" for="Class"><?php $item =  apply_filters( 'wpsp_student_school_title_item',esc_html("Class","WPSchoolPress"));
+-                                $pl = "";
+-                                if(isset($item['section']) && $item['section'] == "school" && isset($item['Class'])){
+-                                      echo $pl = esc_html($item['Class'],"WPSchoolPress");
+-
+-                                }else{
+-                                    echo $pl = esc_html("Class","WPSchoolPress");
+-                                }
+-                                /*Check Required Field*/
+-                                if(isset($is_required_school['section']) && $is_required_school['section'] == "school" && isset($is_required_school['Class'])){
+-                                    $is_required =  $is_required_school['Class'];
+-                                }else{
+-                                    $is_required = false;
+-                                }
+-                                ?>
+-                                <span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span>
+-                              </label>
++                            <label class="wpsp-label" for="Class">Unit<span class="wpsp-required">*</span></label>
+                             <?php
+-
+-                            if (is_numeric($stinfo->class_id)){
+-                              $classIDArray[] = $stinfo->class_id;
+-                            }else{
+-                              $classIDArray = unserialize($stinfo->class_id);
+-                            }
+-                            $prohistory    =    wpsp_check_pro_version('wpsp_mc_version');
+-                            $prodisablehistory    =    ! $prohistory['status'] ? 'notinstalled' : 'installed';
+-
+-                            if( $prodisablehistory == 'installed'){
+-                              echo '<select data-is_required="'.$is_required.'" class="wpsp-form-control multiselect student-profile" multiple="multiple" name="Class[]">';
+-                            }else{
+-                              echo '<select data-is_required="'.$is_required.'" class="wpsp-form-control" name="Class[]">';
++                              echo '<select data-is_required="true" class="wpsp-form-control" name="current_unit_id">';
+                               echo '<option value="" disabled selected>Select Class</option>';
+-                            }
+ 
+-                            foreach ($classes as $class) {
++                            foreach ($units as $unit) {
+                             ?>
+-                              <option value="<?php echo $class->cid; ?>" <?php if(!empty($classIDArray)){ if (in_array( $class->cid , $classIDArray )) echo 'selected'; }?>>
+-                                <?php echo $class->c_name; ?>
++                              <option value="<?php echo $unit->id; ?>" <?php echo ( $stinfo->current_unit_id == $unit->id ) ? 'selected' : ''; ?>>
++                                <?php echo $unit->unit_name; ?>
+                               </option>
+                             <?php }?>
+                           </select>
+-
+-                          <input type="hidden" name="prev_select_class" value="<?php echo $stinfo->class_id;?>">
+                         </div>
+                         <div class="wpsp-col-md-3 wpsp-col-sm-3 wpsp-col-xs-12">
+                         	<div class="date-input-block">
+-                         		 <table class="table table-bordered" width="100%" cellspacing="0" cellpadding="5">
+-                          			<?php
+ 
+-                                        foreach ($classes as $class) {
+-                                            $class_data = $wpdb->get_results("select * from $class_mapping_table where sid=$student_index AND cid = $class->cid");
+-                                            if(!empty($classIDArray)){
+-                                            if (in_array( $class->cid , $classIDArray )){
+-                                    ?>
+-                    				<tr>
+-                      					<td style="border:1px solid;padding:5px;">
+-                        					<strong><?php echo $class->c_name; ?></strong>
+-                      					</td>
+-                      					<td style="border:1px solid;padding:5px;">
+-                      						<input type='text' class='someclass datepicker' name='Classdata[]' placeholder='yyyy-mm-dd' <?php echo (((isset($class_data[0]->date) && ($class_data[0]->date != ''))) ? 'value="'.$class_data[0]->date.'"' : ''); ?>>
+-                    					</td>
+-                    				</tr>
+-                  						<?php } }
+-                                        }?>
+-                            	</table>
+                         	</div>
+                         </div>
+ 	               </div>
+diff --git a/wp-content/plugins/wpschoolpress/includes/wpsp-teacherList.php b/wp-content/plugins/wpschoolpress/includes/wpsp-teacherList.php
+index 412ab5e..04d0172 100755
+--- a/wp-content/plugins/wpschoolpress/includes/wpsp-teacherList.php
++++ b/wp-content/plugins/wpschoolpress/includes/wpsp-teacherList.php
+@@ -186,7 +186,7 @@ if( !empty( $teacher ) && !empty( $sel_classid ) && $sel_classid!='all' ) {
+ 
+ 
+ 
+-$teachers=$wpdb->get_results("select * from $teacher_table WHERE $teacherQuery  first_name != 'teacher' order by tid DESC");
++$teachers=$wpdb->get_results("select * from $teacher_table WHERE $teacherQuery  first_name != 'teacher' order by designation_id ASC");
+ 
+ 
+ 
+@@ -209,59 +209,6 @@ $plugins_url=plugins_url();
+             <div class="subject-inner wpsp-left wpsp-class-filter">
+ 
+ 
+-
+-				<form name="TeacherClass" id="TeacherClass" method="post" action="">
+-
+-
+-
+-					<label class="wpsp-labelMain"><?php _e( 'Select Class Name', 'WPSchoolPress' ); ?></label>
+-
+-
+-
+-					<select name="ClassID" id="ClassID" class="wpsp-form-control">										
+-
+-
+-
+-						<option value="all" <?php if($sel_classid=='all') echo "selected"; ?>><?php _e( 'All', 'WPSchoolPress' ); ?></option>
+-
+-
+-
+-						 <?php
+-
+-
+-
+-						$class_table	=	$wpdb->prefix."wpsp_class";
+-
+-
+-
+-						$sel_class		=	$wpdb->get_results("select cid,c_name from $class_table Order By cid ASC");
+-
+-
+-
+-						foreach( $sel_class as $classes ) {
+-
+-
+-
+-						?> 
+-
+-
+-
+-							<option value="<?php echo intval($classes->cid);?>" <?php if($sel_classid==$classes->cid) echo "selected"; ?>><?php echo $classes->c_name;?></option>
+-
+-
+-
+-						<?php } ?>										 
+-
+-
+-
+-					</select>
+-
+-
+-
+-				</form>								
+-
+-
+-
+ 			</div>
+ 
+ 
+@@ -886,63 +833,6 @@ $plugins_url=plugins_url();
+ 				</tbody>
+ 
+ 
+-
+-				<tfoot>
+-
+-
+-
+-					<tr>
+-
+-
+-
+-						<th><?php if(  $current_user_role=='teacher' ) { ?>
+-
+-
+-
+-								Sr. No.
+-
+-
+-
+-						<?php } ?>
+-
+-
+-
+-						</th>
+-
+-
+-
+-						<th> <?php _e( 'Employee Code', 'WPSchoolPress' );?></th>							
+-
+-
+-
+-						<th><?php _e( 'Name', 'WPSchoolPress' );?> </th>
+-
+-
+-
+-						<th> <?php _e( 'Incharge Class', 'WPSchoolPress' );?></th>
+-
+-
+-
+-						<th> <?php _e( 'Subjects Handling', 'WPSchoolPress' );?></th>								
+-
+-
+-
+-						<th> <?php _e( 'Phone', 'WPSchoolPress' );?></th>
+-
+-
+-
+-						<th  align="center">Action</th>
+-
+-
+-
+-					</tr>
+-
+-
+-
+-				</tfoot>
+-
+-
+-
+ 		 	</table>
+ 
+ 
+diff --git a/wp-content/plugins/wpschoolpress/js/wpsp-attendance.js b/wp-content/plugins/wpschoolpress/js/wpsp-attendance.js
+index da97097..9555a00 100755
+--- a/wp-content/plugins/wpschoolpress/js/wpsp-attendance.js
++++ b/wp-content/plugins/wpschoolpress/js/wpsp-attendance.js
+@@ -1,7 +1,7 @@
+ $(document).ready(function() {
+ 	$('#monthly_muster').click( function(e) {
+-		if( $('#attendance_report_class').val() == '' ) {
+-			$('#error_message').html( 'Please select class.' );
++		if( $('#attendance_report_unit').val() == '' ) {
++			$('#error_message').html( 'Please select unit.' );
+ 			return false;
+ 		}
+ 		
+@@ -15,60 +15,77 @@ $(document).ready(function() {
+ 			return false;
+ 		}
+ 		
+-		window.location.href = $('#monthly_muster').attr('data-reportUrl') + '&class_id=' + $('#attendance_report_class').val() + '&month=' +  $('#attendance_report_month').val()  + '&year=' + $('#attendance_report_year').val();
++		window.location.href = $('#monthly_muster').attr('data-reportUrl') + '&unit_id=' + $('#attendance_report_unit').val() + '&month=' +  $('#attendance_report_month').val()  + '&year=' + $('#attendance_report_year').val();
+ 
+ 	});
+ 
+ });
+ 
+ $(document).ready(function() {
+-  $(".clserror").hide(), $(".clsdate").hide(), $(document).on("click", ".checkAll", function(e) {
+-    $(this).prop("checked") && $("input[name=absent\\[\\]]").prop("checked", !1)
+-  }), $(document).on("click", "input[name=absent\\[\\]]", function(e) {
+-    $(this).prop("checked") && $(".checkAll").prop("checked", !1)
+-  }), $(".select_date").datepicker({
+-    autoclose: !0,
+-    dateFormat: date_format,
+-    todayHighlight: !0,
+-    changeMonth: !0,
+-    changeYear: !0,
+-    maxDate: 0
+-  }), $("#AttendanceEnter, #AttendanceEdit").click(function() {
+-    $("#AttendanceClass").parent().parent().find(".clserror").removeClass("error"), $("#AttendanceDate").parent().parent().find(".clsdate").removeClass("error"), $("#AddModalContent").html(""), $("#wpsp-error-msg").html("");
+-    var e = $("#AttendanceClass").val(),
+-      a = $("#AttendanceDate").val();
+-    if ("" == e && ($(".clserror").show(), $("#AttendanceClass").parent().parent().find(".clserror").addClass("error")), "" == a && ($(".clsdate").show(), $("#AttendanceDate").parent().parent().find(".clsdate").addClass("error")), "" != e && "" != a) {
+-      var t = [];
+-      t.push({
+-        name: "action",
+-        value: "getStudentsList"
+-      }, {
+-        name: "classid",
+-        value: e
+-      }, {
+-        name: "date",
+-        value: a
+-      }), $.ajax({
+-        type: "POST",
+-        url: ajax_url,
+-        data: t,
+-        beforeSend: function() {
+-          $("#AttendanceEnter").attr("disabled", "disabled")
+-        },
+-        success: function(e) {
+-          $("#AttendanceEnter").removeAttr("disabled");
+-          var a = jQuery.parseJSON(e);
+-          0 == a.status ? ($("#wpsp-error-msg").html(a.msg), location.reload(!0)) : $("#AddModalContent").html(a.msg)
+-        },
+-        error: function() {
+-          $("#AttendanceEnter").removeAttr("disabled"), $(".wpsp-popup-return-data").html("Something went wrong. Try after refreshing page.."), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
+-        },
+-        complete: function() {
+-          $("#AttendanceEnter").removeAttr("disabled")
+-        }
+-      })
+-    }
+-  }), $(document).on("click", "#AttendanceSubmit", function(e) {
++	
++	$(".clserror").hide(), 
++	$(".clsdate").hide(), 
++	
++	$(document).on("click", ".checkAll", function(e) {
++		$(this).prop("checked") && $("input[name=absent\\[\\]]").prop("checked", !1)
++	}), 
++	
++	$(document).on("click", "input[name=absent\\[\\]]", function(e) {
++		$(this).prop("checked") && $(".checkAll").prop("checked", !1)
++	}), 
++	
++	$(".select_date").datepicker({
++		autoclose: !0,
++		dateFormat: date_format,
++		todayHighlight: !0,
++		changeMonth: !0,
++		changeYear: !0,
++		maxDate: 0
++	}), 
++	
++	$("#AttendanceEnter, #AttendanceEdit").click(function() {
++		$("#AttendanceClass").parent().parent().find(".clserror").removeClass("error"), 
++		$("#AttendanceClass").parent().parent().find(".clsbatch").removeClass("error"), 
++		$("#AttendanceDate").parent().parent().find(".clsdate").removeClass("error"), 
++		$("#AddModalContent").html(""), $("#wpsp-error-msg").html("");
++		
++		var e = $("#AttendanceClass").val(),
++			a = $("#AttendanceDate").val();
++		
++		var unit_id = $('#UnitId').val();	
++		
++		if (
++				"" == e && ($(".clserror").show(), $("#AttendanceClass").parent().parent().find(".clserror").addClass("error")), 
++				"" == a && ($(".clsdate").show(), $("#AttendanceDate").parent().parent().find(".clsdate").addClass("error")), 
++				"" == unit_id && ($(".clsbatch").show(), $("#UnitId").parent().parent().find(".clsbatch").addClass("error")), 
++				"" != e && "" != a && "" != unit_id ) {
++			var t = [];
++			t.push({ name: "action", value: "getStudentsList" }, { name: "classid", value: e }, { name: "date", value: a }, { name: 'unit_id', value: unit_id}), 
++			
++			$.ajax({
++				type: "POST",
++				url: ajax_url,
++				data: t,
++				beforeSend: function() {		
++					$("#AttendanceEnter").attr("disabled", "disabled")
++				},
++				success: function(e) {
++					$("#AttendanceEnter").removeAttr("disabled");
++					var a = jQuery.parseJSON(e);
++					0 == a.status ? ($("#wpsp-error-msg").html(a.msg), location.reload(!0)) : $("#AddModalContent").html(a.msg)
++				},
++				error: function() {
++					$("#AttendanceEnter").removeAttr("disabled"), $(".wpsp-popup-return-data").html("Something went wrong. Try after refreshing page.."), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
++				},
++				complete: function() {
++					$("#AttendanceEnter").removeAttr("disabled")
++				}
++			})
++		}
++		
++	}), 
++	
++	$(document).on("click", "#AttendanceSubmit", function(e) {
+     if (e.preventDefault(), $('input[type="checkbox"]:checked').length > 0) {
+       var a = $("#AttendanceEntryForm").serializeArray();
+       a.push({
+diff --git a/wp-content/plugins/wpschoolpress/js/wpsp-student.js b/wp-content/plugins/wpschoolpress/js/wpsp-student.js
+index bda1e1a..36a4085 100755
+--- a/wp-content/plugins/wpschoolpress/js/wpsp-student.js
++++ b/wp-content/plugins/wpschoolpress/js/wpsp-student.js
+@@ -401,7 +401,7 @@ $(document).ready(function() {
+ 	    $('#StudentClass').submit();
+   });
+   
+-  $('#ClassID').change(function() {
++  $('#TradeId').change(function() {
+     $('#StudentClass').submit();
+   });
+ 
+diff --git a/wp-content/plugins/wpschoolpress/lib/wpsp-ajaxworks-student.php b/wp-content/plugins/wpschoolpress/lib/wpsp-ajaxworks-student.php
+index 0fdb78c..a33143a 100755
+--- a/wp-content/plugins/wpschoolpress/lib/wpsp-ajaxworks-student.php
++++ b/wp-content/plugins/wpschoolpress/lib/wpsp-ajaxworks-student.php
+@@ -71,6 +71,11 @@ function wpsp_AddStudent(){
+ 	    exit;   
+ 	}
+ 	
++	if( false == isset( $_POST['CurrentUnitId'] ) || "" == $_POST['CurrentUnitId'] ) {
++	    echo "Please select the unit.";
++	    exit;
++	}
++	
+ 	if( false == isset( $_POST['category'] ) || "" == $_POST['category'] ) {
+ 	    echo "Please select category.";
+ 	    exit;
+@@ -262,6 +267,7 @@ function wpsp_AddStudent(){
+ 			'class_date' => isset($_POST['Classdata']) ? serialize($_POST['Classdata']) : '0',
+ 			's_rollno' => isset($_POST['s_rollno']) ? intval($_POST['s_rollno']) : '',
+ 		    'batch_id' => sanitize_text_field( $_POST['BatchId'] ),
++		    'current_unit_id'     =>  intval( $_POST['CurrentUnitId'] ),
+ 			's_fname' => $firstname,
+ 			's_mname' => isset($_POST['s_mname']) ? sanitize_text_field($_POST['s_mname']) : '',
+ 			's_lname' => isset($_POST['s_lname']) ? sanitize_text_field($_POST['s_lname']) : '',
+@@ -658,6 +664,7 @@ function wpsp_UpdateStudent(){
+ 		's_city' => isset($_POST['s_city']) ? sanitize_text_field($_POST['s_city']) : '',
+ 		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
+ 		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
++		'current_unit_id'     => isset( $_POST['current_unit_id'] ) ? sanitize_text_field( $_POST['current_unit_id'] ) : '',
+ 		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
+ 		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
+ 	);
+@@ -693,6 +700,7 @@ function wpsp_UpdateStudent(){
+ 		's_pzipcode' => isset($_POST['s_pzipcode']) ? intval($_POST['s_pzipcode']) : '',
+ 		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
+ 		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
++        'current_unit_id'     => isset( $_POST['current_unit_id'] ) ? sanitize_text_field( $_POST['current_unit_id'] ) : '',
+ 		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
+ 		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
+ 
+@@ -853,6 +861,7 @@ function wpsp_UpdateStudent(){
+ 		's_pzipcode' => isset($_POST['s_pzipcode']) ? intval($_POST['s_pzipcode']) : '',
+ 		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
+ 		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
++		'current_unit_id'     => isset( $_POST['current_unit_id'] ) ? sanitize_text_field( $_POST['current_unit_id'] ) : '',
+ 		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
+ 		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
+ 	);
+diff --git a/wp-content/plugins/wpschoolpress/lib/wpsp-ajaxworks-teacher.php b/wp-content/plugins/wpschoolpress/lib/wpsp-ajaxworks-teacher.php
+index e43ff04..d2877c2 100755
+--- a/wp-content/plugins/wpschoolpress/lib/wpsp-ajaxworks-teacher.php
++++ b/wp-content/plugins/wpschoolpress/lib/wpsp-ajaxworks-teacher.php
+@@ -152,7 +152,7 @@ function wpsp_AddTeacher()
+ function wpsp_TeacherPublicProfile()
+ {
+ 	global $wpdb;
+-	$tid = $_POST['id'];
++	$tid = $_POST['id'];		$msg = '';
+ 	$teacher_table = $wpdb->prefix . "wpsp_teacher";
+ 	$users_table = $wpdb->prefix . "users";
+ 	$tinfo = $wpdb->get_row("select teacher.*,user.user_email from $teacher_table teacher LEFT JOIN $users_table user ON user.ID=teacher.wp_usr_id where teacher.wp_usr_id='$tid'");
+@@ -209,13 +209,10 @@ function wpsp_TeacherPublicProfile()
+ 	wp_die();
+ }
+ /* This function is used for Update Teacher Information */
+-function wpsp_UpdateTeacher()
+-{
+-
++function wpsp_UpdateTeacher() {
+ 	$user_id = intval($_POST['UserID']);
+ 	global $wpdb;
+-	$wpsp_teacher_table = $wpdb->prefix . "wpsp_teacher";
+-
++	$wpsp_teacher_table = $wpdb->prefix . "wpsp_teacher";		$msg = '';	
+ 
+ 	$errors = wpsp_validation(array(
+ 		sanitize_text_field($_POST['firstname']) => 'required',
+@@ -252,7 +249,6 @@ function wpsp_UpdateTeacher()
+ 	$doj = !empty($_POST['Doj']) ? wpsp_StoreDate(sanitize_text_field($_POST['Doj'])) : '';
+ 
+ 	$teachereditprofile = sanitize_text_field($_POST['teachereditprofile']);
+-
+ if ($teachereditprofile == 'teachereditprofile')
+ 	{
+ 
+@@ -373,6 +369,6 @@ if ($teachereditprofile == 'teachereditprofile')
+ 	{
+ 		$msg = "success";
+ 	}
+-	echo $msg;
++	echo $msg;
+ }
+ ?>
+diff --git a/wp-content/plugins/wpschoolpress/lib/wpsp-ajaxworks.php b/wp-content/plugins/wpschoolpress/lib/wpsp-ajaxworks.php
+index a13f993..5400a06 100755
+--- a/wp-content/plugins/wpschoolpress/lib/wpsp-ajaxworks.php
++++ b/wp-content/plugins/wpschoolpress/lib/wpsp-ajaxworks.php
+@@ -1149,25 +1149,23 @@ function wpsp_StudentCount() {
+ 	wp_die();
+ }
+ /**************************** Attendance Functions ***********************/
+-function wpsp_getStudentsList()
+-{
++function wpsp_getStudentsList() {
+ 	global $wpdb;
+-	$classid = intval($_POST['classid']);
++	$intUnitId = intval($_REQUEST['unit_id']);
+ 	$entry_date = date('Y-m-d', strtotime(sanitize_text_field($_POST['date'])));
+ 	$show_date = wpsp_ViewDate($entry_date);
+ 	$att_table = $wpdb->prefix . "wpsp_attendance";
+ 	$student_table = $wpdb->prefix . "wpsp_student";
+-	$class_table = $wpdb->prefix . "wpsp_class";
+-	$check_date = $wpdb->get_row("SELECT * FROM $class_table WHERE cid=$classid");
++	$unit_table    = $wpdb->prefix . 'wpsp_units';
++	$check_date = $wpdb->get_row("SELECT * FROM $unit_table WHERE id=$intUnitId");
+ 
+ 	$startdate = isset($check_date->c_sdate) && !empty($check_date->c_sdate) ? strtotime($check_date->c_sdate) : '';
+ 	$enddate = isset($check_date->c_edate) && !empty($check_date->c_edate) ? strtotime($check_date->c_edate) : '';
+-	$classname = isset($check_date->c_name) ? $check_date->c_name : '';
+ 	$selected = strtotime($_POST['date']);
++
+ 	if (!empty($startdate) && !empty($enddate))
+ 	{
+-		if ($startdate <= $selected && $enddate >= $selected)
+-		{
++		if ($startdate <= $selected && $enddate >= $selected) {
+ 		}
+ 		else
+ 		{
+@@ -1178,9 +1176,7 @@ function wpsp_getStudentsList()
+ 			exit();
+ 		}
+ 	}
+-
+-	$check_attend = $wpdb->get_row("SELECT ab.absents,ab.aid,cls.c_name, ab.casual_leave, ab.sick_leave, ab.special_leave FROM $att_table ab LEFT JOIN $class_table cls ON cls.cid=ab.class_id  WHERE ab.class_id=$classid and ab.date = '$entry_date'");
+-
++	$check_attend = $wpdb->get_row("SELECT ab.absents,ab.aid,cls.unit_name, ab.casual_leave, ab.sick_leave, ab.special_leave FROM $att_table ab LEFT JOIN $unit_table cls ON cls.id=ab.unit_id  WHERE ab.unit_id=$intUnitId and ab.date = '$entry_date'");
+ 
+ 	$ex_absents = array();
+ 	$title = __('New Attendance Entry', 'WPSchoolPress');
+@@ -1225,23 +1221,8 @@ function wpsp_getStudentsList()
+ 	}
+ 
+ 	$stl = [];
+-
+-	// $stl = $wpdb->get_results("select wp_usr_id,s_rollno ,CONCAT_WS(' ', s_fname, s_mname, s_lname ) AS full_name from $student_table where class_id='$classid' order by s_rollno ASC");
+-	 $st_array = $wpdb->get_results("select sid, class_id from $student_table");
+-
+-	 foreach ($st_array as $st) {
+-		 if(is_numeric($st->class_id) ){
+-			 if($st->class_id == $classid){
+-			 	$stl[] = $st->sid;
+-		 	}
+-		 }else{
+-			  $class_id_array = unserialize($st->class_id);
+-				if(in_array($classid, $class_id_array)){
+-					$stl[] = $st->sid;
+-				}
+-		 }
+-	 }
+-
++	$st_array  = $wpdb->get_results("select sid, current_unit_id from $student_table WHERE current_unit_id = " . $intUnitId );
++    $unit      = CUnits::getInstance()->fetchUnitById( $intUnitId );
+ 	$content = '		<h3 class="wpsp-card-title">' . $title . '</h3>
+ 					<div class="wpsp-row">
+ 					<div class="wpsp-col-md-12">
+@@ -1250,7 +1231,7 @@ function wpsp_getStudentsList()
+                         <p><span class="wpsp-text-red">' . $warning . '</span></p>
+                         <div>
+                             <input type="hidden" value="' . $entry_date . '" name="AttendanceDate">
+-                            <input type="hidden" value="' . $classid . '" name="AttendanceClass">
++                            <input type="hidden" value="' . $unit->id . '" name="AttendanceUnit">
+                             <input type="checkbox" class="checkAll ccheckbox wpsp-checkbox" ' . $nil . ' name="Nil" value="Nil"> <span class="wpsp-text-green MRTen" style="
+ 								vertical-align: middle;
+ 							">All Present</span>
+@@ -1261,7 +1242,7 @@ function wpsp_getStudentsList()
+                             <table class="wpsp-table wpsp-table-bordered" id="addAttendanceTable" cellspacing="0" width="100%" style="width:100%">
+                                 <thead>
+                                     <tr><td colspan="5">
+-									<span class="pull-left">Class: <span class="wpsp-f500">' . $classname . '</span></span><span class="pull-right">Date: <span class="wpsp-f500">' . $show_date . '</span></span></td>
++									<span class="pull-left">Class: <span class="wpsp-f500">' . $unit->unit_name . '</span></span><span class="pull-right">Date: <span class="wpsp-f500">' . $show_date . '</span></span></td>
+ 									</tr>
+                                     <tr>
+ 										<th>#</th>
+@@ -1276,8 +1257,10 @@ function wpsp_getStudentsList()
+                                 </thead>
+                                 <tbody>';
+ 								$sno = 1;
+-								foreach($stl as $sid)
++								foreach($st_array as $st)
+ 								{
++								    $sid = $st->sid;
++								    
+ 									$st = $wpdb->get_row("select wp_usr_id,s_rollno ,CONCAT_WS(' ', s_fname, s_mname, s_lname ) AS full_name from $student_table where sid='$sid' order by s_rollno ASC");
+ 									$checked = array_key_exists($st->wp_usr_id, $ex_absents) ? 'checked' : '';
+ 									$clsChecked = array_key_exists($st->wp_usr_id, $ex_cls) ? 'checked' : '';
+@@ -1287,10 +1270,10 @@ function wpsp_getStudentsList()
+ 												<td>' . $sno . '</td>
+ 												<td>' . $st->s_rollno . '</td>
+ 												<td>' . $st->full_name . '</td>
+-<td><input type="checkbox" ' . $checked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'"  name="absent[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'absent\');" id="absent-' . $st->wp_usr_id .'"> Absent </td>
+-<td><input type="checkbox" ' . $clsChecked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'" name="cl[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'cl\');" id="cl-' . $st->wp_usr_id .'"> Casual Leave </td>
+-<td><input type="checkbox" ' . $slsChecked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'" name="sl[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'sl\');" id="sl-' . $st->wp_usr_id .'"> Sick Leave </td>
+-<td><input type="checkbox" ' . $splsChecked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'" name="spl[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'spl\');" id="spl-' . $st->wp_usr_id .'"> Special Leave </td>
++                                                <td><input type="checkbox" ' . $checked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'"  name="absent[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'absent\');" id="absent-' . $st->wp_usr_id .'"> Absent </td>
++                                                <td><input type="checkbox" ' . $clsChecked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'" name="cl[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'cl\');" id="cl-' . $st->wp_usr_id .'"> Casual Leave </td>
++                                                <td><input type="checkbox" ' . $slsChecked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'" name="sl[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'sl\');" id="sl-' . $st->wp_usr_id .'"> Sick Leave </td>
++                                                <td><input type="checkbox" ' . $splsChecked . ' class="ccheckbox wpsp-checkbox attend-' . $st->wp_usr_id .'" name="spl[]" value="' . $st->wp_usr_id . '" onclick="validateAndUncheckAttend( ' .$st->wp_usr_id. ', \'spl\');" id="spl-' . $st->wp_usr_id .'"> Special Leave </td>
+ 												<td><input type="text"  name="reason[' . $st->wp_usr_id . ']" value="' . stripslashes($ex_absents[$st->wp_usr_id]) . '" class="wpsp-form-control"></td>
+ 											</tr>';
+ 									$sno++;
+@@ -1318,8 +1301,7 @@ function wpsp_getStudentsList()
+ 	wp_die();
+ }
+ 
+-function wpsp_AttendanceEntry()
+-{
++function wpsp_AttendanceEntry() {
+ 	if (!isset($_POST['sattendance_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['sattendance_nonce']) , 'StudentAttendance'))
+ 	{
+ 		echo "Unauthorized Submission";
+@@ -1327,15 +1309,15 @@ function wpsp_AttendanceEntry()
+ 	}
+ 	wpsp_Authenticate();
+ 	global $wpdb, $wpsp_settings_data;
+-	$class = sanitize_text_field($_POST['AttendanceClass']);
++	$intUnitId = sanitize_text_field($_POST['AttendanceUnit']);
+ 	$entry_date = date('Y-m-d', strtotime(sanitize_text_field($_POST['AttendanceDate'])));
+ 	$att_table = $wpdb->prefix . "wpsp_attendance";
+ 	$stud_table = $wpdb->prefix . "wpsp_student";
+ 	$class_table = $wpdb->prefix . "wpsp_class";
+-	$check_attend = $wpdb->get_row("SELECT * FROM $att_table WHERE class_id= $class and date = '$entry_date'");
++	$check_attend = $wpdb->get_row("SELECT * FROM $att_table WHERE unit_id= $intUnitId and date = '$entry_date'");
+ 
+ 
+-	$classname = $wpdb->get_var("SELECT c_name FROM $class_table where cid=$class");
++	$unit = CUnits::getInstance()->fetchUnitById( $intUnitId );
+ 	$previousList = $previoudids = array();
+ 	if (!empty($check_attend) && isset($check_attend->aid))
+ 	{
+@@ -1348,7 +1330,7 @@ function wpsp_AttendanceEntry()
+ 	if (isset($_POST['Nil']) && $_POST['Nil'] == 'Nil')
+ 	{
+ 		$att_data = array(
+-			'class_id' => $class,
++			'unit_id' => $unit->id,
+ 			'absents' => Nil,
+ 			'date' => $entry_date
+ 		);
+@@ -1374,7 +1356,7 @@ function wpsp_AttendanceEntry()
+ 				$studInfo = $wpdb->get_row("SELECT s_phone, s_fname  FROM  $stud_table ws WHERE ws.wp_usr_id=$stid");
+ 				if (isset($studInfo->s_phone) && !empty($studInfo->s_phone))
+ 				{
+-					$absentreason = 'Your Child ' . $studInfo->s_fname . ' of class ' . $classname . ' is absent on ' . $entry_date . ' for reason ' . $reason[$stid];
++					$absentreason = 'Your Child ' . $studInfo->s_fname . ' of class ' . $unit->unit_name . ' is absent on ' . $entry_date . ' for reason ' . $reason[$stid];
+ 					if($wpsp_settings_data['sch_sms_slaneuser']!= ""){
+ 					$status = apply_filters('wpsp_send_notification_msg', false, $studInfo->s_phone, $absentreason);
+ 					} else {
+@@ -1407,7 +1389,7 @@ function wpsp_AttendanceEntry()
+ 		
+ 		$attendance = json_encode($attend);
+ 		$att1_data = array(
+-			'class_id' => $class,
++			'unit_id' => $unit->id,
+ 			'absents' => $attendance,
+ 		    'sick_leave'  => json_encode( $slAttend ),
+ 		    'casual_leave'    => json_encode( $clAttend ),
+diff --git a/wp-content/plugins/wpschoolpress/models/CAttendance.class.php b/wp-content/plugins/wpschoolpress/models/CAttendance.class.php
+index 9cd85f8..06db953 100644
+--- a/wp-content/plugins/wpschoolpress/models/CAttendance.class.php
++++ b/wp-content/plugins/wpschoolpress/models/CAttendance.class.php
+@@ -9,8 +9,8 @@ class CAttendance extends CModel {
+         $this->strTableName = $this->strTablePrefix . 'wpsp_attendance';
+     }
+     
+-    public function fetchAttendanceByMonthByYearByClassId( $intMonthNumber, $intYear, $intClassId ) {
+-      $strSql = 'SELECT 
++    public function fetchAttendanceByMonthByYearByUnitId( $intMonthNumber, $intYear, $intUnitId  ) {
++        $strSql = 'SELECT 
+ 	                   s.s_rollno,
+                         GROUP_CONCAT( ( CASE
+     	                   WHEN a.absents LIKE CONCAT( \'%\', s.wp_usr_id ,\'%\' ) THEN \'A\' 
+@@ -21,9 +21,9 @@ class CAttendance extends CModel {
+                         END ) ORDER BY a.date ) AS attendances_by_dates,
+                         GROUP_CONCAT( DAY(a.date) ORDER BY a.date ) AS dates
+                     FROM iti_wpsp_student s
+-                        LEFT JOIN iti_wpsp_attendance a ON s.class_id LIKE CONCAT( \'%\', a.class_id, \'%\' )
++                        LEFT JOIN iti_wpsp_attendance a ON s.current_unit_id = a.unit_id
+                     WHERE
+-                        a.class_id = ' . $intClassId . '
++                        s.current_unit_id = ' . ( int ) $intUnitId . '
+                         AND MONTH( a.date ) = ' .  $intMonthNumber . '
+                         AND YEAR( a.date ) = ' .  $intYear . '
+                     GROUP BY s.s_rollno';
+diff --git a/wp-content/plugins/wpschoolpress/models/CClasses.php b/wp-content/plugins/wpschoolpress/models/CClasses.php
+index 2f57e9d..09034b6 100644
+--- a/wp-content/plugins/wpschoolpress/models/CClasses.php
++++ b/wp-content/plugins/wpschoolpress/models/CClasses.php
+@@ -4,11 +4,21 @@ class CClasses extends CModel {
+     
+     public $strTableName;
+     
++    protected static $_INSTANCE;
++    
+     public function __construct( ) {
+         parent::__construct();
+         $this->strTableName = $this->strTablePrefix . 'wpsp_class';
+     }
+     
++    public static function getInstance() {
++        if( true == is_object( self::$_INSTANCE ) ) {
++            return self::$_INSTANCE;
++        }
++        
++        return  self::$_INSTANCE = new self();
++    }
++    
+     public function fetchClassByClassId( $intClassId ) {
+         return array_pop( $arrobjClasses = $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName . ' WHERE cid = ' . $intClassId ) );
+     }
+diff --git a/wp-content/plugins/wpschoolpress/models/CStudents.class.php b/wp-content/plugins/wpschoolpress/models/CStudents.class.php
+index 4a0fc71..06e3850 100644
+--- a/wp-content/plugins/wpschoolpress/models/CStudents.class.php
++++ b/wp-content/plugins/wpschoolpress/models/CStudents.class.php
+@@ -4,11 +4,22 @@ class CStudents extends CModel {
+     
+     public $strTableName;
+     
++    protected static $_INSTANCE;
++    
+     public function __construct() {
+         parent::__construct();
+         $this->strTableName = $this->strTablePrefix . 'wpsp_student';
+     }
+     
++    public static function getInstance() {
++        if( true == is_object( self::$_INSTANCE ) ) {
++            return self::$_INSTANCE;
++        }
++        
++        return  self::$_INSTANCE = new self();
++    }
++    
++    
+     public function fetchAllStudents() {
+         return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName );
+     }
+@@ -49,34 +60,32 @@ class CStudents extends CModel {
+                 
+     }
+     
+-    public function fetchStudentsByClassId( $intClassId ) {
+-        $strSql = 'SELECT
++    public function fetchStudentsByBatchIdByTradeId( $intBatchId, $intTradeId ) {
++       $strSql = 'SELECT 
++	                       s.*,
++                           u.user_email 
++                        FROM 
++	                       iti_wpsp_student s 
++                        JOIN iti_users u ON u.id = s.wp_usr_id 
++                        WHERE 
++                            s.trade_id = ' . ( int ) $intTradeId .'
++                            AND s.batch_id = ' . ( int ) $intBatchId;
++        return $this->objDatabase->get_results( $strSql );
++        
++    }
++    
++    public function fetchStudentsByUnitId( $intUnitId ) {
++         $strSql = 'SELECT
+                         s.*
+                     FROM ' . $this->strTableName . ' s
+                     WHERE
+-                        s.class_id LIKE CONCAT ( \'%\', \'' . ( int ) $intClassId . '\', \'%\' )';
++                        s.current_unit_id = ' . ( int ) $intUnitId;
+         
+         return $this->objDatabase->get_results( $strSql );
+     }
+     
+     public function fetchStudentByFilters( $arrmixFilters ) {
+-        global $objUser;
+-        if( true == isset( $arrmixFilters['role'] ) ) {
+-            switch ( $arrmixFilters['role'] ) {
+-                case CRole::TEACHER:
+-                    
+-                    if( CDesignations::CLERK == $objUser->getTeacher()->designation_id  || CDesignations::PRINCIPAL == $objUser->getTeacher()->designation_id  ) {
+-                        return $this->fetchStudentsByBatchId( $arrmixFilters[ 'batch_id' ] );
+-                    }
+-                    
+-                    return $this->fetchStudentsByUserIdByBatchId($arrmixFilters[ 'user_id' ] , $arrmixFilters[ 'batch_id' ] );
+-                    break;
+-                    
+-                case CRole::ADMIN:
+-                   return $this->fetchStudentsByBatchId( $arrmixFilters[ 'batch_id' ] );
+-                    break;
+-            }
+-        }
++        return $this->fetchStudentsByBatchIdByTradeId( $arrmixFilters[ 'batch_id' ], $arrmixFilters['trade_id'] );
+     }
+ }
+ 
+diff --git a/wp-content/plugins/wpschoolpress/models/CSubjects.class.php b/wp-content/plugins/wpschoolpress/models/CSubjects.class.php
+index 73e5a4b..4a11e87 100644
+--- a/wp-content/plugins/wpschoolpress/models/CSubjects.class.php
++++ b/wp-content/plugins/wpschoolpress/models/CSubjects.class.php
+@@ -7,5 +7,36 @@ class CSubjects extends CModel {
+         parent::__construct();
+         $this->strTableName = $this->strTablePrefix . 'wpsp_subject';
+     }
++    
++    public static function getInstance() {
++        if( true == is_object( self::$_INSTANCE ) ) {
++            return self::$_INSTANCE;
++        }
++        
++        return  self::$_INSTANCE = new self();
++    }
++    
++    public function insert( $arrmixSubject ) {
++        return $this->objDatabase->insert( $this->strTableName, $arrmixSubject );
++    }
++    
++    public function fetchSubjectsByFilter( $arrmixSubjectFilter ) {
++        
++        $arrstrWhere = [];
++        
++        if( true == isset( $arrmixSubjectFilter['trade_id'] ) ) {
++            $arrstrWhere[] = ' trade_id = ' . ( int ) $arrmixSubjectFilter['trade_id'];
++        }
++        
++        if( true == isset( $arrmixSubjectFilter['year_or_semester_no'] ) ) {
++            $arrstrWhere[] = ' year_or_semester_no = ' . ( int ) $arrmixSubjectFilter['year_or_semester_no'];
++        }
++        
++        $strSql = 'SELECT * FROM ' . $this->strTableName . (  ( true == is_array( $arrstrWhere ) && 0 < count( $arrstrWhere ) ) ? ' WHERE ' . implode( ' AND ', $arrstrWhere ) : '' );
++       
++        return $this->objDatabase->get_results( $strSql );
++        
++    }
++    
+ }
+ 
+diff --git a/wp-content/plugins/wpschoolpress/models/CTeachers.class.php b/wp-content/plugins/wpschoolpress/models/CTeachers.class.php
+index 51be262..28d0337 100644
+--- a/wp-content/plugins/wpschoolpress/models/CTeachers.class.php
++++ b/wp-content/plugins/wpschoolpress/models/CTeachers.class.php
+@@ -3,15 +3,29 @@
+ class CTeachers extends CModel {
+     public $strTableName;
+     
++    protected static $_INSTANCE;
++    
+     public function __construct( ) {
+         parent::__construct();
+         $this->strTableName = $this->strTablePrefix . 'wpsp_teacher';
+     }
++    
++    public static function getInstance() {
++        if( true == is_object( self::$_INSTANCE ) ) {
++            return self::$_INSTANCE;
++        }
++        
++        return  self::$_INSTANCE = new self();
++    }
+         
+     public function fetchTeacherByUserId( $intUserId ) {
+         $strSql = 'SELECT * FROM ' . $this->strTableName . ' WHERE wp_usr_id = ' . ( int ) $intUserId;
+         $arrobjTeachers = ( array ) $this->objDatabase->get_results( $strSql );
+         return  array_pop( $arrobjTeachers );;
+     }
++    
++    public function fetchAllTeachers() {
++        return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName );
++    }
+ }
+ 
+diff --git a/wp-content/plugins/wpschoolpress/models/base/CModel.class.php b/wp-content/plugins/wpschoolpress/models/base/CModel.class.php
+index 7c578b8..5674693 100644
+--- a/wp-content/plugins/wpschoolpress/models/base/CModel.class.php
++++ b/wp-content/plugins/wpschoolpress/models/base/CModel.class.php
+@@ -1,8 +1,9 @@
+ <?php
+ 
+-class CModel {
++class CModel extends CAbstractModel {
+ 
+     protected $objDatabase;
++    protected $strTableName;   
+     protected $strTablePrefix;
+     
+     public function __construct() {
+@@ -10,5 +11,11 @@ class CModel {
+         $this->objDatabase = $wpdb;
+         $this->strTablePrefix = $wpdb->prefix;
+     }
++    
++    public static function getInstance() {
++        
++    }
++    
++    
+ }
+ 
+diff --git a/wp-content/plugins/wpschoolpress/pages/wpsp-attendance.php b/wp-content/plugins/wpschoolpress/pages/wpsp-attendance.php
+index 0a8224e..3a03653 100755
+--- a/wp-content/plugins/wpschoolpress/pages/wpsp-attendance.php
++++ b/wp-content/plugins/wpschoolpress/pages/wpsp-attendance.php
+@@ -1,5 +1,6 @@
+ <?php
+ if (!defined( 'ABSPATH' ) )exit('No Such File');
++$units = CUnits::getInstance()->fetchAllUnits();
+ wpsp_header();
+ 	if( is_user_logged_in() ) {
+ 		global $current_user, $wpdb;
+@@ -16,10 +17,8 @@ wpsp_header();
+ 				if( $('#' + idCheck + '-' + intUserId ).is(':checked') ) {
+ 					$('.attend-' + intUserId ).prop( 'checked', false );
+ 					$('#' + idCheck + '-' + intUserId ).prop( 'checked', true );
+-					console.log( 'set to false' );
+ 				} else {
+ 					$('.attend-' + intUserId ).prop( 'checked', false );
+-					console.log( 'set to true' );
+ 				}
+ 			}
+ 		</script>
+@@ -39,38 +38,18 @@ wpsp_header();
+ 							<div class="wpsp-col-lg-5 wpsp-col-md-5 wpsp-col-sm-12 wpsp-col-xs-12" id="AttendanceEnterForm">
+ 							<h3 class="wpsp-card-title">Attendance</h3>
+ 							<div class="line_box">
++							
+ 									<div class="wpsp-form-group">
+-										<label for="Class">
+-											<?php if( isset($item['classid'])){
+-														echo esc_html($item['classid'],"WPSchoolPress");
+-											}else{
+-													echo esc_html("Select Class","WPSchoolPress");
+-											}
+-											?> </label>
+-											<select name="classid" id="AttendanceClass" class="wpsp-form-control">
+-												<option value="">Select Class</option>
+-													<?php
+-													if(isset($_POST['classid']) && intval($_POST['classid'])!='')
+-														$selid=intval($_POST['classid']);
+-													else
+-														if($current_user_role=='teacher'){
+-															$current_user_id = get_current_user_id();
+-														$selid=0;
+-													$ctname=$wpdb->prefix.'wpsp_class';
+-													global $objUser;
+-													$clt = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
+-													foreach($clt as $cnm){?>
+-														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$selid) echo "selected";?>><?php echo $cnm->c_name;?></option>
+-													<?php }
+-														} else {
+-														$selid=0;
+-													$ctname=$wpdb->prefix.'wpsp_class';
+-													$clt=$wpdb->get_results("select `cid`,`c_name` from `$ctname`");
+-													foreach($clt as $cnm){?>
+-														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$selid) echo "selected";?>><?php echo $cnm->c_name;?></option>
+-													<?php } } ?>
+-											</select>
+-											<span class="clserror wpsp-text-red">Please select Class</span>
++										<label class="wpsp-labelMain">Select Unit</label>
++										<select name="UnitId" id = "UnitId" class="wpsp-form-control">
++											<option value="" disabled selected>Select Unit</option>
++											<?php 
++											foreach ( $units AS $unit ) {
++											    echo '<option value="' . $unit->id . '" ' . ( $unit->id == $intUnitId ? 'selected="selected"' : '' ) . '>' . $unit->unit_name . '</option>';
++					                        }
++					                       ?>
++										</select>
++										<span class="clsbatch wpsp-text-red" style="display: none;    ">Please select Unit.</span>
+ 									</div>
+ 									<div class="wpsp-form-group">
+ 										<label for="date">	<?php if( isset($item['entry_date'])){
+@@ -87,7 +66,7 @@ wpsp_header();
+ 											<div class="wpsp-form-group">
+ 												<button id="AttendanceEnter" name="attendance" class="wpsp-btn wpsp-btn-success">Add</button>
+ 												<button id="AttendanceEdit" name="attendance" class="wpsp-btn wpsp-btn-success">Edit</button>
+-												<button id="Attendanceview" name="attendanceview" class="wpsp-btn wpsp-btn-primary">Quick View</button>
++												<!--  <button id="Attendanceview" name="attendanceview" class="wpsp-btn wpsp-btn-primary">Quick View</button> -->
+ 											</div>
+ 										</div>
+ 									</div>
+@@ -99,65 +78,10 @@ wpsp_header();
+ 							</div>
+ 							<div class="wpsp-col-lg-6 wpsp-col-lg-offset-1 wpsp-col-md-5 wpsp-col-md-offset-1 wpsp-col-sm-12 wpsp-col-xs-12 AttendanceView">
+ 								<?php
+-									$class_names		=	$c_stcount	=	$attendance	=	array();
+-									$class_table		=	$wpdb->prefix."wpsp_class";
++									$c_stcount	=	$attendance	=	array();
+ 									$student_table		=	$wpdb->prefix."wpsp_student";
+ 									$attendance_table	=	$wpdb->prefix."wpsp_attendance";
+ 									global $objUser;
+-									$class_info			=	( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
+-
+-									$stl = array();
+-									foreach($class_info as $cls){
+-										$class_names[$cls->cid]=$cls->c_name;
+-
+-												$studentlists	=	$wpdb->get_results("select class_id, sid from $student_table");
+-
+-												foreach ($studentlists as $stu) {
+-													//$stl = [];
+-													if(is_numeric($stu->class_id) ){
+-														if($stu->class_id == $cls->cid){
+-														 $stl[$cls->cid][$stu->sid] = $stu->sid;
+-													 }
+-													}
+-													else{
+-														 $class_id_array = unserialize( $stu->class_id );
+-														 if(!empty($class_id_array)){
+-														 if(in_array($cls->cid, $class_id_array)){
+-															 $stl[$cls->cid][$stu->sid] = $stu->sid;
+-														 }
+-														}
+-													}
+-											}
+-										}
+-
+-
+-		$newArr = array();
+-		$newArr1 = array();
+-foreach ($stl as $key => $value) {
+-	$newArr[] = count($value);
+-	$newArr1[$key] = count($value);
+-	}
+-
+-									$classwise_count	=	$wpdb->get_results("select class_id, count(*) as count from $student_table GROUP BY class_id",ARRAY_A);
+-
+-									foreach($classwise_count as $clwc){
+-										$c_stcount[$clwc['class_id']]	=	$clwc['count'];
+-									}
+-									$date_today	=	date('Y-m-d');
+-									$attendance_info	=	$wpdb->get_results("select class_id, absents from $attendance_table where date='$date_today'");
+-
+-									foreach($attendance_info as $attend){
+-
+-										foreach($newArr1 as  $key => $value)
+-											if($key == $attend->class_id){
+-										 $absents	=	json_decode($attend->absents);
+-										 if(empty($absents)){}else {
+-										  $present	=	$value-count($absents);
+-										}
+-										$percent	=	round(($present*100)/$value);
+-										$attendance[$attend->class_id]	=	array('present'=>$present,'percentage'=>$percent);
+-									}
+-								}
+ 								?>
+ 								
+ 								<?php 
+@@ -165,37 +89,25 @@ foreach ($stl as $key => $value) {
+ 								$intClassId = ( int ) $_GET['class_id'];
+ 								$intMonthNumber = ( int ) $_GET['month'];
+ 								$intYear = ( int ) $_GET['year'];
+-								
++								$intUnitId = ( int ) $_GET['unit_id'];
+ 								?>
+ 								
+ 								<div class="wpsp-col-sm-12">
+-									<h3 class="wpsp-card-title">View Attendance Report</h3>
++									<h3 class="wpsp-card-title">View Attendance Monthly Report</h3>
+ 									<div class="line_box">
+ 										<div class="box-body">
+-										<select name="classid" id="attendance_report_class" class="wpsp-form-control">
+-												<option value="">Select Class</option>
+-													<?php
+-													if(isset($_POST['classid']) && intval($_POST['classid'])!='')
+-														$selid=intval($_POST['classid']);
+-													else
+-														if($current_user_role=='teacher'){
+-															$current_user_id = get_current_user_id();
+-														$selid=0;
+-													$ctname=$wpdb->prefix.'wpsp_class';
+-													global $objUser;
+-													$clt = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
+-													foreach($clt as $cnm){?>
+-														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$intClassId) echo "selected";?>><?php echo $cnm->c_name;?></option>
+-													<?php }
+-														} else {
+-														$selid=0;
+-													$ctname=$wpdb->prefix.'wpsp_class';
+-													$clt=$wpdb->get_results("select `cid`,`c_name` from `$ctname`");
+-													foreach($clt as $cnm){?>
+-														<option value="<?php echo $cnm->cid;?>" <?php if($cnm->cid==$intClassId) echo "selected";?>><?php echo $cnm->c_name;?></option>
+-													<?php } } ?>
+-											</select>
+-											<br>
++											<div class="wpsp-form-group">
++												<label class="wpsp-labelMain">Select Unit</label>
++													<select name="UnitId" id = "attendance_report_unit" class="wpsp-form-control">
++														<option value="" disabled selected>Select Unit</option>
++															<?php 
++                    											foreach ( $units AS $unit ) {
++                    											    echo '<option value="' . $unit->id . '" ' . ( $unit->id == $intUnitId ? 'selected="selected"' : '' ) . '>' . $unit->unit_name . '</option>';
++					                                            }
++					                                       ?>
++													</select>
++													<span class="clsbatch wpsp-text-red" style="display: none;    ">Please select Unit</span>
++											</div>
+ 											<select id="attendance_report_month" name="month" class="wpsp-form-control" >
+ 												<option value="">Select Month</option>
+ 												<option value="1" <?php echo ( 1 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Jan</option> 
+@@ -210,8 +122,6 @@ foreach ($stl as $key => $value) {
+ 												<option value="10" <?php echo ( 10 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Oct</option> 
+ 												<option value="11" <?php echo ( 11 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Nov</option> 
+ 												<option value="12" <?php echo ( 12 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Dec</option> 
+-												
+-												
+ 											</select>
+ 											<br>
+ 											<select id="attendance_report_year" name="year" class="wpsp-form-control" >
+@@ -228,42 +138,6 @@ foreach ($stl as $key => $value) {
+ 										</div>
+ 									</div>
+ 								</div>
+-								
+-								<!--  <div class="wpsp-col-sm-12">
+-									<h3 class="wpsp-card-title">View Attendance Report</h3>
+-									<div class="line_box">
+-										<div class="box-body">
+-											<?php
+-$i=0;
+-												foreach($class_names as $clid=>$cln){
+-												$css_class='';
+-												if(isset($attendance[$clid])){
+-													if($attendance[$clid]['percentage']==100)
+-														$css_class="wpsp-progress-bar-success";
+-													else if($attendance[$clid]['percentage']<100 && $attendance[$clid]['percentage']>70)
+-														$css_class="wpsp-progress-bar-warning";
+-													else if($attendance[$clid]['percentage']<=70)
+-														$css_class="wpsp-progress-bar-danger";
+-													else
+-														$css_class="wpsp-progress-bar-info";
+-												}
+-
+-											?>
+-												<div class="wpsp-progress-group">
+-														<span class="wpsp-progress-text"><?php echo $cln;?></span>
+-														<span class="wpsp-progress-number"><?php if(isset($attendance[$clid])){ echo $attendance[$clid]['present']; }?>/<?php echo (isset($newArr[$i]))?$newArr[$i]:'0';?></span>
+-														<div class="wpsp-progress sm">
+-															<div class="wpsp-progress-bar <?php echo $css_class;?>" style="width: <?php echo (isset($attendance[$clid]))?$attendance[$clid]['percentage']:'0'; ?>%">
+-															</div>
+-														</div>
+-												</div>
+-											<?php
+-											$i++;
+-										} ?>
+-										</div>
+-									</div>
+-								</div>
+-								 -->
+ 						</div>
+ 					</div>
+ 		<div class="modal modal-wide" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModal" aria-hidden="true">
+diff --git a/wp-content/plugins/wpschoolpress/pages/wpsp-dashboard-classes.php b/wp-content/plugins/wpschoolpress/pages/wpsp-dashboard-classes.php
+index 1cf5947..d1b9ad8 100644
+--- a/wp-content/plugins/wpschoolpress/pages/wpsp-dashboard-classes.php
++++ b/wp-content/plugins/wpschoolpress/pages/wpsp-dashboard-classes.php
+@@ -1,76 +1,26 @@
+ <?php 
+     global $objUser;
++    $arrobjUnits = CUnits::getInstance()->fetchUnitByUser( $objUser );
++        
+ ?>
+ 
+ <div class="wpsp-card-body">
+-				<table class="wpsp-table" id="class_table" cellspacing="0" width="100%" style="width:100%">
+-					<thead>
+-					<tr>
+-						<th>Class Name</th>
+-						<th>Online Class Room</th>
+-					</tr>
+-					</thead>
+-					<tbody>
+-									<?php
+-									$ctable=$wpdb->prefix."wpsp_class";
+-									$stable=$wpdb->prefix."wpsp_student";
+-									if( CRole::STUDENT == $objUser->getRole() ) {
+-									       $wpsp_classes = ( new CClasses() )->fetchClassesByStudentUserId( $objUser->getUserId() );  
+-									} else {
+-		                                  $wpsp_classes = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
+-									}
+-									$sno=1;
+-									$teacher_table=	$wpdb->prefix."wpsp_teacher";
+-									$teacher_data = $wpdb->get_results("select wp_usr_id,CONCAT_WS(' ', first_name, middle_name, last_name ) AS full_name from $teacher_table order by tid");
+-									$teacherlist	=	array();
+-									if( !empty( $teacher_data ) ) {
+-										foreach( $teacher_data  as $value )
+-											$teacherlist[$value->wp_usr_id] = $value->full_name;
+-									}
+-
+-									foreach ($wpsp_classes as $wpsp_class) {
+-										$cid=intval($wpsp_class->cid);
+-
+-
+-										$studentlists	=	$wpdb->get_results("select class_id, sid from $stable");
+-										$stl = [];
+-										foreach ($studentlists as $stu) {
+-											if(is_numeric($stu->class_id) ){
+-												if($stu->class_id == $cid){
+-												 $stl[] = $stu->sid;
+-											 }
+-											}
+-											else{
+-												 $class_id_array = unserialize( $stu->class_id );
+-												// print_r($class_id_array);
+-												 if(!empty($class_id_array)){
+-												 if(in_array($cid, $class_id_array)){
+-													 $stl[] = $stu->sid;
+-												 }
+-												}
+-											}
+-										}
+-										$class_students_count = count($stl);
+-
+-										$teach_id= intval($wpsp_class->teacher_id);
+-										$teachername	=	'';
+-									?>
+-										<tr id="<?php echo intval($wpsp_class->cid);?>" class="pointer">
+-											<td><?php echo $wpsp_class->c_name;?></td>
+-											<td>
+-												<a target='__blank' href="<?php echo ESCHOOL_CLASS_ROOM_BASE_URL . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace('-', '', $wpsp_class->c_name ) . $wpsp_class->cid ); ?>" class="wpsp-btn wpsp-btn-success">
+-													<?php if( CRole::STUDENT == $objUser->getRole() ) {
+-													    echo 'Join';
+-													} else {?>
+-														Begin
+-													<?php }?>
+-												</a>
+-											</td>									
+-										</tr>
+-									<?php
+-										$sno++;
+-									}
+-									?>
+-								</tbody>
+-				</table>
+-			</div>
+\ No newline at end of file
++	<table class="wpsp-table" id="class_table" cellspacing="0" width="100%" style="width:100%">
++		<thead>
++			<tr>
++				<th>Unit Name</th>
++				<th>Online Class Room</th>
++			</tr>
++		</thead>
++		<tbody>
++			<?php 
++			    foreach ( $arrobjUnits as $objUnit ) {
++				   echo '<tr class="pointer">
++                               <td>' . $objUnit->unit_name . '</td>
++                               <td><a target="__blank" class="wpsp-btn wpsp-btn-success" href="' . ESCHOOL_CLASS_ROOM_BASE_URL .  preg_replace('/[^A-Za-z0-9\-]/', '', str_replace('-', '', $objUnit->unit_name ) . $objUnit->id ) . '">' . ( CRole::TEACHER == $objUser->getRole() ? 'Begin' : 'Join' ) . '</a></td>
++                         </tr>';
++			     }
++            ?>
++		</tbody>
++	</table>
++</div>
+\ No newline at end of file
+diff --git a/wp-content/plugins/wpschoolpress/pages/wpsp-dashboard.php b/wp-content/plugins/wpschoolpress/pages/wpsp-dashboard.php
+index 79c30de..863e15d 100755
+--- a/wp-content/plugins/wpschoolpress/pages/wpsp-dashboard.php
++++ b/wp-content/plugins/wpschoolpress/pages/wpsp-dashboard.php
+@@ -573,7 +573,7 @@ if( $current_user_role=='administrator' || $current_user_role == 'parent'){?> <d
+ 	</div>
+ 	<!-- Info boxes -->
+ 	
+-	<?php if( CRole::TEACHER == $objUser->getRole() || CRole::STUDENT == $objUser->getRole()) { ?>
++	<?php  ?>
+ 		<div class="wpsp-row">
+ 			<div class="wpsp-col-lg-8  wpsp-col-xs-12">
+ 				<div class="wpsp-card">
+@@ -603,7 +603,7 @@ if( $current_user_role=='administrator' || $current_user_role == 'parent'){?> <d
+ 				</div>
+ 			</div>
+ 		</div>
+-	<?php } ?>
++	<?php  ?>
+ 
+ 	<?php if( $current_user_role=='administrator' || $current_user_role == 'parent' ){?> <div class="wpsp-row "><?php } else { ?>
+ 	<div class="wpsp-row">
+diff --git a/wp-content/plugins/wpschoolpress/pages/wpsp-student.php b/wp-content/plugins/wpschoolpress/pages/wpsp-student.php
+index b7eba28..32828d5 100755
+--- a/wp-content/plugins/wpschoolpress/pages/wpsp-student.php
++++ b/wp-content/plugins/wpschoolpress/pages/wpsp-student.php
+@@ -9,7 +9,7 @@ wpsp_header();
+ 			wpsp_sidebar();
+ 			wpsp_body_start();
+ 			$filename	=	WPSP_PLUGIN_PATH .'includes/wpsp-studentList.php';
+-			if( isset( $_GET['tab'] ) && $_GET['tab'] == 'addstudent' ) {
++			if( isset( $_GET['page_action'] ) && $_GET['page_action'] == 'addstudent' ) {
+ 				$label	=	__( 'Add New ' . _t( 'Student' ), 'WPSchoolPress');
+ 				$filename	=	WPSP_PLUGIN_PATH .'includes/wpsp-studentForm.php';
+ 			} else if( isset($_GET['id']) && is_numeric($_GET['id']) ) {
+@@ -32,8 +32,8 @@ wpsp_header();
+ 			?>
+ 			<?php
+ 			include_once ( $filename );
+-			if(isset($_GET['tab'])){
+-				if($_GET['tab'] != 'addstudent' ) {
++			if(isset($_GET['page_action'])){
++				if($_GET['page_action'] != 'addstudent' ) {
+ 					do_action('wpsp_student_import_html');
+ 				}
+ 			}
+diff --git a/wp-content/plugins/wpschoolpress/wpschoolpress.php b/wp-content/plugins/wpschoolpress/wpschoolpress.php
+index 2828ea7..d1c00a8 100755
+--- a/wp-content/plugins/wpschoolpress/wpschoolpress.php
++++ b/wp-content/plugins/wpschoolpress/wpschoolpress.php
+@@ -48,9 +48,15 @@ add_action('plugins_loaded', 'wpsp_plugins_loaded');
+ 
+ function wpsp_plugins_loaded()
+ {
++    
++    global $current_user;
++    global $objUser;
++    
+ 	$wpsp_lang_dir = dirname(plugin_basename(__FILE__)) . '/languages/';
+ 	load_plugin_textdomain('WPSchoolPress', false, $wpsp_lang_dir);
+ 	// initialize settings of plugin Open required files for initialization
++	require_once WPSP_PLUGIN_PATH . 'includes/commonFunctions.php';
++	require_once WPSP_PLUGIN_PATH . 'models/base/CAbstractModel.php';
+ 	require_once WPSP_PLUGIN_PATH . 'models/base/CModel.class.php';
+ 
+ 	foreach (glob(WPSP_PLUGIN_PATH . "models/*.php") AS $strFile) {
+@@ -58,6 +64,15 @@ function wpsp_plugins_loaded()
+ 	}
+ 	
+ 	require_once (WPSP_PLUGIN_PATH . 'lib/translations.php');
++	$objUser                = new CUser();
++	$objUser->setUserId( $current_user->id );
++	$objUser->setRole( $current_user->roles[0] );
++	
++	if( 'teacher' == $objUser->strRole ) {
++	    $objUser->setTeacher( ( new CTeachers() )->fetchTeacherByUserId( $objUser->getUserId() ) );
++	}
++	
++	
+ 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks.php');
+ 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks-student.php');
+ 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks-teacher.php');
+@@ -74,24 +89,20 @@ function wpsp_plugins_loaded()
+ 	// public class handles most of functionalities of plugin
+ 	include_once (WPSP_PLUGIN_PATH . 'wpsp-class-public.php');
+ 	$wpsp_public = new Wpsp_Public();
+-	$wpsp_public->add_hooks();
+-	
+-	global $current_user;
+-	global $objUser;
+-	$objUser                = new CUser();
+-	$objUser->setUserId( $current_user->id );
+-	$objUser->setRole( $current_user->roles[0] );
+-
+-	if( 'teacher' == $objUser->strRole ) {
+-	    $objUser->setTeacher( ( new CTeachers() )->fetchTeacherByUserId( $objUser->getUserId() ) );
+-	}
+-	
++	$wpsp_public->add_hooks();		
+ }
+ 
+ 
+ add_action('admin_init', 'ajax_actions');
+ function ajax_actions()
+ {
++    /**
++     * Ajax in MVC
++     */
++    add_action('wp_ajax_action', function() {
++        require_once( WPSP_PLUGIN_PATH . '/modules/autoload.php' );
++    });
++    
+ 	add_action('wp_ajax_listdashboardschedule', 'wpsp_listdashboardschedule');
+ 	add_action('wp_ajax_StudentProfile', 'wpsp_StudentProfile');
+ 	add_action('wp_ajax_AddStudent', 'wpsp_AddStudent');
+diff --git a/wp-content/plugins/wpschoolpress/wpsp-class-admin.php b/wp-content/plugins/wpschoolpress/wpsp-class-admin.php
+index 74f97ec..5f7b4a9 100755
+--- a/wp-content/plugins/wpschoolpress/wpsp-class-admin.php
++++ b/wp-content/plugins/wpschoolpress/wpsp-class-admin.php
+@@ -9,8 +9,7 @@ if (!defined('ABSPATH')) exit;
+  * @package WPSchoolPress
+  * @since 2.0.0
+  */
+-class Wpsp_Admin
+-{
++class Wpsp_Admin {
+ 	public
+ 	function __construct()
+ 	{
+@@ -20,8 +19,7 @@ class Wpsp_Admin
+ 	* @package WPSchoolPress
+ 	* @since 2.0.0
+ 	*/
+-function wpsp_admin_menu()
+-	{
++function wpsp_admin_menu() {
+ 		global $current_user;
+ 		$current_user_role=$current_user->roles[0];
+ 		$proversion1    =    wpsp_check_pro_version('wpsp_addon_version');
+@@ -106,8 +104,7 @@ function wpsp_admin_menu()
+ 			$this,
+ 			'wpsp_callback_importhistory'
+ 		));
+-		if( $current_user_role=='administrator' || $current_user_role=='teacher')
+-		{
++		if( $current_user_role=='administrator' || $current_user_role=='teacher') {
+ 			add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-bullhorn"></i>&nbsp; Notify', 'edit_posts', 'sch-notify', array(
+ 				$this,
+ 				'wpsp_callback_notify'
+@@ -153,6 +150,38 @@ function wpsp_admin_menu()
+ 			$this,
+ 			'wpsp_callback_schhistory'
+ 		));
++		
++		/** MVC Strarted **/
++		
++		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trades', 'edit_posts', 'sch-trades', array(
++		    $this,
++		    'wpsp_callback'
++		));
++		
++		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trades', 'edit_posts', 'sch-meetingroom', array(
++		    $this,
++		    'wpsp_callback'
++		));
++		
++		
++		
++		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trainees', 'edit_posts', 'sch-trainees', array(
++		    $this,
++		    'wpsp_callback'
++		));
++		
++		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; Subjets', 'edit_posts', 'sch-subjects-new', array(
++		    $this,
++		    'wpsp_callback'
++		));
++		
++		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; Subjets', 'edit_posts', 'sch-units', array(
++		    $this,
++		    'wpsp_callback'
++		));
++		
++		/** MVC FInished **/
++
+ 		if($propayment == "installed"){
+ 			add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-strikethrough"></i>&nbsp; Payment', 'edit_posts', 'sch-payment', array(
+ 			$this,
+@@ -171,6 +200,11 @@ function wpsp_admin_menu()
+ 	* @package WPSchoolPress
+ 	* @since 2.0.0
+ 	*/
++	
++	public function wpsp_callback() {
++	   require_once( WPSP_PLUGIN_PATH . '/modules/autoload.php' );
++	}
++	
+ 	function wpsp_admin_details()
+ 	{
+ 		require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-admin-options.php');
+@@ -408,6 +442,12 @@ function wpsp_admin_menu()
+ 				'jquery'
+ 			) , '1.0.0', true);
+ 		}
++		
++		
++		if ($hook == 'wpschoolpress_page_sch-trainees' || $hook == 'wpschoolpress_page_sch-subjects-new' || $hook == 'wpschoolpress_page_sch-units' ) {
++		    wp_enqueue_script('student_list', WPSP_PLUGIN_URL . 'js/common/wpsp-common.js', ['jquery'] , '1.0.0', true); 
++		}
++		
+ 		if ($hook == 'wpschoolpress_page_sch-student' )
+ 		{
+ 			// wp_enqueue_script('wpsp_wp_admin_jquery15', WPSP_PLUGIN_URL . 'plugins/fileupload/jquery.iframe-transport.js', array(
+diff --git a/wp-content/plugins/wpschoolpress/wpsp-layout.php b/wp-content/plugins/wpschoolpress/wpsp-layout.php
+index 194787b..c37bfea 100755
+--- a/wp-content/plugins/wpschoolpress/wpsp-layout.php
++++ b/wp-content/plugins/wpschoolpress/wpsp-layout.php
+@@ -119,1142 +119,10 @@ function wpsp_topbar(){
+ }
+ /* This function used for Left-Sidebar */
+ function wpsp_sidebar(){
+-  global $current_user, $wp_roles, $current_user_name;
+-  $current_user_role=$current_user->roles[0];
+-  $page = $_GET['page'] ?  ltrim(strstr($_GET['page'],'-'),'-') : '';
+-  $dashboard_page=$message_page=$student_page=$teacher_page=$parent_page=$class_page=$attendance_page=$subject_page=$mark_page=$exam_page=$event_page=$timetable_page=$import_page=$notify_page=$sms_page=$transport_page=$settings_page=$settings_general_page=$settings_wrkhours_page=$settings_subfield_page=$leave_page=$teacher_attendance_page=$settings_chgpw_page      = $viewpayment= $addpayment= $history_page =$payment_page_main='';
+-  $proversion1       =    wpsp_check_pro_version('wpsp_addon_version');
+-  $prodisable1       =    !$proversion1['status'] ? 'notinstalled'    : 'installed';
+-  $prohistory        =    wpsp_check_pro_version('wpsp_mc_version');
+-  $prodisablehistory =    !$prohistory['status'] ? 'notinstalled'    : 'installed';
+-  $promessage        =    wpsp_check_pro_version('wpsp_message_version');
+-  $prodisablemessage =    !$promessage['status'] ? 'notinstalled'    : 'installed';
+-  $propayment        =    wpsp_check_pro_version('pay_WooCommerce');
+-  $propayment        =    !$propayment['status'] ? 'notinstalled'    : 'installed';
+-
+-  include(WPSP_PLUGIN_PATH . 'includes/filter_menu.php');
+-  
+-    if($current_user_role=='administrator' || $current_user_role=='teacher'){
+-    switch( $page ){
+-      case 'dashboard':
+-      $dashboard_page="active";
+-      break;
+-      case 'messages':
+-      $message_page="active";
+-      break;
+-      case 'student':
+-      $student_page="active";
+-      break;
+-      case 'request':
+-      $request_page="active";
+-      break;
+-      case 'teacher':
+-      $teacher_page="active";
+-      break;
+-      case 'parent':
+-      $parent_page="active";
+-      break;
+-      case 'class':
+-      $class_page="active";
+-      break;
+-      case 'attendance':
+-      $attendance_page="active";
+-      break;
+-      case 'subject':
+-      $subject_page="active";
+-      break;
+-      case 'exams':
+-      $exam_page="active";
+-      break;
+-      case 'marks':
+-      $mark_page="active";
+-      break;
+-      case 'importhistory':
+-      $import_page="active";
+-      break;
+-      case 'notify':
+-      $notify_page="active";
+-      break;
+-      case 'payment':
+-      if( isset( $_GET['type'] ) && $_GET['type'] =='addpayment' )
+-      $addpayment="active";
+-      else
+-      $viewpayment="active";
+-      $payment_page_main = "class='treeview active'";
+-      break;
+-      case 'events':
+-      $event_page="active";
+-      break;
+-      case 'transport':
+-      $transport_page="active";
+-      break;
+-      case 'leavecalendar':
+-      $leave_page="active";
+-      break;
+-      case 'timetable' :
+-      $timetable_page='active';
+-      break;
+-      case 'settings':
+-      $settings_page="class='treeview active'";
+-      if(isset($_GET['sc']) && $_GET['sc']=='subField')
+-        $settings_subfield_page="active";
+-      else if(isset($_GET['sc']) && $_GET['sc']=='WrkHours')
+-        $settings_wrkhours_page="active";
+-      else
+-        $settings_general_page="active";
+-      break;
+-      case 'changepassword' :
+-      $settings_chgpw_page="active";
+-      break;
+-      case 'teacherattendance':
+-      $teacher_attendance_page="active";
+-      break;
+-      case 'history' :
+-        $history_page='active';
+-        break;
+-    }
+-
+-
+-
+- // Outputs: Full URL
+- if($prodisablehistory == "installed"){
+-   if(isset($_SERVER['QUERY_STRING'])){
+-     $query = $_SERVER['QUERY_STRING'];
+-     $query1 = explode("=",$query);
+-     $query1[1];
+-     if(!isset($query1[2])){
+-       $query1[2] = '';
+-     }
+-
+-     if($query1[1] == 'sch-class' || $query1[1] == 'sch-subject' ||
+-        $query1[2] == 'subField' || $query1[1] == 'sch-marks' || $query1[1] == 'sch-exams' || $query1[1] == 'sch-timetable' ){
+-        $class_page_our = 'active';
+-      }else {
+-        $class_page_our = '';
+-      }
+-      if($query1[1] == 'sch-attendance' || $query1[1] == 'sch-teacherattendance'){
+-        $attendance_page_main = 'active';
+-      } else {
+-        $attendance_page_main = '';
+-      }
+-      if($query1[1] == 'sch-settings' || $query1[2] == 'WrkHours' || $query1[1] == 'sch-leavecalendar' || $query1[1] == 'sch-importhistory'){
+-        $settings_page_main = 'active';
+-      }else {
+-        $settings_page_main = '';
+-      }
+-    }
+-  }
+-  $loc_avatar=get_user_meta($current_user->ID,'simple_local_avatar',true);
+-  if( $current_user->ID == 1 )
+-    $img_url  =   WPSP_PLUGIN_URL.'img/admin.png';
+-  else
+-    $img_url  = $loc_avatar ? $loc_avatar['full'] : WPSP_PLUGIN_URL.'img/avatar.png';
+-
+-    echo "<!-- Left side column. contains the logo and sidebar -->
+-          <div class='wpsp-overlay'></div>
+-          <aside class='wpsp-sidebar ifnotadmin'>
+-          <div class='sidebarScroll'>
+-          <ul class='wpsp-navigation'>
+-          <li class='".$dashboard_page."'>
+-          <a href='".site_url('wp-admin/admin.php?page=sch-dashboard')."'>
+-          <i class='dashicons dashicons-dashboard icon'></i>
+-          <span>".$sch_dashboard."</span>
+-          </a>
+-          </li>";
+-
+-          if($prodisablemessage == 'installed'){
+-            echo "<li class=".$message_page.">
+-            <a href='".site_url('wp-admin/admin.php?page=sch-messages')."'>
+-            <i class='dashicons dashicons-email icon'></i>
+-            <span>".$sch_message."</span><span class='pull-right label label-primary pull-right'></span>
+-            </a>
+-            </li>";
+-          }
+-          global $objUser;
+-          if( 'administrator' == $current_user_role || CDesignations::PRINCIPAL == $objUser->getTeacher()->designation_id || CDesignations::CLERK == $objUser->getTeacher()->designation_id ) {
+-              echo "<li class='".$teacher_page."'>
+-                        <a href='".site_url('wp-admin/admin.php?page=sch-teacher')."'>
+-                            <i class='dashicons dashicons-businessman icon'></i>
+-                            <span>Staff Management</span>
+-                        </a>
+-                    </li>";
+-              
+-          }
+-
+-          echo "<li class='has-submenu ".$student_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-student')."'>
+-                    <i class='dashicons dashicons dashicons-welcome-widgets-menus icon icon'></i>
+-                    <span>".$sch_student."</span>
+-                  </a>
+-                </li>
+-                <li class='has-submenu  ".$student_page."'>
+-                            <a href='#'>
+-                                <i class='dashicons dashicons-welcome-write-blog icon'></i>
+-                                <span>Trainee Record</span>
+-                            </a>
+-                            <ul class='sub-menu'>
+-                                <li>
+-                                    <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Daily Diary</a>
+-                                </li>
+-                                <li>
+-                                    <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Drafting Book</a>
+-                                </li>
+-                                <li>
+-                                    <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Theory File</a>
+-                                </li>
+-                                <li>
+-                                    <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Job Sheetbook</a>
+-                                </li>
+-                                <li>
+-                                    <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Assignment Books</a>
+-                                </li>
+-                                <li>
+-                                    <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Practical Book</a>
+-                                </li>
+-                                <li>
+-                                    <a href='" . site_url('wp-admin/admin.php?page=sch-leave_record') . "'>Leave Record</a>
+-                                </li>
+-                            </ul>
+-                  </li>
+-                  <li class='has-submenu  ".$student_page."'>
+-                        <a href='#'>
+-                            <i class='dashicons dashicons-welcome-write-blog icon'></i>
+-                            <span>Instructor Record</span>
+-                        </a>
+-                        <ul class='sub-menu'>
+-                            <li>
+-                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Syllabus(split syllabus monthly yearly)</a>
+-                            </li>
+-                            <li>
+-                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Timetable</a>
+-                            </li>
+-                            <li>
+-                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Lesson Plan</a>
+-                            </li>
+-                            <li>
+-                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Demostration Plan</a>
+-                            </li>
+-                            <li>
+-                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Daily Diary</a>
+-                            </li>
+-                            <li>
+-                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "' title='Job Evaluation Register'>Job Evaluation</a>
+-                            </li>
+-                            <li>
+-                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Skill Chart</a>
+-                            </li>
+-                            <li>
+-                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Progress Chart</a>
+-                            </li>
+-                            <li>
+-                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Question Bank</a>
+-                            </li>
+-                            <li>
+-                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "'>Hand Tool Distribution</a>
+-                            </li>
+-                            <li>
+-                                <a href='" . site_url('wp-admin/admin.php?page=sch-underconstruction') . "' title='Audio Video Aids in Training'>A/V Aids</a>
+-                            </li>
+-                        </ul>
+-                    </li>
+-    
+-                    ";
+-          if($current_user_role == 'administrator'){
+-            if($proversion1['status']){
+-              echo "<li class='".$request_page."'>
+-              <a href='".site_url('wp-admin/admin.php?page=sch-request')."'>
+-              <i class='dashicons dashicons-welcome-write-blog icon'></i>
+-              <span>".$sch_registration."</span>
+-              </a></li>";
+-            }
+-          }
+-
+-          echo "<li class='".$parent_page."'>
+-          <a href='".site_url('wp-admin/admin.php?page=sch-parent')."'>
+-          <i class='dashicons dashicons-groups icon'></i>
+-          <span>".$sch_parent."</span>
+-          </a>
+-          </li>
+-          <li class='has-submenu ".((isset($class_page_our)? $class_page_our : ''))."'>
+-          <a href='".site_url('wp-admin/admin.php?page=sch-class')."'>
+-          <i class='dashicons dashicons-welcome-widgets-menus icon'></i>
+-          <span>".$sch_classes."</span>
+-          </a>
+-          <ul class='sub-menu'>
+-          <li class='".$class_page."'>
+-            <a href='".site_url('wp-admin/admin.php?page=sch-class')."'>
+-              <span>".$sch_classes."</span>
+-            </a>
+-          </li>
+-          <li class='".$subject_page."'>
+-            <a href='".site_url('wp-admin/admin.php?page=sch-subject')."'>
+-              <span>".$sch_subject."</span>
+-            </a>
+-          </li>";
+-
+-          if($current_user_role=='administrator'){
+-            echo "<li class='".$settings_subfield_page."'>
+-            <a href='".site_url('wp-admin/admin.php?page=sch-settings&sc=subField')."'>".$sch_subject_mark_field."</a>
+-            </li>";
+-          }
+-
+-          echo "<li class='".$mark_page."'>
+-          <a href='".site_url('wp-admin/admin.php?page=sch-marks')."'>
+-          <span>".$sch_marks."</span>
+-          </a>
+-                </li>
+-                <li class='".$exam_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-exams')."'>
+-                    <span>".$sch_exams."</span>
+-                  </a>
+-                </li>
+-                <li class='".$timetable_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-timetable')."'>
+-                    <span>".$sch_timetable."</span>
+-                  </a>
+-                </li>
+-              </ul>
+-          </li>
+-          <li class='has-submenu ".((isset($attendance_page_main)? $attendance_page_main : ''))."'>
+-            <a href='".site_url('wp-admin/admin.php?page=sch-attendance')."'>
+-              <i class='dashicons dashicons-clipboard icon'></i>
+-              <span>".$sch_attendance."</span>
+-            </a>
+-            <ul class='sub-menu'>
+-              <li class='".$attendance_page."'><a href='".site_url('wp-admin/admin.php?page=sch-attendance')."'>
+-                <span>".$sch_student_attendance."</span>
+-              </a></li>";
+-            /* if($current_user_role=='administrator' || $current_user_role=='teacher'){
+-              echo "<li class='".$teacher_attendance_page."'>
+-                <a href='".site_url('wp-admin/admin.php?page=sch-teacherattendance')."'>
+-                 <span>".$sch_teacher_attendance."</span>
+-                </a>
+-               </li>";
+-            } */
+-          echo"</ul>
+-          </li>
+-          <li class='".$event_page."'>
+-            <a href='".site_url('wp-admin/admin.php?page=sch-events')."'>
+-              <i class='dashicons dashicons-calendar-alt icon'></i><span>".$sch_events."</span>
+-            </a>
+-                </li>
+-           ";
+-        if($current_user_role=='administrator' || $current_user_role=='teacher') {
+-            global $wpsp_settings_data;
+-            $schoolname = isset( $wpsp_settings_data['sch_name'] ) && !empty( $wpsp_settings_data['sch_name'] ) ? $wpsp_settings_data['sch_name'] : __( 'ESchool','WPSchoolPress' );
+-            
+-            echo 
+-                "<li class='".$notify_page."'>
+-                  <a target='__blank' href='" . ESCHOOL_CLASS_ROOM_BASE_URL . str_replace( ' ', '', $schoolname ) . 'StaffMeeting' ."'>
+-                 <i class='dashicons dashicons-groups icon'></i><span>Meeting Room</span></a>
+-                </li>";
+-            echo "
+-            <li class='".$notify_page."'>
+-            <a href='".site_url('wp-admin/admin.php?page=sch-notify')."'>
+-              <i class='icon wpsp-notify'></i><span>".$sch_notfiy."</span>
+-            </a>
+-          </li>";
+-        }
+-         echo "<li class='".$transport_page."'>
+-            <a href='".site_url('wp-admin/admin.php?page=sch-transport')."'>
+-              <i class='icon wpsp-school-bus'></i><span>".$sch_transport."</span>
+-            </a>
+-           </li>";
+-      echo "<li class='has-submenu ".((isset($settings_page_main)? $settings_page_main : '' ))."'>
+-          <a href='#'>
+-          <i class='dashicons dashicons-admin-generic'></i>
+-          <span>".$sch_gen_setting."</span>
+-          </a>
+-          <ul class='sub-menu'>";
+-           if($current_user_role=='administrator'){
+-          echo "<li class='".$settings_general_page."'>
+-              <a href='".site_url('wp-admin/admin.php?page=sch-settings')."'>
+-              <span>".$sch_setting."</span></a>
+-              </li>";
+-          echo "<li class='".$settings_wrkhours_page."'>
+-              <a href='".site_url('wp-admin/admin.php?page=sch-settings&sc=WrkHours')."'>
+-              <span>".$sch_workinghours."</span></a>
+-              </li>";
+-         }
+-      echo "<li class='".$leave_page."'>
+-          <a href='".site_url('wp-admin/admin.php?page=sch-leavecalendar')."'>
+-          <span>".$sch_leavecalendar."</span></a></li>";
+-         if($current_user_role=='administrator' || $current_user_role=='teacher') {
+-          echo "<li class='" . $import_page . "'>
+-              <a href='" . site_url('wp-admin/admin.php?page=sch-importhistory') . "'>
+-                <span>". $sch_import_history . "</span>
+-              </a>
+-               </li>
+-             ";
+-          }
+-            echo "</ul>
+-                </li>";
+-
+-      echo "</ul>
+-            </div>
+-          </aside>";
+-  }  elseif($current_user_role=='student'){
+-      switch( $page )
+-      {
+-        case 'dashboard':
+-        $dashboard_page="active";
+-        break;
+-        case 'payment':
+-        $payment_page_main="active";
+-        break;
+-        case 'Messages':
+-        $message_page="active";
+-        break;
+-        case 'student':
+-        $student_page="active";
+-        break;
+-        case 'teacher':
+-        $teacher_page="active";
+-        break;
+-        case 'parent':
+-        $parent_page="active";
+-        break;
+-        // case 'class':
+-        // $class_page="active";
+-        // break;
+-        case 'attendance':
+-        $attendance_page="active";
+-        break;
+-        case 'subject':
+-        $subject_page="active";
+-        break;
+-        case 'exams':
+-        $exam_page="active";
+-        break;
+-        case 'marks':
+-        $mark_page="active";
+-        break;
+-        case 'events':
+-        $event_page="active";
+-        break;
+-        case 'transport':
+-        $transport_page="active";
+-        break;
+-        case 'leavecalendar':
+-        $leave_page="active";
+-        break;
+-        // case 'timetable' :
+-        // $timetable_page='active';
+-        // break;
+-        case 'history' :
+-        $history_page='active';
+-        break;
+-      }
+-       // Outputs: Full URL
+-
+-$query = $_SERVER['QUERY_STRING'];
+-$query1 = explode("=",$query);
+- $query1[1];
+-$query = $_SERVER['QUERY_STRING'];
+-$query1 = explode("=",$query);
+- $query1[1];
+- if(!isset($query1[2])){
+-  $query1[2] = '';
+-}
+-if($query1[1] == 'sch-timetable&cid' || $query1[1] == 'sch-teacher&cid' || $query1[1] == 'sch-subject&cid' || $query1[1] == 'sch-exams&cid' || $query1[1] == 'sch-marks&cid' || $query1[1] == 'sch-attendance&cid' || $query1[1] == 'sch-leavecalendar&cid'|| $query1[1] == 'sch-student&cid')
+-{
+-$class_innercls1 = 'active';
+-}else{
+-  $class_innercls1 = '';
+-
+-}
+-
+-
+-if($propayment == "installed"){
+-global $wpdb;
+-  $user_id = $current_user->ID;
+-$stable=$wpdb->prefix."wpsp_student";
+-$wpsp_stud =$wpdb->get_results("SELECT s.class_id FROM wp_wpsp_student s
+-INNER JOIN wp_wpsp_class c  where s.wp_usr_id = '".$user_id."' and c.c_fee_type = 'paid'");
+-//$clsid = $wpsp_stud[0]->class_id;
+-$clsid = [];
+-if(is_numeric($wpsp_stud[0]->class_id) ){
+-  $clsid[] = $wpsp_stud[0]->class_id;
+-}else{
+-  $class_id_array = unserialize( $wpsp_stud[0]->class_id );
+-  $clsid[] = $class_id_array;
+-}
+-$courses = get_user_meta( $user_id, '_pay_woocommerce_enrolled_class_access_counter', true );
+-    if ( ! empty( $courses ) ) {
+-      $courses = maybe_unserialize( $courses );
+-    } else {
+-      $courses = array();
+-    }
+-
+-foreach($courses as $key => $value) {
+-      //if($key == $clsid)
+-  $keyvakye[] =  $key;
+-    }
+-}
+-
+-
+-      $loc_avatar=get_user_meta($current_user->ID,'simple_local_avatar',true);
+-      if( $current_user->ID == 1 )
+-      $img_url  =   WPSP_PLUGIN_URL.'img/admin.png';
+-      else
+-      $img_url  = $loc_avatar ? $loc_avatar['full'] : WPSP_PLUGIN_URL.'img/avatar.png';
+-     global $current_user, $wpdb;
+-     $ctable= $wpdb->prefix."wpsp_class";
+-     $stable= $wpdb->prefix."wpsp_student";
+-     // $wpsp_classes =$wpdb->get_results("SELECT cls.* FROM $ctable cls, $stable st where st.wp_usr_id = $current_user->ID AND st.class_id=cls.cid");
+-      $wpsp_classes =$wpdb->get_results("SELECT class_id FROM $stable where wp_usr_id = $current_user->ID");
+-       // print_r($wpsp_classes);
+-          echo "<!-- Left side column. contains the logo and sidebar -->
+-          <div class='wpsp-overlay'></div>
+-            <aside class='wpsp-sidebar ifnotadmin'>
+-          <div class='sidebarScroll'>
+-            <ul class='wpsp-navigation'>
+-                <li class='".$dashboard_page."'>
+-                 <a href='".site_url('wp-admin/admin.php?page=sch-dashboard')."'>
+-                    <i class='dashicons dashicons-dashboard icon'></i>
+-                    <span>".$sch_dashboard."</span>
+-                  </a>
+-                </li>";
+-              if($prodisablemessage == 'installed'){
+-               echo "<li class=".$message_page.">
+-             <a href='".site_url('wp-admin/admin.php?page=sch-messages')."'>
+-               <i class='dashicons dashicons-email icon'></i>
+-        <span>".$sch_message."</span><span class='pull-right label label-primary pull-right'></span>
+-              </a>
+-            </li>";
+-          }
+-                echo "
+-            <li class='".$parent_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-parent')."'>
+-                    <i class='dashicons dashicons-groups icon'></i>
+-
+-                    <span>". $sch_parent."</span>
+-                  </a>
+-                </li>
+-             <li class='has-submenu ".$class_innercls1."'>
+-                <a href='".site_url('wp-admin/admin.php?page=sch-class')."'>
+-                  <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".$sch_enrolled_class."</span>
+-                </a>";
+-             if (is_numeric($wpsp_classes[0]->class_id)){
+-                  $classIDArray[] = $wpsp_classes[0]->class_id;
+-              }else{
+-                  $classIDArray = unserialize($wpsp_classes[0]->class_id);
+-              }
+-              $classname_array = [];
+-
+-              if ((!empty($classIDArray)) && ($classIDArray[0] != 0)) {
+-              foreach ($classIDArray as $id ) {
+-               $clasname = $wpdb->get_row("SELECT * FROM $ctable where cid=$id");
+-
+-               $classname1 = $clasname->c_name;
+-               $classname_array[] = $clasname;
+-
+-               if($propayment == "installed"){
+-               if($clasname->c_fee_type == 'free'){
+-                 $nonemenu = ' nopayment1';
+-               } else {
+-                 if(!empty($keyvakye)){
+-                   if(in_array($id, $keyvakye)){
+-                     $nonemenu = ' nopayment1';
+-                   } else {
+-                     $nonemenu = ' nopayment';
+-                   }
+-                 }else{
+-                   $nonemenu = ' nopayment';
+-                 }
+-               }
+-             }
+-
+-               $getid = base64_decode($query1[2]);
+-               $id = base64_encode($id);
+-               $clsgetid = base64_decode($id);
+-               if($getid == base64_decode($id)){
+-                 $timetable_page = 'active';
+-               }
+-
+-               if($clsgetid != 0)
+-               {
+-
+-
+-                echo "<ul class='sub-menu has-submenu ".((isset($nonemenu) ? $nonemenu : ''))." '>";
+-            if(trim($clsgetid) == trim($getid)){
+-
+-              echo "<li class='has-submenu active'>";
+-            } else {
+-              echo "<li class='has-submenu'>";
+-            }
+-
+-            echo "<a href='".site_url('wp-admin/admin.php?page=sch-class')."'>
+-                  <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".$classname1."</span>
+-                </a>
+-                <ul class='sub-menu'>
+-                <li class='".$leave_page."'>
+-                     <a target='__blank' href='" . ESCHOOL_CLASS_ROOM_BASE_URL . preg_replace('/[^A-Za-z0-9\-]/', '',  str_replace('-', '', $clasname->c_name ) . $clasname->cid ) . "'>
+-                    <span>Online Class Room</span></a>
+-                </li>
+-                <li class='".$timetable_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-timetable&cid=').$id."'>
+-                    <span>".$sch_timetable."</span>
+-                  </a>
+-                </li>
+-                <li class='".$teacher_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-teacher&cid=').$id."'>
+-                    <span>".$sch_teacher."</span>
+-                  </a>
+-                </li>
+-                <li class='".$student_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-student&cid=').$id."'>
+-                    <span>".$sch_student."</span>
+-                  </a>
+-                </li>
+-                <li class='".$subject_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-subject&cid=').$id."'>
+-                    <span>".$sch_subject."</span>
+-                  </a>
+-                </li><!--
+-                <li class='".$exam_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-exams&cid=').$id."'>
+-                    <span>".$sch_exams."</span>
+-                  </a>
+-                </li>
+-                <li class='".$mark_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-marks&cid=').$id."'>
+-                    <span>".$sch_marks."</span>
+-                  </a>
+-                </li>
+-                <li class='".$attendance_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-attendance&cid=').$id."'>
+-                    <span>".$sch_attendance."</span>
+-                  </a>
+-                </li>
+-                <li class='".$leave_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-leavecalendar&cid=').$id."'>
+-                 <span>".$sch_leavecalendar."</span></a>
+-                </li> -->
+-              </ul>
+-          </li></li></ul>";
+-          }
+-        }
+-          }
+-         echo "<li class='".$event_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-events')."'>
+-                    <i class='dashicons dashicons-calendar-alt icon'></i><span>".$sch_events."</span>
+-                  </a>
+-                </li>
+-
+-            <li class='".$transport_page."'>
+-            <a href='".site_url('wp-admin/admin.php?page=sch-transport')."'>
+-              <i class='icon wpsp-school-bus'></i><span>".$sch_transport."</span>
+-            </a>
+-           </li>";
+-        if($prohistory['status']){
+-           echo "<li class='".$history_page."'>
+-            <a href='".site_url('wp-admin/admin.php?page=sch-history')."'>
+-              <i class='icon  fa fa-history'></i><span>".$sch_class_history."</span>
+-            </a>
+-           </li>";
+-         }
+-          if($propayment == "installed"){
+-              if($current_user_role=='student'){
+-
+-      echo "<li class='".$payment_page_main."'>
+-        <a href='".site_url('wp-admin/admin.php?page=sch-payment')."'>
+-          <i class='icon fa fa-money'></i><span>".$sch_payment."</span>
+-        </a>
+-       </li>";
+-       }}
+-         echo "</ul>
+-            </div>
+-          </aside>";
+-  }elseif($current_user_role=='parent'){
+-      switch( $page )
+-      {
+-        case 'dashboard':
+-        $dashboard_page="active";
+-        break;
+-         case 'Messages':
+-      $message_page="active";
+-       break;
+-        case 'student':
+-        $student_page="active";
+-        break;
+-        case 'teacher':
+-        $teacher_page="active";
+-        break;
+-        case 'parent':
+-        $parent_page="active";
+-        break;
+-        // case 'class':
+-        // $class_page="active";
+-        // break;
+-        case 'attendance':
+-        $attendance_page="active";
+-        break;
+-        case 'subject':
+-        $subject_page="active";
+-        break;
+-        case 'exams':
+-        $exam_page="active";
+-        break;
+-        case 'marks':
+-        $mark_page="active";
+-        break;
+-        case 'events':
+-        $event_page="active";
+-        break;
+-        case 'transport':
+-        $transport_page="active";
+-        break;
+-        case 'leavecalendar':
+-        $leave_page="active";
+-        break;
+-        case 'timetable' :
+-        $timetable_page='active';
+-        break;
+-        case 'history' :
+-        $history_page='active';
+-        break;
+-      }
+-      $query = $_SERVER['QUERY_STRING'];
+-      $query1 = explode("=",$query);
+-      $query1[1];
+-      $query = $_SERVER['QUERY_STRING'];
+-      $query1 = explode("=",$query);
+-      $query1[1];
+-      if(!isset($query1[2])){
+-        $query1[2] = '';
+-      }
+-      if($query1[1] == 'sch-timetable&cid' || $query1[1] == 'sch-teacher&cid' || $query1[1] == 'sch-subject&cid' || $query1[1] == 'sch-exams&cid' || $query1[1] == 'sch-marks&cid' || $query1[1] == 'sch-attendance&cid' || $query1[1] == 'sch-leavecalendar&cid'|| $query1[1] == 'sch-student&cid')
+-      {
+-        $class_innercls1 = 'active';
+-      }else {
+-        $class_innercls1 = '';
+-      }
+-
+-      if($propayment == "installed"){
+-        global $wpdb;
+-        $stable=$wpdb->prefix."wpsp_student";
+-        $current_user->ID;
+-        $user_id = $wpdb->get_var("SELECT wp_usr_id FROM $stable where parent_wp_usr_id = $current_user->ID");
+-
+-        $wpsp_stud =$wpdb->get_results("SELECT s.class_id FROM wp_wpsp_student s INNER JOIN wp_wpsp_class c  where s.wp_usr_id = '".$user_id."' and c.c_fee_type = 'paid'");
+-
+-        $clsid = [];
+-        if(is_numeric($wpsp_stud[0]->class_id) ){
+-          $clsid[] = $wpsp_stud[0]->class_id;
+-        }else{
+-          $class_id_array = unserialize( $wpsp_stud[0]->class_id );
+-          foreach ($class_id_array as $value) {
+-            $clsid[] = $value;
+-          }
+-        }
+-        $courses = get_user_meta( $user_id, '_pay_woocommerce_enrolled_class_access_counter', true );
+-        if ( ! empty( $courses ) ) {
+-          $courses = maybe_unserialize( $courses );
+-        } else {
+-          $courses = array();
+-        }
+-        foreach($courses as $key => $value) {
+-          $keyvakye[] =  $key;
+-        }
+-      }
+-
+-      $loc_avatar=get_user_meta($current_user->ID,'simple_local_avatar',true);
+-      if( $current_user->ID == 1 )
+-        $img_url  =   WPSP_PLUGIN_URL.'img/admin.png';
+-      else
+-        $img_url  = $loc_avatar ? $loc_avatar['full'] : WPSP_PLUGIN_URL.'img/avatar.png';
+-      global $current_user, $wpdb;
+-      $ctable= $wpdb->prefix."wpsp_class";
+-      $stable= $wpdb->prefix."wpsp_student";
+-      $wpsp_classes =$wpdb->get_results("SELECT class_id,sid,s_fname,s_mname,s_lname FROM $stable where parent_wp_usr_id = $current_user->ID");
+-      echo "<!-- Left side column. contains the logo and sidebar -->
+-          <div class='wpsp-overlay'></div>
+-          <aside class='wpsp-sidebar ifnotadmin ".((isset($nonemenu)? $nonemenu : ''))."'>
+-          <div class='sidebarScroll'>
+-          <ul class='wpsp-navigation'>
+-            <li class='".$dashboard_page."'>
+-              <a href='".site_url('wp-admin/admin.php?page=sch-dashboard')."'>
+-                <i class='dashicons dashicons-dashboard icon'></i>
+-                  <span>".$sch_dashboard."</span>
+-              </a>
+-            </li>";
+-
+-            if($prodisablemessage == 'installed'){
+-              echo "<li class=".$message_page.">
+-                <a href='".site_url('wp-admin/admin.php?page=sch-messages')."'>
+-                <i class='dashicons dashicons-email icon'></i>
+-                <span>".$sch_message."</span>
+-                </a>
+-                </li>";
+-              }
+-              echo "<li class='".$student_page." has-submenu ".$class_innercls1."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-student')."'>
+-                    <i class='dashicons dashicons-id icon'></i>
+-                    <span>".$sch_student."</span>
+-                  </a>";
+-
+-              foreach ($wpsp_classes as $sclas) {
+-                echo "<ul class='sub-menu ".$class_innercls1."'>
+-                 <li class='".$student_page." has-submenu ".$class_innercls1."'>
+-                  <a href=''>
+-                  <i class='dashicons dashicons-id icon'></i>
+-                  <span>".$sclas->s_fname.' '. $sclas->s_mname.' '. $sclas->s_lname."</span>
+-                  </a>
+-                  <ul class='sub-menu ".$class_innercls1."'><li class='has-submenu ".$class_innercls1."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-class')."'>
+-                    <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".$sch_enrolled_class."</span>
+-                  </a>";
+-
+-              $sid = base64_encode($sclas->sid);
+-
+-             if (is_numeric($sclas->class_id)){
+-               $classIDArray[] = $sclas->class_id;
+-              }else{
+-                $classArray = unserialize($sclas->class_id);
+-                foreach ($classArray as $value) {
+-                  $classIDArray[] = $value;
+-                }
+-              }
+-
+-              $classname_array = [];
+-
+-              foreach ($classIDArray as $id ) {
+-
+-               $clasname = $wpdb->get_row("SELECT * FROM $ctable where cid=$id");
+-              $classname_array[] = $clasname;
+-              if($clasname->c_fee_type == 'free'){
+-                $nonemenu = ' nopayment1';
+-              } else {
+-               if($propayment == "installed"){
+-                if(in_array($id, $keyvakye)){
+-                  $nonemenu = ' nopayment1';
+-               }
+-               else {
+-                  $nonemenu = ' nopayment';
+-               }
+-             }
+-            }
+-              $id = base64_encode($id);
+-                $getid = base64_decode($query1[2]);
+-
+-               $clsgetid = base64_decode($id);
+-          if($getid == base64_decode($id)){
+-            $timetable_page = 'active';
+-          }
+-                      echo "<ul class='sub-menu has-submenu ".((isset($nonemenu)? $nonemenu : ''))." '>";
+-          if(trim($clsgetid) == trim($getid)){
+-
+-                 echo "<li class='has-submenu active'>";
+-          }
+-            else {
+-              echo "<li class='has-submenu'>";
+-            }
+-
+-
+-               echo "<a href='".site_url('wp-admin/admin.php?page=sch-class')."'>
+-                  <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".$clasname->c_name."</span>
+-                </a>
+-                <ul class='sub-menu ".((isset($nonemenu)? $nonemenu : ''))."'>
+-                <li class='".$leave_page."'>
+-                  <a target='__blank' href='" . ESCHOOL_CLASS_ROOM_BASE_URL . preg_replace('/[^A-Za-z0-9\-]/', '',  str_replace('-', '', $clasname->c_name ) . $clasname->cid ) ."'>
+-                 <span>Online Class Room</span></a>
+-                </li>    
+-                <li class='".$timetable_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-timetable&cid='.$id.'&sid=').$sid."'>
+-                    <span>".$sch_timetable."</span>
+-                  </a>
+-                </li>
+-                <li class='".$teacher_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-teacher&cid='.$id.'&sid=').$sid."'>
+-                    <span>".$sch_teacher."</span>
+-                  </a>
+-                </li>
+-                <li class='".$subject_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-subject&cid='.$id.'&sid=').$sid."'>
+-                    <span>".$sch_subject."</span>
+-                  </a>
+-                </li>
+-                <li class='".$exam_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-exams&cid='.$id.'&sid=').$sid."'>
+-                    <span>".$sch_exams."</span>
+-                  </a>
+-                </li>
+-                <li class='".$mark_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-marks&cid='.$id.'&sid=').$sid."'>
+-                    <span>".$sch_marks."</span>
+-                  </a>
+-                </li>
+-                <li class='".$attendance_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-attendance&cid='.$id.'&sid=').$sid."'>
+-                    <span>".$sch_attendance."</span>
+-                  </a>
+-                </li>
+-                <li class='".$leave_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-leavecalendar&cid='.$id.'&sid=').$sid."'>
+-                 <span>".$sch_leavecalendar."</span></a>
+-                </li>
+-              </ul> 
+-          </li></ul>";
+-          }
+-          echo "</li></ul></li></ul>";
+-           $classIDArray = array();
+-        }
+-
+-         echo "</li><li class='".$event_page."'>
+-                  <a href='".site_url('wp-admin/admin.php?page=sch-events')."'>
+-                    <i class='dashicons dashicons-calendar-alt icon'></i><span>".$sch_events."</span>
+-                  </a>
+-                </li>
+-
+-            <li class='".$transport_page."'>
+-            <a href='".site_url('wp-admin/admin.php?page=sch-transport')."'>
+-              <i class='icon wpsp-school-bus'></i><span>".$sch_transport."</span>
+-            </a>
+-           </li>";
+-         if($prohistory['status']){
+-           echo"<li class='".$history_page."'>
+-            <a href='".site_url('wp-admin/admin.php?page=sch-history')."'>
+-              <i class='icon fa fa-history'></i><span>".$sch_class_history."</span>
+-            </a>
+-           </li>";
+-         }
+-         if($propayment == "installed"){
+-
+-
+-      echo "<li class='".$payment_page_main."'>
+-        <a href='".site_url('wp-admin/admin.php?page=sch-payment')."'>
+-          <i class='icon fa fa-money'></i><span>".$sch_payment."</span>
+-        </a>
+-       </li>";
+-
+-       }
+-         echo "</ul>
+-            </div>
+-          </aside>";
+-  }
++    require_once WPSP_PLUGIN_PATH . 'pages/wpsp-header.php';
+ }
+ /* This function used for Header Breadcrumb */
+-function wpsp_body_start()
+-{
+-  $result = $_GET['page'] ?  ltrim(strstr($_GET['page'],'-'),'-') : ''; // This variable return URL Part. for ex: dashboard
+-  $base_url  = wpsp_admin_url(); // This Variable Print Base URL
+-  global $current_user;
+-  $current_user_role = $current_user->roles[0];
+-  include(WPSP_PLUGIN_PATH . 'includes/filter_menu.php');
+-  switch($result)
+-  {
+-    case 'dashboard':
+-      $pagetitle = 'Dashboard';
+-      $pagetitle = $sch_dashboard;
+-      break;
+-    case 'messages':
+-      $pagetitle = 'Messages';
+-      $pagetitle = $sch_dashboard;
+-      $addurl = $base_url.'sch-message&tab=addmessage';
+-      break;
+-    case 'teacher':
+-      $pagetitle = _t( 'Staff Management' );
+-    //$pagetitle = $sch_teacher;
+-      $addurl = $base_url.'sch-teacher&tab=addteacher';
+-      break;
+-    case 'student':
+-      $pagetitle = _t( 'Student' );
+-      $pagetitle = $sch_student;
+-      $addurl = $base_url.'sch-student&tab=addstudent';
+-      break;
+-    case 'request':
+-      $pagetitle = 'Registration Request';
+-      $pagetitle = $sch_registration;
+-      break;
+-    case 'parent':
+-      $pagetitle = apply_filters( 'wpsp_parent_title_menu', esc_html__( 'Parents', 'WPSchoolPress' ));
+-      $pagetitle = $sch_parent;
+-      $addurl = $base_url.'sch-student&tab=addstudent';
+-      break;
+-  case 'payment':
+-      $pagetitle = 'payment';
+-      $pagetitle = $sch_payment;
+-    //  $addurl = $base_url.'sch-class&tab=addclass';
+-      break;
+-    case 'class':
+-      $pagetitle = 'Class';
+-      $pagetitle = $sch_classes;
+-      $addurl = $base_url.'sch-class&tab=addclass';
+-      break;
+-    case 'attendance':
+-      $pagetitle = 'Attendance';
+-      $pagetitle = $sch_attendance;
+-      $addurl = $base_url.'sch-attendance';
+-      break;
+-    case 'teacherattendance':
+-      $pagetitle = _t( 'Teacher Attendance' );
+-      $pagetitle = $sch_teacher_attendance;
+-      $addurl = $base_url.'sch-teacherattendance';
+-      break;
+-    case 'subject':
+-      $pagetitle = 'Subject';
+-      $pagetitle = $sch_subject;
+-      $addurl = $base_url.'sch-subject&tab=addsubject&classid=1';
+-      break;
+-    case 'exams':
+-      $pagetitle = 'Exam';
+-      $pagetitle = $sch_exams;
+-      $addurl = $base_url.'sch-exams&tab=addexam';
+-      break;
+-    case 'marks':
+-      $pagetitle = 'Marks';
+-      $pagetitle = $sch_marks;
+-      $addurl = $base_url.'sch-marks';
+-      break;
+-    case 'importhistory':
+-      $pagetitle = 'Import History';
+-      $pagetitle = $sch_import_history;
+-      break;
+-    case 'notify':
+-      $pagetitle = 'Notify';
+-      $pagetitle = $sch_notfiy;
+-      $addurl = $base_url.'sch-notify&ac=add';
+-      break;
+-      case 'payment':
+-      if(isset($_GET['type']) && $_GET['type'] =='addpayment'):
+-          $pagetitle = 'Payment';
+-          $pagetitle = $sch_payment;
+-      endif;
+-      break;
+-    case 'events':
+-      $pagetitle = 'Events';
+-      $pagetitle = $sch_events;
+-      break;
+-    case 'transport':
+-      $pagetitle = 'Transport';
+-      $pagetitle = $sch_transport;
+-      $breadcum = $base_url.'sch-transport';
+-      //$addurl = $base_url.'sch-transport';
+-      //$addurl ='';
+-      break;
+-    case 'leavecalendar':
+-      $pagetitle = 'Leave Calendar';
+-      $pagetitle = $sch_leavecalendar;
+-      $addurl = $base_url.'sch-transport';
+-      break;
+-    case 'timetable' :
+-      $pagetitle = 'Timetable';
+-      $pagetitle = $sch_timetable;
+-      $breadcum = $base_url.'sch-timetable';
+-      $addurl = $base_url.'sch-timetable&ac=add';
+-      break;
+-    case 'subField':
+-      $pagetitle = 'SubField';
+-      $pagetitle = $sch_subject_mark_field;
+-      $addurl = $base_url.'sch-transport';
+-      break;
+-    case 'WrkHours':
+-      $pagetitle = 'WorkHours';
+-      $pagetitle = $sch_workinghours;
+-    //  $addurl = $base_url.'sch-settings&sc=WrkHours';
+-      break;
+-    case 'settings':
+-      $pagetitle = 'Settings';
+-      $pagetitle = $sch_setting;
+-     // $addurl = $base_url.'sch-settings';
+-      break;
+-    case 'changepassword' :
+-      $pagetitle = 'Change Password';
+-      break;
+-       case 'editprofile' :
+-    $pagetitle="Edit Profile";
+-    break;
+-     case 'history' :
+-    $pagetitle="History";
+-    break;
+-     case 'leave_record':
+-         $pagetitle = 'Leave Record';
+-         $breadcum = $base_url.'sch-leave_record';
+-         break;
+-  }
+-  // echo $addurl;
+-   //echo $result;
+-  if((isset($_GET['sc'])) && ($_GET['sc'] == 'subField'))
+-  {
+-   $pagetitle="Subject Mark Fields";
+-   $pagetitle = $sch_subject_mark_field;
+-              }
+-   else if((isset($_GET['sc'])) && ($_GET['sc'] == 'WrkHours'))
+-   {
+-   $pagetitle="Working Hours";
+-   $pagetitle = $sch_workinghours;
+-              } else {
+-               $pagetitle;
+-            }
+-// Get class name
+-if(isset($_GET['cid'])){
+-  $cid = base64_decode($_GET['cid']);
+-  global $wpdb;
+-  $wpsp_class_table = $wpdb->prefix . "wpsp_class";
+-  $classdata = $wpdb->get_row("SELECT c_name from $wpsp_class_table where cid=$cid");
+-  $c_name = $classdata->c_name;
+-}
+-  echo "<!-- Content Wrapper. Contains page content -->
+-      <div class='wpsp-wrapper'>
+-        <!-- Main content -->
+-        <section class='wpsp-container'>
+-      <div class='wpsp-pageHead'>
+-        <h1 class='wpsp-pagetitle'>".$pagetitle."".((isset($_GET['cid']))? " - ".$c_name : '')."</h1>
+-        <div class='wpsp-right'>
+-          <ol class='wpsp-breadcrumb'> <div class='".$result."'></div>";
+-            if(!empty($result == 'dashboard')):
+-              echo "<li><a href='".$base_url."sch-dashboard'>Home</a></li>";
+-            endif;
+-            echo "<li><a href='".$base_url."sch-dashboard'>".$sch_dashboard."</a></li>";
+-            if(!empty($result != 'dashboard')):
+-              if((isset($_GET['sc'])) && ($_GET['sc'] == 'subField')){
+-              echo "<li><span class='active'>".$sch_subject_mark_field."</span></li>";
+-              }
+-              else if((isset($_GET['sc'])) && ($_GET['sc'] == 'WrkHours'))
+-              {
+-                echo "<li><span class='active'>".$sch_workinghours."</span></li>";
+-              }
+-              else if($result == 'timetable'){
+-                echo "<li><a href=$breadcum><span class='active'> $pagetitle</span></a></li>";
+-              }else {
+-                echo "<li><a href=".((isset($addurl)? $addurl : $base_url.'sch-events' ))."><span class='active'>$pagetitle</span></a></li>";
+-              }
+-            endif;
+-          echo '</ol>';
+-          //echo $result;
+-            if(!empty($addurl)):
+-              if(!isset($_GET['tab'])){
+-                  
+-                $_GET['tab'] = '';
+-              }
+-              if(!isset($_GET['ac'])){
+-                $_GET['ac'] = '';
+-              }
+-
+-              if(($current_user_role == 'teacher')):
+-                if($result == 'notify' || $result == 'settings' ){
+-                  echo "<a class=' wpsp-btn wpsp-popclick' href='$addurl'><i class='fa fa-plus-circle'></i> Create New</a>";
+-                }
+-              endif;
+-              global $objUser;
+-              if(($current_user_role=='administrator') || CDesignations::PRINCIPAL == $objUser->getTeacher()->designation_id || CDesignations::CLERK == $objUser->getTeacher()->designation_id):
+-                if($result == 'teacherattendance' || $result == 'attendance' || $result == 'marks' || $_GET['tab'] == 'addteacher' || $_GET['tab'] == 'addstudent'  || $_GET['tab'] == 'addclass' || $_GET['tab'] == 'addsubject' || $result == 'leavecalendar' || $_GET['tab'] == 'addexam' || $_GET['ac'] == 'add' ||  $result == 'settings' || $result == 'messages'){} else{
+-                    echo "<a class='wpsp-btn $current_user_role' href='$addurl'><i class='fa fa-plus-circle'></i> Create New</a>";
+-                }
+-              endif;
+-            endif;
+-            if(empty($addurl) && ($current_user_role == 'administrator') && ($result == 'notify' ||  $result == 'settings' || $result =='transport' )):
+-              if($result == 'settings'){
+-                if((isset($_GET['sc'])) && ($_GET['sc'] == 'WrkHours')){} elseif((isset($_GET['sc'])) && ($_GET['sc'] == 'subField')) {
+-                echo "<a class='wpsp-popclick wpsp-btn' data-pop='addFieldModal' id='AddFieldsButton'><i class='fa fa-plus-circle'></i> Create New</a>";
+-                }
+-              } else{
+-                echo "<a class='wpsp-btn wpsp-popclick' data-pop='ViewModal' id='AddNew'><i class='fa fa-plus-circle'></i> Create New</a>";
+-              }
+-            endif;
+-        echo "</div>
+-      </div>";
++function wpsp_body_start() {
+ }
+ /* This function used for footer copyright section */
+ function wpsp_body_end()

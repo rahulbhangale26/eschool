@@ -27,16 +27,23 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 	$role		=	 $current_user->roles;
 	$cuserId	=	 $current_user->ID;
 ?>
-<?php $proversion1    =    wpsp_check_pro_version('wpsp_addon_version');
-  	  $prodisable1    =    !$proversion1['status'] ? 'notinstalled'    : 'installed';
+<?php 
+        $proversion1    =    wpsp_check_pro_version('wpsp_addon_version');
+        $prodisable1    =    !$proversion1['status'] ? 'notinstalled'    : 'installed';
 
-  	   $propayment    =    wpsp_check_pro_version('pay_WooCommerce');
-      $propayment    =    !$propayment['status'] ? 'notinstalled'    : 'installed';
+        $propayment    =    wpsp_check_pro_version('pay_WooCommerce');
+        $propayment    =    !$propayment['status'] ? 'notinstalled'    : 'installed';
 
-       $prohistory    =    wpsp_check_pro_version('wpsp_mc_version');
-    $prodisablehistory    =    !$prohistory['status'] ? 'notinstalled'    : 'installed';
+        $prohistory    =    wpsp_check_pro_version('wpsp_mc_version');
+        $prodisablehistory    =    !$prohistory['status'] ? 'notinstalled'    : 'installed';
     
-        $arrobjBatches = ( new CBatches() )->fetchAllBatches();
+        if( CRole::TEACHER == $objUser->getRole() && CDesignations::PRINCIPAL != $objUser->getTeacher()->designation_id &&  CDesignations::CLERK != $objUser->getTeacher()->designation_id ) {
+            $arrobjBatches = ( new CBatches() )->fetchBatchesByInstructorId( $objUser->getTeacher()->tid );
+            $arrobjTrades = CTrade::getInstance()->fetchTradesByInstructorId( $objUser->getTeacher()->tid );
+        } else {
+            $arrobjBatches = ( new CBatches() )->fetchAllBatches();
+            $arrobjTrades = CTrade::getInstance()->fetchAllTrades();
+        }
        ?>
 <div class="wpsp-card">
 		<div class="wpsp-card-head">
@@ -54,46 +61,29 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 					<option value="">Select Batch</option>
 					<?php 
 					foreach ( $arrobjBatches AS $objBatch ) {
-					    echo '<option value="' . $objBatch->id . '" ' . ( $objBatch->id == $intBatchId ? 'selected="selected"' : '' ) . '>' . $objBatch->name . '</option>';
+					    echo '<option  value="' . $objBatch->id . '" ' . ( $objBatch->id == $intBatchId ? 'selected="selected"' : '' ) . '>' . $objBatch->name . '</option>';
 					}
 					?>
 				</select>
-				
-				<label class="wpsp-labelMain"><?php _e( 'Select Class Name', 'WPSchoolPress' ); ?></label>
-				<select name="ClassID" id="ClassID" class="wpsp-form-control">
-					<?php
-					$sel_classid	=	isset( $_POST['ClassID'] ) ? intval($_POST['ClassID']) : '';
-					
-					global $objUser;
-					
-					if( CRole::TEACHER == $objUser->getRole() ) {		    
-    					
-    					if( CDesignations::CLERK == $objUser->getTeacher()->designation_id  || CDesignations::PRINCIPAL == $objUser->getTeacher()->designation_id  ) {
-    					    $sel_class = ( new CClasses() )->fetchAllClasses();
-    					} else {
-    					    $sel_class = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
-    					}
-    					
-					} elseif( CRole::ADMIN == $objUser->getRole() ) {
-					    $sel_class = ( new CClasses() )->fetchAllClasses();
-					}
-
-					?>
-					<option value="all" <?php if($sel_classid=='all') echo "selected"; ?>><?php _e( 'All', 'WPSchoolPress' ); ?></option>
-					<?php foreach( $sel_class as $classes ) {
-					?>
-						<option value="<?php echo $classes->cid;?>" <?php if($sel_classid==$classes->cid) echo "selected"; ?>><?php echo $classes->c_name;?></option>
+			
+				<label class="wpsp-labelMain">Trade</label>
+				<select name="TradeId" id="TradeId" class="wpsp-form-control">
+					<option value="all" >Select Trade</option>
+					<?php 
+    					   $intTradeId = $_POST['TradeId'];
+					       foreach ( $arrobjTrades AS $objTrade ) { ?>
+								<option <?php echo ( $intTradeId == $objTrade->id ) ? 'selected="selected"' : ''; ?>value="<?php echo $objTrade->id; ?>"><?php echo $objTrade->name ?></option>
 					<?php } ?>
 				</select>
 			</form>
 		</div>
 		<div class="wpsp-right wpsp-import-export">
-			<div class="wpsp-btn-lists" <?php echo $prodisable;?> title="<?php echo $protitle;?>">
+			<div class="wpsp-btn-lists" title="">
 
-				<div class="wpsp-btn-list" <?php if($proversion['status'] != "1") {?> wpsp-tooltip="<?php echo $protitle;?>" <?php } ?>>
+				<div class="wpsp-btn-list" wpsp-tooltip="Under construction">
 
 					<div class="wpsp-button-group wpsp-dropdownmain wpsp-left">
-						<button type="button" class="wpsp-btn wpsp-btn-success print" id="PrintStudent" <?php echo $prodisable;?> title="<?php //echo $protitle;?>">
+						<button type="button" class="wpsp-btn wpsp-btn-success print" id="PrintStudent" title="<?php //echo $protitle;?>">
 							<i class="fa fa-print" ></i> <?php _e( 'Print', 'WPSchoolPress'); ?>
 						</button>
 						<button type="button" class="wpsp-btn wpsp-btn-success wpsp-dropdown-toggle" <?php echo $prodisable;?> title="<?php //echo $protitle;?>">
@@ -118,14 +108,15 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 				</div>
 
 			</div>
+
 <?php if ( in_array( 'administrator', $role ) ) {?>
-			<div class="wpsp-btn-list"  <?php if($proversion['status'] != "1") {?> wpsp-tooltip="<?php echo $protitle;?>" <?php } ?>>
-				<button id="ImportStudent" class="wpsp-btn wpsp-dark-btn wpsp-popclick impt" <?php echo $prodisable;?> title="<?php //echo $protitle;?>" data-pop="ImportModal"><i class="fa fa-upload"></i> Import </button></div>
+			<div class="wpsp-btn-list" >
+				<button id="ImportStudent" class="wpsp-btn wpsp-dark-btn wpsp-popclick impt" title="<?php //echo $protitle;?>" data-pop="ImportModal"><i class="fa fa-upload"></i> Import </button></div>
 					<?php }?>
-			<div class="wpsp-btn-list"  <?php if($proversion['status'] != "1") {?> wpsp-tooltip="<?php echo $protitle;?>" <?php } ?>>
+			<div class="wpsp-btn-list"  wpsp-tooltip="Under construction" >
 				<div class="wpsp-dropdownmain wpsp-button-group">
-					<button type="button" class="wpsp-btn print" id="ExportStudents" <?php echo $prodisable;?> title="<?php //echo $protitle;?>"><i class="fa fa-download"></i> <?php _e( 'Export', 'WPSchoolPress'); ?> </button>
-					<button type="button" class="wpsp-btn wpsp-btn-blue wpsp-dropdown-toggle" <?php echo $prodisable;?> title="<?php //echo $protitle;?>">
+					<button type="button" class="wpsp-btn print" id="ExportStudents" title="<?php //echo $protitle;?>"><i class="fa fa-download"></i> <?php _e( 'Export', 'WPSchoolPress'); ?> </button>
+					<button type="button" class="wpsp-btn wpsp-btn-blue wpsp-dropdown-toggle" title="<?php //echo $protitle;?>">
 						<!-- <span class="sr-only"><?php _e( 'Toggle Dropdown', 'WPSchoolPress' );?></span> -->
 					</button>
 					 <div id="exportcontainer" style="display:none;"></div>
@@ -172,7 +163,7 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 
 								<th><?php echo apply_filters( 'wpsp_student_table_rollno_heading',esc_html__('Roll No.','WPSchoolPress'));?></th>
 								<th><?php echo apply_filters( 'wpsp_student_table_fullname_heading',esc_html__('Full Name','WPSchoolPress'));?></th>
-								<th width="70">Birth Date</th>
+								<th>Unit</th>
 								<th>Qualification</th>
 								<th>Category</th>
 								<th>Address</th>
@@ -189,170 +180,61 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 						</thead>
 						<tbody>
 							<?php
-							$student_table	=	$wpdb->prefix."wpsp_student";
-							$users_table	=	$wpdb->prefix."users";
-							
-							$class_id='';
-							if( isset($_POST['ClassID'] ) && $_POST['ClassID'] != 'all' ) {
-								$class_id=intval($_POST['ClassID']);
-								$stl = [];
+							    $units = CUnits::getInstance()->fetchAllUnits();
+							    foreach( $units AS $unit ) {
+							        $tempUnits[$unit->id] = $unit;
+							    }
+							    $units = $tempUnits;
+							    
+								$TradeId    = intval($_POST['TradeId']);
+								$intBatchId = intval($_POST['BatchId']);
 								$studentlists	= ( new CStudents() )->fetchStudentByFilters( [ 
-								        'role' => $objUser->getRole(), 
 								        'batch_id' => $intBatchId, 
-								        'user_id' => $objUser->getUserId()
+								        'trade_id'  => $TradeId
 								] ); 
-									foreach ($studentlists as $stu) {
-										if(is_numeric($stu->class_id) ){
-											if($stu->class_id == $class_id){
-											 $stl[] = $stu->sid;
-										 }
-										}
-										else{
-											 $class_id_array = unserialize( $stu->class_id );
-											 if(in_array($class_id, $class_id_array)){
-												 $stl[] = $stu->sid;
-											 }
-										}
-									}
+								
+								foreach ( $studentlists as $stinfo ) {
+							?>
 
-								}
-								else if(!isset($_POST['ClassID']) || $_POST['ClassID'] == 'all' ){
-								    $studentlists	= ( new CStudents() )->fetchStudentByFilters( [ 'role' => $objUser->getRole(), 'batch_id' => $intBatchId, 'user_id' => $objUser->getUserId() ] ); 							    
-								    foreach ($studentlists as $stu) {
-										 $stl[] = $stu->sid;
-									}
-
-								}
-
-								if (!empty($stl)) {
-									$key =0;
-								foreach ($stl as $id ) {
-							$students	=	$wpdb->get_results("select * from $student_table s, $users_table u where u.ID=s.wp_usr_id AND sid = $id and user_login != 'student' order by sid desc");
-							$plugins_url=plugins_url();
-							$teacherId = '';
-							if( $currentSelectClass != 'all' )
-								$teacherId	=	$wpdb->get_var("select teacher_id from $class_table WHERE cid=$currentSelectClass");
-
-							$pendingcount =0;
-							$cid = [];
-							
-							if( CRole::TEACHER == $objUser->getRole() ) {
-							    $sel_class = ( new CClasses() )->fetchClassesByUserId( $objUser->getUserId() );
-							} elseif( CRole::ADMIN == $objUser->getRole() ) {
-							    $sel_class = ( new CClasses() )->fetchAllClasses();
-							}
-							foreach($students as $stinfo)
-							{
-								//echo $stinfo->wp_usr_id;
-
-								if(is_numeric($stinfo->class_id) ){
-									 $cid[] = $stinfo->class_id;
-								}
-								else{
-									 $class_id_array = unserialize( $stinfo->class_id );
-										 $cid[] = $class_id_array;
-								}
-								$courses = get_user_meta( $stinfo->wp_usr_id, '_pay_woocommerce_enrolled_class_access_counter', true );
-								if(empty($courses))
-								{
-									$paid = "Pending";
-								}
-								else {
-
-									foreach($courses as $key => $value) {
-										$coursekey[] = $key;
-									}
-									foreach ($class_id_array as $allids){
-										 if(in_array($allids, $coursekey)){
-
-       										}
-       									else {
-
-       										$clsid	=	$wpdb->get_var("select cid from $class_table WHERE cid=$allids and c_fee_type = 'paid'");
-       										if($clsid != ''){
-       											$pendingcount++;
-       										}
-       										 }
-									}
-									if($pendingcount > 0)
-										{
-										$paid = "Pending";
-										}
-									else {
-										$paid = "Paid";
-									}
-
-								}
-								$key++;
-								?>
-
-									<?php  if($proversion1['status']){?>
-									<tr <?php if($stinfo->s_lname == "") {echo "style='background-color:#fcdddd'";} else {
-										echo "style='background-color:#c9f7c9'";}?>>
-									<?php }else {?>
 									<tr>
-								  	<?php } ?>
-
+										<?php if ( in_array( 'administrator', $role ) ) { ?>
+											<td>
+												<input type="checkbox" class="ccheckbox strowselect" name="UID[]" value="<?php echo $stinfo->wp_usr_id;?>">						
+											</td>
+										<?php } ?>
+										<td><?php echo $stinfo->s_rollno;?></td>
+										<td>
+											<?php
+		  							             $loc_avatar = get_user_meta($stinfo->wp_usr_id, 'simple_local_avatar', true);
+									             $img_url = isset($loc_avatar['full']) && !empty($loc_avatar['full']) ? $loc_avatar['full'] : WPSP_PLUGIN_URL . 'img/avatar.png';
+									             echo "<img src='$img_url' height='50px' width='50px' class='wpsp-userPic'/>";
+										         $mname = $stinfo->s_mname;
+							                     $lname = $stinfo->s_lname;
+									             echo $stinfo->s_fname .' '. $mname .' '.  $lname . '';
+									       ?>
+										</td>
+										<td><?php echo $units[$stinfo->current_unit_id]->unit_name; ?></td>
+										<td><?php echo $stinfo->qualification; ?></td>
+										<td><?php echo $stinfo->category; ?></td>
+										<td>
+										<?php
+    									   $country = !empty( $stinfo->s_country ) ? ", ".$stinfo->s_country : '';
+	   								        $city    = !empty( $stinfo->s_city ) ? ", <br>".$stinfo->s_city : '';
+									       $zipcode    = !empty( $stinfo->s_zipcode ) ? ", ".$stinfo->s_zipcode : '';
+									       echo $stinfo->s_address.' '.$city. ' ' . $country.' '.$zipcode;
+									   ?></td>
+										<?php  if($propayment == 'installed'){?>
+										<td><?php echo $paid; ?>
+											<a href="<?php echo wpsp_admin_url();?>sch-payment&id=<?php echo base64_encode($stinfo->wp_usr_id);?>" class="wpsp-popclick1" title="View"><i class="icon dashicons dashicons-visibility wpsp-view-icon"></i></a>
+										</td>
 									
-									<?php if ( in_array( 'administrator', $role ) ) { ?>
-									<td>
-										<input type="checkbox" class="ccheckbox strowselect" name="UID[]" value="<?php echo $stinfo->wp_usr_id;?>">
-									</td>
 									<?php } ?>
-									
-									<td><?php echo $stinfo->s_rollno;?></td>
-									<td><?php
-									$loc_avatar = get_user_meta($stinfo->wp_usr_id, 'simple_local_avatar', true);
-									$img_url = isset($loc_avatar['full']) && !empty($loc_avatar['full']) ? $loc_avatar['full'] : WPSP_PLUGIN_URL . 'img/avatar.png';
-									
-									echo "<img src='$img_url' height='50px' width='50px' class='wpsp-userPic'/>";
-										$mname = $stinfo->s_mname;
-							            $lname = $stinfo->s_lname;
-									echo $stinfo->s_fname .' '. $mname .' '.  $lname . '';
-									?>
-									</td>
-									<td><?php echo date( 'd M Y', strtotime( $stinfo->s_doj ));?></td>
-									<td><?php echo $stinfo->qualification; ?></td>
-									<td><?php echo $stinfo->category; ?></td>
-									<td>
-									<?php
-    									$country = !empty( $stinfo->s_country ) ? ", ".$stinfo->s_country : '';
-	   								    $city    = !empty( $stinfo->s_city ) ? ", <br>".$stinfo->s_city : '';
-									   $zipcode    = !empty( $stinfo->s_zipcode ) ? ", ".$stinfo->s_zipcode : '';
-									   echo $stinfo->s_address.' '.$city. ' ' . $country.' '.$zipcode;
-									?></td>
-									<?php  if($propayment == 'installed'){?>
-									<td><?php echo $paid;
-									?>
-										<a href="<?php echo wpsp_admin_url();?>sch-payment&id=<?php echo base64_encode($stinfo->wp_usr_id);?>" class="wpsp-popclick1" title="View"><i class="icon dashicons dashicons-visibility wpsp-view-icon"></i></a>
-
-									</td>
-									
-								<?php } ?>
 									<?php  if($proversion1['status']){?>
-									<td>
-                    <?php
-                  $stl = [];
-                  if($stinfo->class_id != ''){
-                    if(is_numeric($stinfo->class_id) ){
-                       $stl[] = $stinfo->class_id;
-                    }else{
-                       $class_id_array = unserialize($stinfo->class_id);
-                       foreach ($class_id_array as $id) {
-                         $stl[] = $id;
-                       }
-                    }
-                  }else{
-                    $stl[] = 0;
-                  }
-
-                  if($stl[0] == 0 ){ echo "Unassigned"; } else {echo "Assigned"; }
-                  ?>
-                  </td>
+										<td></td>
 									<?php } ?>
-									<td><?php echo $stinfo->s_phone;?></td>
-									<td><?php echo $stinfo->user_email;?></td>
-									<td align="center">
+										<td><?php echo $stinfo->s_phone;?></td>
+										<td><?php echo $stinfo->user_email;?></td>
+										<td align="center">
 										<div class="wpsp-action-col">
 											<a href="javascript:;" class="ViewStudent wpsp-popclick" data-pop="ViewModal" data-id="<?php echo $stinfo->wp_usr_id;?>" title="View"><i class="icon dashicons dashicons-visibility wpsp-view-icon"></i></a>
 
@@ -378,29 +260,9 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 									</td>
 								</tr>
 							<?php
-							}}}
+							}
 							?>
 						</tbody>
-						<tfoot>
-						  <tr>
-							<?php if ( in_array( 'administrator', $role ) ) { echo '<th></th>';} ?>
-							<th>Roll No.</th>
-							<th>Full Name</th>
-							<th>Birth Date</th>
-							<th>Qualification</th>
-							<th>Category</th>
-							<th>Address</th>
-							<?php  if($propayment =='installed'){?>
-								<th>Payment Status</th>
-							<?php } ?>
-							<?php  if($proversion1['status']){?>
-								 <th>Class Status</th>
-							<?php } ?>
-							<th>Phone</th>
-							<th>Email</th>
-							<th  align="center">Action</th>
-						  </tr>
-						</tfoot>
 					  </table>
 					  </div>
 					</div><!-- /.box-body -->

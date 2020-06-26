@@ -572,9 +572,8 @@ if( $current_user_role=='administrator' || $current_user_role == 'parent'){?> <d
 
 	</div>
 	<!-- Info boxes -->
-	
-	<?php if( CRole::TEACHER == $objUser->getRole() || CRole::STUDENT == $objUser->getRole()) { ?>
-		<div class="wpsp-row">
+	<div class="wpsp-row">
+	<?php if( CRole::TEACHER == $objUser->getRole() && true == in_array( $objUser->getTeacher()->designation_id, [ CDesignations::INSTRUCTOR, CDesignations::PRINCIPAL ] ) || CRole::STUDENT == $objUser->getRole() ) {  ?>
 			<div class="wpsp-col-lg-8  wpsp-col-xs-12">
 				<div class="wpsp-card">
 					<div class="wpsp-card-head">
@@ -585,6 +584,7 @@ if( $current_user_role=='administrator' || $current_user_role == 'parent'){?> <d
 					<?php require_once 'wpsp-dashboard-classes.php'; ?>
 				</div>
 			</div>
+		<?php } ?>
 			<div class="wpsp-col-lg-4  wpsp-col-xs-12">
 				<div class="wpsp-card">
 					<div class="wpsp-card-head">
@@ -603,7 +603,7 @@ if( $current_user_role=='administrator' || $current_user_role == 'parent'){?> <d
 				</div>
 			</div>
 		</div>
-	<?php } ?>
+
 
 	<?php if( $current_user_role=='administrator' || $current_user_role == 'parent' ){?> <div class="wpsp-row "><?php } else { ?>
 	<div class="wpsp-row">

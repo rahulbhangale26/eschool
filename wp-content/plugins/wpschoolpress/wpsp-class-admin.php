@@ -180,6 +180,13 @@ function wpsp_admin_menu() {
 		    'wpsp_callback'
 		));
 		
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Subjets', 'edit_posts', 'sch-trainee_record', array(
+		    $this,
+		    'wpsp_callback'
+		));
+		
+		
+		
 		/** MVC FInished **/
 
 		if($propayment == "installed"){
@@ -443,10 +450,7 @@ function wpsp_admin_menu() {
 			) , '1.0.0', true);
 		}
 		
-		
-		if ($hook == 'itims_page_sch-trainees' || $hook == 'itims_page_sch-subjects-new' || $hook == 'itims_page_sch-units' ) {
-		    wp_enqueue_script('student_list', WPSP_PLUGIN_URL . 'js/common/wpsp-common.js', ['jquery'] , '1.0.0', true); 
-		}
+	    wp_enqueue_script('student_list', WPSP_PLUGIN_URL . 'js/common/wpsp-common.js', ['jquery'] , '1.0.0', true); 
 		
 		if ($hook == 'itims_page_sch-student' )
 		{

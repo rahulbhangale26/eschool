@@ -2921,7 +2921,7 @@ td.drop.droppable {
     height: 120px;	
   	-webkit-animation: spin 2s linear infinite; /* Safari */
   	animation: spin 2s linear infinite;
-  	position: absolute;
+  	position: fixed;
     top: 50%;
     left: 50%;
     opacity: 1;
@@ -2970,5 +2970,10 @@ td.drop.droppable {
 
 .disabled {
 	background-color: #CCC !important	;
+}	
+
+#addAttendanceTable, #trainee_record_table {
+	overflow-x: auto;
+    display: inline-block;
 }
 

@@ -3,11 +3,27 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
 
 global $objUser;
 
-if( CRole::TEACHER == $objUser->getRole() && CDesignations::PRINCIPAL != $objUser->getTeacher()->designation_id &&  CDesignations::CLERK != $objUser->getTeacher()->designation_id ) {
-    $units = CUnits::getInstance()->fetchUnitByUser( $objUser );
+if(  CRole::ADMIN == $objUser->getRole() || ( CRole::TEACHER == $objUser->getRole() && true == in_array( $objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
+    $trades= CTrade::getInstance()->fetchAllTrades();
 } else {
-    $units = CUnits::getInstance()->fetchAllUnits();
+    $trades = CTrade::getInstance()->fetchTradesByInstructorId( $objUser->getTeacher()->tid );
 }
+
+$intTradeId = $_REQUEST['TradeId'];
+$intUnitId  = $_REQUEST['UnitId'];
+if( true == isset( $_REQUEST['report' ] ) ) {  
+    $intViewTradeId = $_REQUEST['ViewTradeId'];
+
+    $units = CUnits::getInstance()->fetchUnitByUserByTradeId( $objUser, $intViewTradeId );
+} else {
+    $units = CUnits::getInstance()->fetchUnitByUserByTradeId( $objUser, $intTradeId );
+}
+
+$intViewUnitId  = $_REQUEST['ViewUnitId'];
+
+
+
+
 wpsp_header();
 	if( is_user_logged_in() ) {
 		global $current_user, $wpdb;
@@ -32,7 +48,7 @@ wpsp_header();
 		
 		
 		
-		<div class="wpsp-card">
+		<div class="wpsp-card attendance-page" data-attendancePageUrl="<?php echo site_url( 'wp-admin/admin.php?page=sch-attendance' );?>">
 						<div class="wpsp-card-head">
 							<h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_student_attendance_heading_detail', esc_html__( 'Attendance Report', 'WPSchoolPress' )); ?></h3>
 							<hr>
@@ -45,10 +61,22 @@ wpsp_header();
 							<div class="wpsp-col-lg-5 wpsp-col-md-5 wpsp-col-sm-12 wpsp-col-xs-12" id="AttendanceEnterForm">
 							<h3 class="wpsp-card-title">Attendance</h3>
 							<div class="line_box">
-							
+									<div class="wpsp-form-group">
+										<label class="wpsp-labelMain">Select Trade</label>
+										<select name="TradeId" id = "TradeId" class="wpsp-form-control">
+											<option value="" disabled selected>Select Trade</option>
+											<?php 
+											foreach ( $trades AS $trade ) {
+											    echo '<option value="' . $trade->id . '" ' . ( $trade->id == $intTradeId ? 'selected="selected"' : '' ) . '>' . $trade->name . '</option>';
+					                        }
+					                       ?>
+										</select>
+										<span class="clsbatch wpsp-text-red" style="display: none;    ">Please select Trade.</span>
+									</div>							
 									<div class="wpsp-form-group">
 										<label class="wpsp-labelMain">Select Unit</label>
-										<select name="UnitId" id = "UnitId" class="wpsp-form-control">
+										
+										<select <?php echo (true == isset( $intTradeId ) ? '' : 'disabled' ); ?> name="UnitId" id = "UnitId" class="wpsp-form-control">
 											<option value="" disabled selected>Select Unit</option>
 											<?php 
 											foreach ( $units AS $unit ) {
@@ -59,7 +87,7 @@ wpsp_header();
 										<span class="clsbatch wpsp-text-red" style="display: none;    ">Please select Unit.</span>
 									</div>
 									<div class="wpsp-form-group">
-										<label for="date">	<?php if( isset($item['entry_date'])){
+										<label for="date" class="wpsp-labelMain">	<?php if( isset($item['entry_date'])){
 														echo esc_html($item['entry_date'],"WPSchoolPress");
 											}else{
 													echo esc_html('Date',"WPSchoolPress");
@@ -93,19 +121,31 @@ wpsp_header();
 								
 								<?php 
 								
-								$intClassId = ( int ) $_GET['class_id'];
 								$intMonthNumber = ( int ) $_GET['month'];
 								$intYear = ( int ) $_GET['year'];
-								$intUnitId = ( int ) $_GET['unit_id'];
+								$intUnitId = ( int ) $intViewUnitId;
 								?>
 								
 								<div class="wpsp-col-sm-12">
 									<h3 class="wpsp-card-title">View Attendance Monthly Report</h3>
 									<div class="line_box">
 										<div class="box-body">
+										
+											<div class="wpsp-form-group">
+												<label class="wpsp-labelMain">Select Trade</label>
+												<select name="ViewTradeId" id = "ViewTradeId" class="wpsp-form-control">
+													<option value="" disabled selected>Select Trade</option>
+													<?php 
+					               					   foreach ( $trades AS $trade ) {
+									           		      echo '<option value="' . $trade->id . '" ' . ( $trade->id == $intViewTradeId ? 'selected="selected"' : '' ) . '>' . $trade->name . '</option>';
+					                                   }
+					                               ?>
+												</select>
+												<span class="clsbatch wpsp-text-red" style="display: none;    ">Please select Trade.</span>
+											</div>	
 											<div class="wpsp-form-group">
 												<label class="wpsp-labelMain">Select Unit</label>
-													<select name="UnitId" id = "attendance_report_unit" class="wpsp-form-control">
+													<select name="ViewUnitId" id = "attendance_report_unit" class="wpsp-form-control" <?php echo ( true == isset( $intViewTradeId ) ? '' : 'disabled' ); ?>>
 														<option value="" disabled selected>Select Unit</option>
 															<?php 
                     											foreach ( $units AS $unit ) {
@@ -115,29 +155,33 @@ wpsp_header();
 													</select>
 													<span class="clsbatch wpsp-text-red" style="display: none;    ">Please select Unit</span>
 											</div>
-											<select id="attendance_report_month" name="month" class="wpsp-form-control" >
-												<option value="">Select Month</option>
-												<option value="1" <?php echo ( 1 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Jan</option> 
-												<option value="2" <?php echo ( 2 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Feb</option> 
-												<option value="3" <?php echo ( 3 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Mar</option> 
-												<option value="4" <?php echo ( 4 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Apr</option> 
-												<option value="5" <?php echo ( 5 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>May</option> 
-												<option value="6" <?php echo ( 6 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Jun</option> 
-												<option value="7" <?php echo ( 7 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Jul</option> 
-												<option value="8" <?php echo ( 8 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Aug</option> 
-												<option value="9" <?php echo ( 9 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Sep</option> 
-												<option value="10" <?php echo ( 10 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Oct</option> 
-												<option value="11" <?php echo ( 11 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Nov</option> 
-												<option value="12" <?php echo ( 12 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Dec</option> 
-											</select>
-											<br>
-											<select id="attendance_report_year" name="year" class="wpsp-form-control" >
-												<option value="">Select Year</option>
-												<?php for( $i=2019; $i<=date('Y'); $i++) {?>
-												<option value="<?php echo $i;?>" <?php echo ( $i == $intYear ) ? 'selected="selected"' : ""; ?>><?php echo $i;?></option> 
-												<?php }?>
-											</select>
-											
+											<div class="wpsp-form-group">
+												<label class="wpsp-labelMain">Select Month</label>
+												<select id="attendance_report_month" name="month" class="wpsp-form-control" >
+													<option value="">Select Month</option>
+													<option value="1" <?php echo ( 1 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Jan</option> 
+													<option value="2" <?php echo ( 2 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Feb</option> 
+													<option value="3" <?php echo ( 3 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Mar</option> 
+													<option value="4" <?php echo ( 4 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Apr</option> 
+													<option value="5" <?php echo ( 5 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>May</option> 
+													<option value="6" <?php echo ( 6 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Jun</option> 
+													<option value="7" <?php echo ( 7 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Jul</option> 
+													<option value="8" <?php echo ( 8 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Aug</option> 
+													<option value="9" <?php echo ( 9 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Sep</option> 
+													<option value="10" <?php echo ( 10 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Oct</option> 
+													<option value="11" <?php echo ( 11 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Nov</option> 
+													<option value="12" <?php echo ( 12 == $intMonthNumber ) ? 'selected="selected"' : ""; ?>>Dec</option> 
+												</select>
+											</div>
+											<div class="wpsp-form-group">
+												<label class="wpsp-labelMain">Select Year</label>
+													<select id="attendance_report_year" name="year" class="wpsp-form-control" >
+														<option value="">Select Year</option>
+															<?php for( $i=2019; $i<=date('Y'); $i++) {?>
+																<option value="<?php echo $i;?>" <?php echo ( $i == $intYear ) ? 'selected="selected"' : ""; ?>><?php echo $i;?></option> 
+															<?php }?>
+													</select>
+											</div>
 											<br>
 											<span id="error_message" class="wpsp-text-red"></span>
 											<br>
@@ -168,12 +212,12 @@ function printDiv() {
         '</style>';
     htmlToPrint += divToPrint.outerHTML;
     newWin = window.open("");
-    newWin.document.write(htmlToPrint);
+    newWin.document.write('<html><head></head><body>' + htmlToPrint + '</body></html>');
 }
 </script>
 <?php 
 								 if( true == isset( $_GET['report'] ) && 'monthly_muster' == $_GET['report'] ) { ?>
-	<div  class="wpsp-card">
+	<div id="attendance_report" class="wpsp-card">
 			<div style="padding:20px 30px"><button  style="padding: 10px 30px !important;font-size: large;"onclick="printDiv();" name="print_report" class="wpsp-btn wpsp-btn-success">Print</button></div>
 			<div class="wpsp-card-body">
 			<section id="muster-print" class="content">
@@ -278,7 +322,7 @@ function printDiv() {
 						 <img src='$img_url' height='150px' width='150px' class='img img-circle'/>
 					</div>
 					<div class='wpsp-userDetails'>
-						<table class='wpsp-table'>
+						<table class='wpsp-table' >
 							<tbody>
 								<tr>
 									<td colspan='2'><strong>Name: </strong>$stinfo->full_name</td>

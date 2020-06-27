@@ -11,7 +11,7 @@ wpsp_header();
 			wpsp_body_start();
 			?>
 			<?php
-				if(isset( $_GET['tab'] ) && sanitize_text_field($_GET['tab'])=='addteacher')
+				if(isset( $_GET['page_action'] ) && sanitize_text_field($_GET['page_action'])=='addteacher')
 				{
 					include_once( WPSP_PLUGIN_PATH .'/includes/wpsp-teacherForm.php' );
 				}

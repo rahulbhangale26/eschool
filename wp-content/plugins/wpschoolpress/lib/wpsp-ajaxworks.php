@@ -1239,7 +1239,7 @@ function wpsp_getStudentsList() {
 							$content.= wp_nonce_field('StudentAttendance', 'sattendance_nonce', '', false) . '
                             </div>
                             <div class="wpsp-form-group">
-                            <table class="wpsp-table wpsp-table-bordered" id="addAttendanceTable" cellspacing="0" width="100%" style="width:100%">
+                            <table class="wpsp-table wpsp-table-bordered" id="addAttendanceTable" cellspacing="0" width="100%" style="width:100%; overflow-x:scroll; " >
                                 <thead>
                                     <tr><td colspan="5">
 									<span class="pull-left">Class: <span class="wpsp-f500">' . $unit->unit_name . '</span></span><span class="pull-right">Date: <span class="wpsp-f500">' . $show_date . '</span></span></td>

@@ -97,7 +97,9 @@ function ewpsp_customcss(){
           			<?php } ?>
           		</ol>
           		<?php if( true == isset( $arrstrCurrentModule['create_new' ] ) ) { ?>
-          			<a class="wpsp-btn" href="<?php echo site_url( 'wp-admin/admin.php?page=' . $arrstrCurrentModule['slug']. '&page_action=' .  $arrstrCurrentModule['create_new'] ); ?>" > Create New </a>
+          			<a class="wpsp-btn" href="<?php echo site_url( 'wp-admin/admin.php?page=' . $arrstrCurrentModule['slug']. '&page_action=' .  $arrstrCurrentModule['create_new'] ); ?>" >
+          				<?php echo ( true == isset( $arrstrCurrentModule['create_new_title'] ) ? $arrstrCurrentModule['create_new_title'] : 'Create New' ); ?>
+          			</a>
           		<?php } ?>
           	</div>
       	</div>

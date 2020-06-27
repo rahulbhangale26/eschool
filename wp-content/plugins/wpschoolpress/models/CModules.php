@@ -47,7 +47,7 @@ class CModules extends CModel {
         'icon_class'        => 'dashicons dashicons-businessman icon',
         'parent_module_id'  => 0,
         'has_sub_modules'   => 0,
-        
+        'create_new'        => 'addteacher'
     ];
     
     const TRAINEES = [
@@ -63,16 +63,19 @@ class CModules extends CModel {
     const TRAINEE_RECORD    = [
         'id'                => 5,
         'title'             => 'Trainee Record',
-        'slug'              => 'sch-underconstruction',
+        'slug'              => 'sch-trainee_record',
         'icon_class'        => 'dashicons dashicons-welcome-write-blog icon',
         'parent_module_id'  => 0,
-        'has_sub_modules'   => true
+        'has_sub_modules'   => false,
+        'create_new'        => 'add_record',
+        'create_new_title' => 'Add Record'
     ];
-    
+
+    /* 
     const DAILY_DIARY = [
         'id'                => 6,
         'title'             => 'Daily Diary',
-        'slug'              => 'sch-underconstruction',
+        'slug'              => 'sch-trainee_daily_diary',
         'icon_class'        => '',
         'parent_module_id'  => 5,
         'has_sub_modules'   => 0
@@ -130,7 +133,7 @@ class CModules extends CModel {
         'icon_class'        => '',
         'parent_module_id'  => 5,
         'has_sub_modules'   => 0
-    ];
+    ]; */
     
     const INSTRUCTOR_RECORD = [
         'id'                => 12,
@@ -417,7 +420,8 @@ class CModules extends CModel {
             'sch-student'       => self::TRAINEES,
             'sch-subjects-new'  => self::SUBJECTS,
             'sch-attendance'    => self::ATTENDANCE,
-            'sch-teacher'       => self::STAFF,
+            'sch-teacher'           => self::STAFF,
+            'sch-trainee_record'    => self::TRAINEE_RECORD
         ];
     
     }
@@ -464,15 +468,6 @@ class CModules extends CModel {
         $arrmixModule = [];
                
         switch ( $intParentId ) {
-            case self::TRAINEE_RECORD['id']:
-                $arrmixModule[self::DAILY_DIARY['id']]      = self::DAILY_DIARY;
-                $arrmixModule[self::DRAFTING_BOOK['id']]    = self::DRAFTING_BOOK;
-                $arrmixModule[self::THEORY_FILE['id']]      = self::THEORY_FILE;
-                $arrmixModule[self::JOB_SHEETBOOK['id']]    = self::JOB_SHEETBOOK;
-                $arrmixModule[self::ASSIGNMENT_BOOK['id']]  = self::ASSIGNMENT_BOOK;
-                $arrmixModule[self::PRACTICAL_BOOK['id']]    = self::PRACTICAL_BOOK;
-                $arrmixModule[self::LEAVE_RECORD['id']]     = self::LEAVE_RECORD;
-                break;
                 
             case self::TRADE['id']:
                 $arrmixModule[self::TRADES['id']]           = self::TRADES;
@@ -519,15 +514,6 @@ class CModules extends CModel {
     private function getInstructorSubModules( $intParentId ) {
         $arrmixModule = [];
         switch ( $intParentId ) {
-            case self::TRAINEE_RECORD['id']:
-                $arrmixModule[self::DAILY_DIARY['id']]      = self::DAILY_DIARY;
-                $arrmixModule[self::DRAFTING_BOOK['id']]    = self::DRAFTING_BOOK;
-                $arrmixModule[self::THEORY_FILE['id']]      = self::THEORY_FILE;
-                $arrmixModule[self::JOB_SHEETBOOK['id']]    = self::JOB_SHEETBOOK;
-                $arrmixModule[self::ASSIGNMENT_BOOK['id']]  = self::ASSIGNMENT_BOOK;
-                $arrmixModule[self::PRACTICAL_BOOK['id']]    = self::PRACTICAL_BOOK;
-                $arrmixModule[self::LEAVE_RECORD['id']]     = self::LEAVE_RECORD;
-                break;
                     
             case self::INSTRUCTOR_RECORD['id']:
                 $arrmixModule[self::SYLLABUS['id']]                     = self::SYLLABUS;

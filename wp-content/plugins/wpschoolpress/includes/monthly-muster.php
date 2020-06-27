@@ -1,6 +1,6 @@
 <?php
     global $objUser;
-    $intUnitId = ( int ) $_GET['unit_id']; 
+    $intUnitId = ( int ) $_GET['ViewUnitId']; 
     $intMonthNumber = ( int ) $_GET['month'];
     $intYear = ( int ) $_GET['year'];
     $objUnit = CUnits::getInstance()->fetchUnitById( $intUnitId );

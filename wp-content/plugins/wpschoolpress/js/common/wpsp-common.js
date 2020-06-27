@@ -11,7 +11,11 @@ sch.ajaxRequest = function( options ) {
         beforeSend: function() {
         	$(options.selector).append( '<div class="loaderOverlay"></div><div class="loader"></div>')
         },
-        success:options.success,
+        success: function( res ){
+        	$(options.selector + ' .loaderOverlay').remove();
+        	$(options.selector + ' .loader').remove();
+        	options.success( res );
+        },
         error: options.error,
         complete: options.complete
       })

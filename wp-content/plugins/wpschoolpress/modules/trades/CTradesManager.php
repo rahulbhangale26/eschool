@@ -18,6 +18,10 @@ class CTradesManager extends CFactory {
             case NULL:
                 $this->handleViewTrades();
                 break;
+                
+            case 'get_trade_unit_lists':
+                $this->handleGetTradeUnitLists();
+                break;
         }
         
     }
@@ -32,6 +36,17 @@ class CTradesManager extends CFactory {
         $this->arrmixTrades = CTrade::getInstance()->fetchAllTrades();
         
         $this->displayViewTrades();
+    }
+    
+    public function handleGetTradeUnitLists() {
+        $intTradeId = $this->getRequestData( [ 'data', 'TradeId' ] );
+        
+        if( false != $intTradeId ) {
+            $arrobjUnits = CUnits::getInstance()->fetchUnitByTradeId( $intTradeId );
+        }
+        
+        echo json_encode( $arrobjUnits );
+        
     }
     
     public function displayViewTrades( ) {

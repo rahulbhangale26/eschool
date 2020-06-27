@@ -15,7 +15,7 @@ $(document).ready(function() {
 			return false;
 		}
 		
-		window.location.href = $('#monthly_muster').attr('data-reportUrl') + '&unit_id=' + $('#attendance_report_unit').val() + '&month=' +  $('#attendance_report_month').val()  + '&year=' + $('#attendance_report_year').val();
+		window.location.href = $('#monthly_muster').attr('data-reportUrl') + '&ViewUnitId=' + $('#attendance_report_unit').val() + '&month=' +  $('#attendance_report_month').val()  + '&year=' + $('#attendance_report_year').val() + '&ViewTradeId=' + $('#ViewTradeId').val();
 
 	});
 
@@ -46,12 +46,65 @@ $(document).ready(function() {
 		maxDate: 0
 	}), 
 	
+	
+	$( '.AttendanceView #ViewTradeId' ).change(function(){
+		sch.ajaxRequest({
+			'page': 'sch-trades',
+			'pageAction': 'get_trade_unit_lists',
+			'selector': '.attendance-page',
+			data:  { 'TradeId': $('.AttendanceView #ViewTradeId').val() },
+			success: function( res ) {
+				
+				if( '' != res ) {
+					var units = $.parseJSON( res );
+					strOption = '';
+					$(units).each( function( index, unit ){
+						strOption += '<option value="' + unit.id + '">' + unit.unit_name+ '</option>';
+					});
+					strHTML = '<select name="ViewUnitId" id = "attendance_report_unit" class="wpsp-form-control">' +
+								'<option value="" disabled selected>Select Unit</option>' +
+								strOption +
+							'</select>';
+
+					$('.AttendanceView #attendance_report_unit').replaceWith( strHTML );
+				}	
+			}
+				
+		});
+	});
+	
+	$( '#AttendanceEnterForm #TradeId' ).change(function(){
+		sch.ajaxRequest({
+			'page': 'sch-trades',
+			'pageAction': 'get_trade_unit_lists',
+			'selector': '.attendance-page',
+			data:  { 'TradeId': $('#AttendanceEnterForm #TradeId').val() },
+			success: function( res ) {
+				
+				if( '' != res ) {
+					var units = $.parseJSON( res );
+					strOption = '';
+					$(units).each( function( index, unit ){
+						strOption += '<option value="' + unit.id + '">' + unit.unit_name+ '</option>';
+					});
+					strHTML = '<select name="UnitId" id = "UnitId" class="wpsp-form-control">' +
+								'<option value="" disabled selected>Select Unit</option>' +
+								strOption +
+							'</select>';
+
+					$('#AttendanceEnterForm #UnitId').replaceWith( strHTML );
+				}	
+			}
+				
+		});
+	});
+	
 	$("#AttendanceEnter, #AttendanceEdit").click(function() {
 		$("#AttendanceClass").parent().parent().find(".clserror").removeClass("error"), 
 		$("#AttendanceClass").parent().parent().find(".clsbatch").removeClass("error"), 
 		$("#AttendanceDate").parent().parent().find(".clsdate").removeClass("error"), 
 		$("#AddModalContent").html(""), $("#wpsp-error-msg").html("");
-		
+		$('.attendance-page').append( '<div class="loaderOverlay"></div><div class="loader"></div>')
 		var e = $("#AttendanceClass").val(),
 			a = $("#AttendanceDate").val();
 		
@@ -73,14 +126,26 @@ $(document).ready(function() {
 					$("#AttendanceEnter").attr("disabled", "disabled")
 				},
 				success: function(e) {
+					$('.attendance-page .loaderOverlay').remove();
+		        	$('.attendance-page .loader').remove();
+		        	$('#attendance_report').remove();
 					$("#AttendanceEnter").removeAttr("disabled");
 					var a = jQuery.parseJSON(e);
 					0 == a.status ? ($("#wpsp-error-msg").html(a.msg), location.reload(!0)) : $("#AddModalContent").html(a.msg)
+							
+					$('html, body').animate({
+						scrollTop: $(".AddModalContent").offset().top
+					}, 2000 );
+						 
 				},
 				error: function() {
+					$('.attendance-page .loaderOverlay').remove();
+		        	$('.attendance-page .loader').remove();
 					$("#AttendanceEnter").removeAttr("disabled"), $(".wpsp-popup-return-data").html("Something went wrong. Try after refreshing page.."), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
 				},
 				complete: function() {
+					$('.attendance-page .loaderOverlay').remove();
+		        	$('.attendance-page .loader').remove();
 					$("#AttendanceEnter").removeAttr("disabled")
 				}
 			})
@@ -89,6 +154,7 @@ $(document).ready(function() {
 	}), 
 	
 	$(document).on("click", "#AttendanceSubmit", function(e) {
+
     if (e.preventDefault(), $('input[type="checkbox"]:checked').length > 0) {
       var a = $("#AttendanceEntryForm").serializeArray();
       a.push({
@@ -107,7 +173,7 @@ $(document).ready(function() {
     			$(".alert").remove(), 
     			$("#SuccessModal").css("display", "none"),
     			$("#Attendanceview").click()
-    			location.reload();
+    			window.location.href = $('.attendance-page').attr( 'data-attendancePageUrl' );
         }, 2e3)) : "updated" == e ? ($("#formresponse").html("<div class='alert alert-warning'>Attendance updated successfully!</div>"),
 		location.reload(!0)) : ($(".wpsp-popup-return-data").html("Something went "),
 		$("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"),

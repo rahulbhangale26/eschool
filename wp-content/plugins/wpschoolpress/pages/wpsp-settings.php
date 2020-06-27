@@ -722,7 +722,10 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                             <?php } ?>
                         </div>
             <?php } else if($current_user_role=='parent' || $current_user_role=='student') {
-                }
+                include_once( WPSP_PLUGIN_PATH . 'pages/underconstruction.php');
+            } else {
+                include_once( WPSP_PLUGIN_PATH . 'pages/underconstruction.php');
+            }
         wpsp_body_end();
         wpsp_footer(); ?>
     <?php

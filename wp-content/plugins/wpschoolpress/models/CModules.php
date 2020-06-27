@@ -31,7 +31,7 @@ class CModules extends CModel {
     
     const UNITS = [
         'id'                => 43,
-        'title'             => 'Units Management',
+        'title'             => 'Units',
         'slug'              => 'sch-units',
         'icon_class'        => 'dashicons dashicons-admin-home',
         'parent_module_id'  => 0,
@@ -543,6 +543,11 @@ class CModules extends CModel {
                 $arrmixModule[self::A_V_AIDS['id']]                     = self::A_V_AIDS;
                 break;
                 
+            case self::TRADE['id']:
+                $arrmixModule[self::TRADES['id']]           = self::TRADES;
+                $arrmixModule[self::SUBJECTS['id']]         = self::SUBJECTS;
+                break;
+                
             case self::ATTENDANCE['id']:
                 $arrmixModule[self::TRAINEE_ATTENDANCE['id']]      = self::TRAINEE_ATTENDANCE;
                 break;
@@ -563,7 +568,6 @@ class CModules extends CModel {
             self::DASHBOARD['id']           => self::DASHBOARD,
             self::TRADE['id']               => self::TRADE,
             self::STAFF['id']               => self::STAFF,
-            self::UNITS['id']               => self::UNITS,
             self::TRAINEES['id']            => self::TRAINEES,
             self::TRAINEE_RECORD['id']      => self::TRAINEE_RECORD,
             self::INSTRUCTOR_RECORD['id']   => self::INSTRUCTOR_RECORD,
@@ -582,15 +586,17 @@ class CModules extends CModel {
     private function getInstructorModules() {
         $arrmixModule = [
             self::DASHBOARD['id']           => self::DASHBOARD,
-            self::STAFF['id']               => self::STAFF,
             self::TRAINEES['id']            => self::TRAINEES,
+            self::ATTENDANCE['id']          => self::ATTENDANCE,
             self::TRAINEE_RECORD['id']      => self::TRAINEE_RECORD,
             self::INSTRUCTOR_RECORD['id']   => self::INSTRUCTOR_RECORD,
-            self::ATTENDANCE['id']          => self::ATTENDANCE,
+            self::STAFF['id']               => self::STAFF,
             self::MEETING_ROOM['id']        => self::MEETING_ROOM,
             self::EVENTS['id']              => self::EVENTS,
             self::NOTIFY['id']              => self::NOTIFY,
             self::TRANSPORT['id']           => self::TRANSPORT,
+            self::TRADE['id']               => self::TRADE,
+            self::UNITS['id']               => self::UNITS,
             self::PARENTS['id']             => self::PARENTS,
             self::SETTINGS['id']            => self::SETTINGS,
         ];

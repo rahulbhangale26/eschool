@@ -30,152 +30,152 @@ function wpsp_admin_menu() {
 		$promessage2    =    wpsp_check_pro_version('wpsp_message_version');
     	$prodisablemessage2    =    !$promessage2['status'] ? 'notinstalled'    : 'installed';
 
-		add_menu_page(__('WPSchoolPress', 'WPSchoolPress') , __('WPSchoolPress', 'WPSchoolPress') , 'manage_options', 'WPSchoolPress', array(
+		add_menu_page(__('ITIMS', 'WPSchoolPress') , __('ITIMS', 'WPSchoolPress') , 'manage_options', 'ITIMS', array(
 			$this,
 			'wpsp_admin_details'
 		) , WPSP_PLUGIN_URL . 'img/favicon.png');
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-dashboard icon"></i>&nbsp; Dashboard', 'edit_posts', 'sch-dashboard', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="dashicons dashicons-dashboard icon"></i>&nbsp; Dashboard', 'edit_posts', 'sch-dashboard', array(
 			$this,
 			'wpsp_callback_dashboard'
 		));
 	 	
-			add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-inbox"></i>&nbsp; Messages', 'edit_posts', 'sch-messages', array(
+			add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-inbox"></i>&nbsp; Messages', 'edit_posts', 'sch-messages', array(
 				$this,
 				'wpsp_callback_messages'
 			));
 		
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-id icon"></i>&nbsp; ' . _t( 'Students' ), 'edit_posts', 'sch-student', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="dashicons dashicons-id icon"></i>&nbsp; ' . _t( 'Students' ), 'edit_posts', 'sch-student', array(
 			$this,
 			'wpsp_callback_students'
 		));
 		if($proversion1['status']){
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-welcome-write-blog icon"></i>&nbsp; Registration Request', 'edit_posts', 'sch-request', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="dashicons dashicons-welcome-write-blog icon"></i>&nbsp; Registration Request', 'edit_posts', 'sch-request', array(
 			$this,
 			'wpsp_callback_request'
 		));
 		}
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-groups icon"></i>&nbsp; ' . _t( 'Teachers' ), 'edit_posts', 'sch-teacher', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="dashicons dashicons-groups icon"></i>&nbsp; ' . _t( 'Teachers' ), 'edit_posts', 'sch-teacher', array(
 			$this,
 			'wpsp_callback_teachers'
 		));
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-businessman icon"></i>&nbsp; Parents', 'edit_posts', 'sch-parent', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="dashicons dashicons-businessman icon"></i>&nbsp; Parents', 'edit_posts', 'sch-parent', array(
 			$this,
 			'wpsp_callback_parents'
 		));
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-businessman icon"></i>&nbsp; Parents', 'edit_posts', 'sch-underconstruction', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="dashicons dashicons-businessman icon"></i>&nbsp; Parents', 'edit_posts', 'sch-underconstruction', array(
 		    $this,
 		    'wpsp_callback_underconstruction'
 		));
 		
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-businessman icon"></i>&nbsp; Parents', 'edit_posts', 'sch-leave_record', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="dashicons dashicons-businessman icon"></i>&nbsp; Parents', 'edit_posts', 'sch-leave_record', array(
 		    $this,
 		    'wpsp_callback_leave_record'
 		));
 		
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-welcome-widgets-menus icon"></i>&nbsp; Classes', 'edit_posts', 'sch-class', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="dashicons dashicons-welcome-widgets-menus icon"></i>&nbsp; Classes', 'edit_posts', 'sch-class', array(
 			$this,
 			'wpsp_callback_classes'
 		));
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-clipboard icon"></i>&nbsp; Attendance', 'edit_posts', 'sch-attendance', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="dashicons dashicons-clipboard icon"></i>&nbsp; Attendance', 'edit_posts', 'sch-attendance', array(
 			$this,
 			'wpsp_callback_attendance'
 		));
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-book"></i>&nbsp; Subjects', 'edit_posts', 'sch-subject', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-book"></i>&nbsp; Subjects', 'edit_posts', 'sch-subject', array(
 			$this,
 			'wpsp_callback_subject'
 		));
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-edit"></i>&nbsp; Exams', 'edit_posts', 'sch-exams', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-edit"></i>&nbsp; Exams', 'edit_posts', 'sch-exams', array(
 			$this,
 			'wpsp_callback_exams'
 		));
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-check-square-o"></i>&nbsp; Marks', 'edit_posts', 'sch-marks', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-check-square-o"></i>&nbsp; Marks', 'edit_posts', 'sch-marks', array(
 			$this,
 			'wpsp_callback_marks'
 		));
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-calendar-alt"></i>&nbsp; Events', 'edit_posts', 'sch-events', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="dashicons dashicons-calendar-alt"></i>&nbsp; Events', 'edit_posts', 'sch-events', array(
 			$this,
 			'wpsp_callback_events'
 		));
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-clock-o"></i>&nbsp; Time Table', 'edit_posts', 'sch-timetable', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-clock-o"></i>&nbsp; Time Table', 'edit_posts', 'sch-timetable', array(
 			$this,
 			'wpsp_callback_timetable'
 		));
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-upload"></i>&nbsp; Import History', 'edit_posts', 'sch-importhistory', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-upload"></i>&nbsp; Import History', 'edit_posts', 'sch-importhistory', array(
 			$this,
 			'wpsp_callback_importhistory'
 		));
 		if( $current_user_role=='administrator' || $current_user_role=='teacher') {
-			add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-bullhorn"></i>&nbsp; Notify', 'edit_posts', 'sch-notify', array(
+			add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-bullhorn"></i>&nbsp; Notify', 'edit_posts', 'sch-notify', array(
 				$this,
 				'wpsp_callback_notify'
 			));
 		}
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-road"></i>&nbsp; Transport', 'edit_posts', 'sch-transport', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-road"></i>&nbsp; Transport', 'edit_posts', 'sch-transport', array(
 			$this,
 			'wpsp_callback_transport'
 		));
 		if($current_user_role=='administrator' || $current_user_role=='teacher'){
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-signal"></i>&nbsp; ' . _t( 'Teacher Attendance' ) , 'edit_posts', 'sch-teacherattendance', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-signal"></i>&nbsp; ' . _t( 'Teacher Attendance' ) , 'edit_posts', 'sch-teacherattendance', array(
 			$this,
 			'wpsp_callback_teacherattendance'
 		));
 	}
 	if($current_user_role=='administrator' || $current_user_role=='teacher'){
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-cog"></i>&nbsp; General Settings', 'edit_posts', 'sch-settings', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-cog"></i>&nbsp; General Settings', 'edit_posts', 'sch-settings', array(
 			$this,
 			'wpsp_callback_settings'
 		));
 	}
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-check-square-o"></i>&nbsp; Subject Mark Fields', 'edit_posts', 'sch-settings&sc=subField', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-check-square-o"></i>&nbsp; Subject Mark Fields', 'edit_posts', 'sch-settings&sc=subField', array(
 			$this,
 			'wpsp_callback_subfield'
 		));
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-clock-o"></i>&nbsp; Working Hours', 'edit_posts', 'sch-settings&sc=WrkHours', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-clock-o"></i>&nbsp; Working Hours', 'edit_posts', 'sch-settings&sc=WrkHours', array(
 			$this,
 			'wpsp_callback_wrkhours'
 		));
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-key fa-fw"></i>&nbsp; Change Password', 'edit_posts', 'sch-changepassword', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-key fa-fw"></i>&nbsp; Change Password', 'edit_posts', 'sch-changepassword', array(
 			$this,
 			'wpsp_callback_changepassword'
 		));
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-strikethrough"></i>&nbsp; Leave Calendar', 'edit_posts', 'sch-leavecalendar', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-strikethrough"></i>&nbsp; Leave Calendar', 'edit_posts', 'sch-leavecalendar', array(
 			$this,
 			'wpsp_callback_leavecalendar'
 		));
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-key fa-fw"></i>&nbsp; Edit Profile', 'edit_posts', 'sch-editprofile', array(
+		add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-key fa-fw"></i>&nbsp; Edit Profile', 'edit_posts', 'sch-editprofile', array(
 			$this,
 			'wpsp_callback_editprofile'
 		));
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; History', 'edit_posts', 'sch-history', array(
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; History', 'edit_posts', 'sch-history', array(
 			$this,
 			'wpsp_callback_schhistory'
 		));
 		
 		/** MVC Strarted **/
 		
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trades', 'edit_posts', 'sch-trades', array(
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trades', 'edit_posts', 'sch-trades', array(
 		    $this,
 		    'wpsp_callback'
 		));
 		
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trades', 'edit_posts', 'sch-meetingroom', array(
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trades', 'edit_posts', 'sch-meetingroom', array(
 		    $this,
 		    'wpsp_callback'
 		));
 		
 		
 		
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trainees', 'edit_posts', 'sch-trainees', array(
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trainees', 'edit_posts', 'sch-trainees', array(
 		    $this,
 		    'wpsp_callback'
 		));
 		
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; Subjets', 'edit_posts', 'sch-subjects-new', array(
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Subjets', 'edit_posts', 'sch-subjects-new', array(
 		    $this,
 		    'wpsp_callback'
 		));
 		
-		add_submenu_page('WPSchoolPress', 'WPSchoolPress',  '<i class="fa fa-key fa-fw"></i>&nbsp; Subjets', 'edit_posts', 'sch-units', array(
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Subjets', 'edit_posts', 'sch-units', array(
 		    $this,
 		    'wpsp_callback'
 		));
@@ -183,12 +183,12 @@ function wpsp_admin_menu() {
 		/** MVC FInished **/
 
 		if($propayment == "installed"){
-			add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="fa fa-strikethrough"></i>&nbsp; Payment', 'edit_posts', 'sch-payment', array(
+			add_submenu_page('ITIMS', 'ITIMS', '<i class="fa fa-strikethrough"></i>&nbsp; Payment', 'edit_posts', 'sch-payment', array(
 			$this,
 			'wpsp_callback_payment'
 			));
 		}
-		add_submenu_page( 'WPSchoolPress', 'WPSchoolPress', '<i class="dashicons dashicons-welcome-add-page"></i>&nbsp; Addons',
+		add_submenu_page( 'ITIMS', 'ITIMS', '<i class="dashicons dashicons-welcome-add-page"></i>&nbsp; Addons',
     'manage_options', 'addons',
 		array(
 			$this,
@@ -339,17 +339,17 @@ function wpsp_admin_menu() {
 			wp_register_style('wpsp_wp_admin_dataTablesbootresp2', WPSP_PLUGIN_URL . 'plugins/datatables/responsive.bootstrap.min.css', false, '1.0.0');
 			wp_enqueue_style('wpsp_wp_admin_dataTablesbootresp2');
 		}
-		if ($hook == 'wpschoolpress_page_sch-student')
+		if ($hook == 'itims_page_sch-student')
 		{
 			// wp_register_style('wpsp_wp_admin_blueimp-gallery', WPSP_PLUGIN_URL . 'plugins/gallery/blueimp-gallery.min.css', false, '1.0.0');
 			// wp_enqueue_style('wpsp_wp_admin_blueimp-gallery');
 		}
-		if ($hook == 'wpschoolpress_page_sch-dashboard')
+		if ($hook == 'itims_page_sch-dashboard')
 		{
 			wp_register_style('wpsp_wp_admin_fullcalendar', WPSP_PLUGIN_URL . 'plugins/fullcalendar/fullcalendar.min.css', false, '1.0.0');
 			wp_enqueue_style('wpsp_wp_admin_fullcalendar');
 		}
-		if ($hook == 'wpschoolpress_page_sch-events')
+		if ($hook == 'itims_page_sch-events')
 		{
 			wp_register_style('wpsp_wp_admin_fullcalendar', WPSP_PLUGIN_URL . 'plugins/fullcalendar/fullcalendar.min.css', false, '1.0.0');
 			wp_enqueue_style('wpsp_wp_admin_fullcalendar');
@@ -357,7 +357,7 @@ function wpsp_admin_menu() {
 			wp_enqueue_style('wpsp_wp_admin_timepicker');
 		}
 
-		if ($hook == 'wpschoolpress_page_sch-settings' || $hook == 'wpschoolpress_page_sch-teacher')
+		if ($hook == 'itims_page_sch-settings' || $hook == 'itims_page_sch-teacher')
 		{
 			wp_register_style('wpsp_wp_admin_boottimepicker', WPSP_PLUGIN_URL . 'plugins/timepicker/bootstrap-timepicker.css', false, '1.0.0');
 			wp_enqueue_style('wpsp_wp_admin_boottimepicker');
@@ -407,7 +407,7 @@ function wpsp_admin_menu() {
 		wp_enqueue_script('wpsp_wp_admin_jquery100', WPSP_PLUGIN_URL . 'js/wpsp-settingtab.js', array(
 				'jquery'
 			) , '1.0.0', true);
-		if ($hook == 'toplevel_page_WPSchoolPress'){
+		if ($hook == 'toplevel_page_ITIMS'){
 			wp_enqueue_script('wpsp_wp_admin_jquery90', WPSP_PLUGIN_URL . 'js/wpsp-wp-admin.js', array(
 				'jquery'
 			) , '1.0.0', true);
@@ -421,13 +421,13 @@ function wpsp_admin_menu() {
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if($hook == 'wpschoolpress_page_sch-request')
+		if($hook == 'itims_page_sch-request')
 				{
 				wp_enqueue_script('wpsp_wp_admin_jquery1011', WPSP_PLUGIN_URL . 'js/wpsp-sch-request.js', array(
 				'jquery'
 			) , '1.0.0', true);
 			}
-		if ($hook == 'wpschoolpress_page_sch-dashboard')
+		if ($hook == 'itims_page_sch-dashboard')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery10', WPSP_PLUGIN_URL . 'plugins/fullcalendar/moment.min.js', array(
 				'jquery'
@@ -444,11 +444,11 @@ function wpsp_admin_menu() {
 		}
 		
 		
-		if ($hook == 'wpschoolpress_page_sch-trainees' || $hook == 'wpschoolpress_page_sch-subjects-new' || $hook == 'wpschoolpress_page_sch-units' ) {
+		if ($hook == 'itims_page_sch-trainees' || $hook == 'itims_page_sch-subjects-new' || $hook == 'itims_page_sch-units' ) {
 		    wp_enqueue_script('student_list', WPSP_PLUGIN_URL . 'js/common/wpsp-common.js', ['jquery'] , '1.0.0', true); 
 		}
 		
-		if ($hook == 'wpschoolpress_page_sch-student' )
+		if ($hook == 'itims_page_sch-student' )
 		{
 			// wp_enqueue_script('wpsp_wp_admin_jquery15', WPSP_PLUGIN_URL . 'plugins/fileupload/jquery.iframe-transport.js', array(
 			// 	'jquery'
@@ -467,56 +467,56 @@ function wpsp_admin_menu() {
 
 			 }
 		}
-		if ($hook == 'wpschoolpress_page_sch-editprofile' )
+		if ($hook == 'itims_page_sch-editprofile' )
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery17', WPSP_PLUGIN_URL . 'js/wpsp-editprofile.js', array(
 				'jquery'
 			) ,'1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-teacher')
+		if ($hook == 'itims_page_sch-teacher')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery18', WPSP_PLUGIN_URL . 'js/wpsp-teacher.js', array(
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-parent')
+		if ($hook == 'itims_page_sch-parent')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery19', WPSP_PLUGIN_URL . 'js/wpsp-parent.js', array(
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-class')
+		if ($hook == 'itims_page_sch-class')
 		{
 			wp_deregister_script('jquery-ui-datepicker');
 			wp_enqueue_script('wpsp_wp_admin_jquery20', WPSP_PLUGIN_URL . 'js/wpsp-class.js', array(
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-attendance')
+		if ($hook == 'itims_page_sch-attendance')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery21', WPSP_PLUGIN_URL . 'js/wpsp-attendance.js', array(
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-subject')
+		if ($hook == 'itims_page_sch-subject')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery22', WPSP_PLUGIN_URL . 'js/wpsp-subject.js', array(
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-exams')
+		if ($hook == 'itims_page_sch-exams')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery23', WPSP_PLUGIN_URL . 'js/wpsp-exam.js', array(
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-marks')
+		if ($hook == 'itims_page_sch-marks')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery24', WPSP_PLUGIN_URL . 'js/wpsp-mark.js', array(
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-timetable')
+		if ($hook == 'itims_page_sch-timetable')
 		{
 			wp_deregister_script( 'jquery-ui-core' );
 			wp_enqueue_script('wpsp_wp_admin_jquery25', WPSP_PLUGIN_URL . 'plugins/otherui/wpsp_easyui.min.js', array(
@@ -529,7 +529,7 @@ function wpsp_admin_menu() {
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-settings')
+		if ($hook == 'itims_page_sch-settings')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery27', WPSP_PLUGIN_URL . 'plugins/timepicker/bootstrap-timepicker.js', array(
 				'jquery'
@@ -538,31 +538,31 @@ function wpsp_admin_menu() {
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-importhistory')
+		if ($hook == 'itims_page_sch-importhistory')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery29', WPSP_PLUGIN_URL . 'js/wpsp-importhistory.js', array(
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-transport')
+		if ($hook == 'itims_page_sch-transport')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery30', WPSP_PLUGIN_URL . 'js/wpsp-transport.js', array(
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-teacherattendance')
+		if ($hook == 'itims_page_sch-teacherattendance')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery31', WPSP_PLUGIN_URL . 'js/wpsp-teacherattendance.js', array(
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-notify')
+		if ($hook == 'itims_page_sch-notify')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery32', WPSP_PLUGIN_URL . 'js/wpsp-notify.js', array(
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-events')
+		if ($hook == 'itims_page_sch-events')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery33', WPSP_PLUGIN_URL . 'plugins/fullcalendar/moment.min.js', array(
 				'jquery'
@@ -577,13 +577,13 @@ function wpsp_admin_menu() {
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-notify')
+		if ($hook == 'itims_page_sch-notify')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery37', WPSP_PLUGIN_URL . 'js/wpsp-leavecalendar.js', array(
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-messages' || $hook == 'wpschoolpress_page_sch-parent')
+		if ($hook == 'itims_page_sch-messages' || $hook == 'itims_page_sch-parent')
 		{
 			 wp_register_style('wpsp_wp_admin_multiselect', WPSP_PLUGIN_URL . 'plugins/multiselect/jquery.multiselect.css', false, '1.0.0');
 			 wp_enqueue_style('wpsp_wp_admin_multiselect');
@@ -591,19 +591,19 @@ function wpsp_admin_menu() {
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-changepassword')
+		if ($hook == 'itims_page_sch-changepassword')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery40', WPSP_PLUGIN_URL . 'js/wpsp-changepassword.js', array(
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-payment')
+		if ($hook == 'itims_page_sch-payment')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery41', WPSP_PLUGIN_URL . 'plugins_url("plugins/multiselect/jquery.multiselect.js', array(
 				'jquery'
 			) , '1.0.0', true);
 		}
-		if ($hook == 'wpschoolpress_page_sch-leavecalendar')
+		if ($hook == 'itims_page_sch-leavecalendar')
 		{
 			wp_enqueue_script('wpsp_wp_admin_jquery42', WPSP_PLUGIN_URL . 'js/wpsp-leavecalendar.js', array(
 				'jquery'
@@ -626,7 +626,7 @@ function wpsp_admin_menu() {
 		$wp_admin_bar->add_menu(array(
 			'parent' => false,
 			'id' => 'dashboard',
-			'title' => _('WPSchoolPress Dashboard') ,
+			'title' => _('ITIMS Dashboard') ,
 			'href' => $wpsp_wpschooldashboard_url
 		));
 		$wp_admin_bar->add_menu(array(

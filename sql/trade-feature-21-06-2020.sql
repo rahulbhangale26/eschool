@@ -1,6 +1,6 @@
 -- Batches 
 
-CREATE TABLE `nutaniti`.`iti_wpsp_trades` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NOT NULL , `created_by` INT NOT NULL , `created_on` DATETIME NOT NULL , `published_on` DATETIME NOT NULL , `deleted_by` INT NOT NULL , `deleted_on` DATETIME NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+CREATE TABLE `iti_wpsp_trades` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NOT NULL , `created_by` INT NOT NULL , `created_on` DATETIME NOT NULL , `published_on` DATETIME NOT NULL , `deleted_by` INT NOT NULL , `deleted_on` DATETIME NOT NULL , PRIMARY KEY (`id`));
 
 ALTER TABLE `iti_wpsp_class` ADD `trade_id` INT NOT NULL AFTER `cid`;
 ALTER TABLE `iti_wpsp_student` ADD `trade_id` INT NOT NULL AFTER `batch_id`;
@@ -69,13 +69,13 @@ UPDATE `iti_wpsp_trades` SET `trade_pattern` = 'year';
 
 ALTER TABLE `iti_wpsp_subject` ADD `year_or_semester_no` INT NOT NULL AFTER `trade_id`;
 
-CREATE TABLE `nutaniti`.`iti_wpsp_units` ( `id` INT NOT NULL AUTO_INCREMENT , `trade_id` INT NOT NULL , `year_or_semester_no` INT NOT NULL , `instructor_user_id` INT NOT NULL , `Unit Name` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+CREATE TABLE `iti_wpsp_units` ( `id` INT NOT NULL AUTO_INCREMENT , `trade_id` INT NOT NULL , `year_or_semester_no` INT NOT NULL , `instructor_user_id` INT NOT NULL , `Unit Name` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
 
 ALTER TABLE `iti_wpsp_units` CHANGE `Unit Name` `unit_name` VARCHAR(30) NOT NULL;
 
-CREATE TABLE `nutaniti`.`subject_instructor` ( `id` INT NOT NULL AUTO_INCREMENT , `subject_id` INT NOT NULL , `instructor_id` INT NOT NULL , `unit_id` INT NOT NULL , `trade_id` INT NOT NULL , `year_or_semester_no` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+CREATE TABLE `subject_instructor` ( `id` INT NOT NULL AUTO_INCREMENT , `subject_id` INT NOT NULL , `instructor_id` INT NOT NULL , `unit_id` INT NOT NULL , `trade_id` INT NOT NULL , `year_or_semester_no` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
 
-RENAME TABLE `nutaniti`.`subject_instructor` TO `nutaniti`.`iti_wpsp_subject_instructors`;
+RENAME TABLE `subject_instructor` TO `nutaniti`.`iti_wpsp_subject_instructors`;
 
 ALTER TABLE `iti_wpsp_student` CHANGE `current_class_id` `current_unit_id` INT(11) NOT NULL;
 
@@ -88,22 +88,9 @@ WHERE
 	batch_id = 2 
     AND trade_id = 1;
 
-UPDATE iti_wpsp_student SET current_unit_id = 5 WHERE batch_id = 1 AND trade_id = 1
-UPDATE iti_wpsp_student SET current_unit_id = 6 WHERE batch_id = 1 AND trade_id = 2
-UPDATE iti_wpsp_student SET current_unit_id = 7 WHERE batch_id = 2 AND trade_id = 2
+UPDATE iti_wpsp_student SET current_unit_id = 5 WHERE batch_id = 1 AND trade_id = 1;
+UPDATE iti_wpsp_student SET current_unit_id = 6 WHERE batch_id = 1 AND trade_id = 2;
+UPDATE iti_wpsp_student SET current_unit_id = 7 WHERE batch_id = 2 AND trade_id = 2;
 
 
 ALTER TABLE `iti_wpsp_units` CHANGE `instructor_user_id` `instructor_id` INT(11) NOT NULL;
-
-
-
-
-
-
-
-
-
-
-
-
-

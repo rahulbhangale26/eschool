@@ -567,6 +567,7 @@ class CModules extends CModel {
         $arrmixModule = [
             self::DASHBOARD['id']           => self::DASHBOARD,
             self::TRADE['id']               => self::TRADE,
+            self::UNITS['id']               => self::UNITS,
             self::STAFF['id']               => self::STAFF,
             self::TRAINEES['id']            => self::TRAINEES,
             self::TRAINEE_RECORD['id']      => self::TRAINEE_RECORD,

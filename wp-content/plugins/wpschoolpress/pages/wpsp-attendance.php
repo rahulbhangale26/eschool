@@ -13,7 +13,6 @@ $intTradeId = $_REQUEST['TradeId'];
 $intUnitId  = $_REQUEST['UnitId'];
 if( true == isset( $_REQUEST['report' ] ) ) {  
     $intViewTradeId = $_REQUEST['ViewTradeId'];
-
     $units = CUnits::getInstance()->fetchUnitByUserByTradeId( $objUser, $intViewTradeId );
 } else {
     $units = CUnits::getInstance()->fetchUnitByUserByTradeId( $objUser, $intTradeId );
@@ -177,7 +176,7 @@ wpsp_header();
 												<label class="wpsp-labelMain">Select Year</label>
 													<select id="attendance_report_year" name="year" class="wpsp-form-control" >
 														<option value="">Select Year</option>
-															<?php for( $i=2019; $i<=date('Y'); $i++) {?>
+															<?php for( $i=date('Y'); $i>=2019; $i-- ) {?>
 																<option value="<?php echo $i;?>" <?php echo ( $i == $intYear ) ? 'selected="selected"' : ""; ?>><?php echo $i;?></option> 
 															<?php }?>
 													</select>

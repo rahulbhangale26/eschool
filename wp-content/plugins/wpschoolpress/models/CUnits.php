@@ -82,7 +82,7 @@ class CUnits extends CModel {
                             JOIN ' . $this->strTableName . ' u ON u.id = s.current_unit_id
                         WHERE
                             s.wp_usr_id = ' . ( int ) $objUser->getUserId() . '
-                            AND u trade_id = ' . ( int ) $intTradeId;
+                            AND u.trade_id = ' . ( int ) $intTradeId;
         }
         
         if( CRole::TEACHER == $objUser->getRole() ) {
@@ -94,7 +94,7 @@ class CUnits extends CModel {
                             JOIN ' . $this->strTableName . ' u ON u.id = si.unit_id
                         WHERE
                             t.wp_usr_id = ' .( int ) $objUser->getUserId() . '
-                            AND u trade_id = ' . ( int ) $intTradeId;
+                            AND u.trade_id = ' . ( int ) $intTradeId;
         }
         
         if( CRole::ADMIN == $objUser->getRole() || ( CRole::TEACHER == $objUser->getRole() && ( CDesignations::PRINCIPAL == $objUser->getTeacher()->designation_id ) ) ) {

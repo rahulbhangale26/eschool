@@ -117,7 +117,7 @@ border: none !important;
             <td class="s5 softmerge">
                <div class="softmerge-inner textRotate" style="width: 19px; left: -1px;">खा.दिवस</div>
             </td>
-            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
+            <?php for( $i=1; $i<=date('t', mktime(0, 0, 0, $intMonthNumber, 1, $intYear ) ); $i++ ) {
                 $intDaysInMonth = $i;
             ?>
             	<td class="s6 padding10" style="text-align:center"><?php echo sprintf( "%02d", $i ); ;?></td>            
@@ -201,7 +201,7 @@ border: none !important;
             <td class="s5"><?php echo $objStudent->s_fname . ' ' . $objStudent->s_mname . ' ' . $objStudent->s_lname; ?></td>
             <?php 
             $intSaturdayCount = 0;
-            for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
+            for( $i=1; $i<=date('t', mktime(0, 0, 0, $intMonthNumber, 1, $intYear ) ); $i++ ) {
                 $intDaysInMonth = $i;
                 
                 if( 'Sunday' == date( 'l', strtotime( $intYear . '-' . $intMonthNumber . '-' . $i ) ) ) {
@@ -289,7 +289,7 @@ border: none !important;
             <td class="s7"></td>
             <td class="s8"></td>
             <td class="s5">हजर </td>
-            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
+            <?php for( $i=1; $i<=date('t', mktime(0, 0, 0, $intMonthNumber, 1, $intYear ) ); $i++ ) {
                 $intPresentDayCount = 0;
                 $intDaysInMonth = $i;
                 foreach ( $arrmixProcessedAttendance AS $arrmixStudentAttendance ) {
@@ -321,7 +321,7 @@ border: none !important;
             <td class="s7"></td>
             <td class="s8"></td>
             <td class="s5">कि.रजा</td>
-            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
+            <?php for( $i=1; $i<=date('t', mktime(0, 0, 0, $intMonthNumber, 1, $intYear ) ); $i++ ) {
                 $intCausalLeaveCount = 0;
                 $intDaysInMonth = $i;
                 foreach ( $arrmixProcessedAttendance AS $arrmixStudentAttendance ) {
@@ -353,7 +353,7 @@ border: none !important;
             <td class="s7"></td>
             <td class="s8"></td>
             <td class="s5">आ.रजा </td>
-            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
+            <?php for( $i=1; $i<=date('t', mktime(0, 0, 0, $intMonthNumber, 1, $intYear ) ); $i++ ) {
                 $intSickLeaveCount = 0;
                 $intDaysInMonth = $i;
                 foreach ( $arrmixProcessedAttendance AS $arrmixStudentAttendance ) {
@@ -383,7 +383,7 @@ border: none !important;
             <td class="s7"></td>
             <td class="s8"></td>
             <td class="s5">खा.रजा </td>
-            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
+            <?php for( $i=1; $i<=date('t', mktime(0, 0, 0, $intMonthNumber, 1, $intYear ) ); $i++ ) {
                 $intSpecialLeaveCount = 0;
                 $intDaysInMonth = $i;
                 foreach ( $arrmixProcessedAttendance AS $arrmixStudentAttendance ) {
@@ -414,7 +414,7 @@ border: none !important;
             <td class="s7"></td>
             <td class="s8"></td>
             <td class="s5">गैरहजर</td>
-            <?php for( $i=1; $i<=cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++ ) {
+            <?php for( $i=1; $i<=date('t', mktime(0, 0, 0, $intMonthNumber, 1, $intYear ) ); $i++ ) {
                 $intAbsentCount = 0;
                 $intDaysInMonth = $i;
                 foreach ( $arrmixProcessedAttendance AS $arrmixStudentAttendance ) {
@@ -456,7 +456,7 @@ border: none !important;
             $intMonthSickLeaveCount = 0;
             $intMonthSpecialCount = 0;
             
-            for( $i=1; $i<= cal_days_in_month( CAL_GREGORIAN, $intMonthNumber, $intYear ); $i++) {
+            for( $i=1; $i<= date('t', mktime(0, 0, 0, $intMonthNumber, 1, $intYear ) ); $i++) {
                     $intDaysInMonth = $i;
                     
                 echo '<td class="s5">' . ( $arrintPresentDayCount[$i] + $arrintAbsentCount[$i] + $arrintCasualLeaveCount[$i] + $arrintSickLeaveCount[$i] + $arrintSpecialLeaveCount[$i] ) . '</td>';

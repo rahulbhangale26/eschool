@@ -40,9 +40,9 @@ class CTradesManager extends CFactory {
     
     public function handleGetTradeUnitLists() {
         $intTradeId = $this->getRequestData( [ 'data', 'TradeId' ] );
-        
+
         if( false != $intTradeId ) {
-            $arrobjUnits = CUnits::getInstance()->fetchUnitByTradeId( $intTradeId );
+            $arrobjUnits = CUnits::getInstance()->fetchUnitByUserByTradeId( $this->objUser, $intTradeId );
         }
         
         echo json_encode( $arrobjUnits );

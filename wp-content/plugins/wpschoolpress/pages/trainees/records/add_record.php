@@ -61,12 +61,13 @@
 function bindUnitEvents() {
 	$('#unit_id').change(function(){
 		var unit_id = $('#unit_id').val();
+		var checked_on = $('#from_date').val();
 	
 		sch.ajaxRequest({
 			'page': 'sch-trainee_record',
 			'pageAction': 'trainee_record_check_form',
 			'selector': '#add_trainee_record',
-			data:  { 'unit_id': unit_id },
+			data:  { 'unit_id': unit_id, 'checked_on': checked_on },
 			success: function( res ) {
 				$('#trainee_record_check').html( res );
 				$('#TraineeRecordSubmit').show();		

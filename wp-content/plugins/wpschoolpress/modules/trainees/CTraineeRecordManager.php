@@ -2,7 +2,9 @@
 class CTraineeRecordManager extends CFactory {
     
     protected $arrobjTrades;
+    protected $arrobjTraineeRecords;
     protected $arrobjStudents;
+    protected $arrobjTraineeRecordSummary;
     
     public function __construct() {
         
@@ -31,6 +33,8 @@ class CTraineeRecordManager extends CFactory {
     
     public function handleViewTraineeDailyDiary() {
         
+        $this->arrobjTraineeRecordSummary = CTraineeRecords::getInstance()->fetchDailyGroupedTraineeRecords();
+        
         $this->displayViewTraineeDailyDiary();
     }
     
@@ -39,26 +43,43 @@ class CTraineeRecordManager extends CFactory {
         $arrmixRequestData = $this->getRequestData( [] );
         $boolIsSuccess = true;
         
-
         if( true == isset( $arrmixRequestData['submit'] ) ) {
+                       
+            $this->arrobjStudents           = CStudents::getInstance()->fetchStudentsByUnitId( $arrmixRequestData['unit_id'] );
+            $arrobjTraineeRecordTypes       = CTraineeRecordTypes::getInstance()->fetchAllTraineeRecordTypes();
+            $strCheckedOnDate               = date( 'Y-m-d', strtotime( $arrmixRequestData['from_date'] ) );
             
-            $this->arrobjStudents = CStudents::getInstance()->fetchStudentsByUnitId( $arrmixRequestData['unit_id'] );
-            $arrobjTraineeRecordTypes = CTraineeRecordTypes::getInstance()->fetchAllTraineeRecordTypes();
-            $strCheckedOnDate = $arrmixRequestData['from_date'];
+            if( true == isset( $arrmixRequestData['is_edit'] ) && true == $arrmixRequestData['is_edit'] ) {
+                CTraineeRecords::getInstance()->delete( [
+                    'instructor_id'             => $this->objUser->getTeacher()->tid,
+                    'checked_on'                => $strCheckedOnDate
+                ] );
+            }
+
             foreach ( $arrobjTraineeRecordTypes as $objTraineeRecordType ) {
                 foreach( $this->arrobjStudents as $objStudent ) {
+                    $strProgress = '';
+                    
+                    if( true == isset( $arrmixRequestData['progress'] ) && true == isset( $arrmixRequestData['progress'][$objTraineeRecordType->id] ) && true == isset( $arrmixRequestData['progress'][$objTraineeRecordType->id][$objStudent->sid] ) ) {
+                        $strProgress = $arrmixRequestData['progress'][$objTraineeRecordType->id][$objStudent->sid];
+                    } else if( false == ( true == isset( $arrmixRequestData['checked_for'] ) && true == isset( $arrmixRequestData['checked_for'][$objTraineeRecordType->id] ) &&  true == isset( $arrmixRequestData['checked_for'][$objTraineeRecordType->id][$objStudent->sid] ) ) ) {
+                        continue;   
+                    }
+                                       
                     $arrmixTraineeRecord = [
                         'student_id'                => $objStudent->sid,
                         'trainee_record_type_id'    => $objTraineeRecordType->id,
-                        'is_checked'                => ( true == isset( $arrmixRequestData['checked_for'] ) && true == isset( $arrmixRequestData['checked_for'][$objTraineeRecordType->id] ) &&  true == isset( $arrmixRequestData['checked_for'][$objTraineeRecordType->id][$objStudent->sid] ) ),
-                        'checked_on'                => $strCheckedOnDate
+                        'instructor_id'             => $this->objUser->getTeacher()->tid,
+                        'is_checked'                => true,
+                        'checked_on'                => $strCheckedOnDate,
+                        'progress'                  => $strProgress
                     ];
                     
-                    if( false == CTraineeRecords::getInstance()->insert( $arrmixTraineeRecord ) ) {
+                     if( false == CTraineeRecords::getInstance()->insert( $arrmixTraineeRecord ) ) {
                         $boolIsSuccess = false;
                         $this->addErrorMessage( 'Unable to insert trainee records.' );
                         break 2;
-                    }
+                    } 
                 }
             }
             
@@ -79,7 +100,9 @@ class CTraineeRecordManager extends CFactory {
     }
     
     public function handleTraineeRecordCheckForm() {
-        
+        $strCreatedOn = date( 'y-m-d', strtotime( $this->getRequestData( [ 'data', 'checked_on' ] ) ) );
+        $this->arrobjTraineeRecords = CTraineeRecords::getInstance()->fetchTraineeRecordsByCheckedOnByInstructorId( $strCreatedOn, $this->objUser->getTeacher()->tid );
+
         $intUnitId = $this->getRequestData([ 'data', 'unit_id' ] );
         
         $this->arrobjStudents = CStudents::getInstance()->fetchStudentsByUnitId( $intUnitId );
@@ -87,6 +110,12 @@ class CTraineeRecordManager extends CFactory {
     }
     
     public function displayViewTraineeDailyDiary() {
+        
+        $this->arrmixTemplateParams['trainee_records_summary']      = $this->arrobjTraineeRecordSummary;
+        $this->arrmixTemplateParams['units']                        = $this->rekeyObjects( 'id', CUnits::getInstance()->fetchAllUnits() );
+        $this->arrmixTemplateParams['trades']                       = $this->rekeyObjects( 'id', CTrade::getInstance()->fetchAllTrades() );
+        $this->arrmixTemplateParams['instructors']                  = $this->rekeyObjects( 'tid', CTeachers::getInstance()->fetchAllTeachers() );
+        
         $this->renderPage( 'trainees/records/view_trainee_records.php' );
     }
     
@@ -99,6 +128,8 @@ class CTraineeRecordManager extends CFactory {
     }
     
     public function displayTraineeRecordCheckForm() {
+        
+        $this->arrmixTemplateParams['trainee_records']          = $this->rekeyObjects( 'id', $this->arrobjTraineeRecords );
         $this->arrmixTemplateParams['trainee_record_types']     = CTraineeRecordTypes::getInstance()->fetchAllTraineeRecordTypes();
         $this->arrmixTemplateParams['students']                 = $this->arrobjStudents;
         

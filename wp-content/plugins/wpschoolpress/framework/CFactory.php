@@ -92,6 +92,7 @@ class CFactory {
     public function initalizeTemplateParams() {
         $this->arrmixTemplateParams['is_ajax_request']  = $this->boolIsAjaxRequest;
         $this->arrmixTemplateParams['slug_module']      = $this->getRequestData( [ 'page' ] );
+        $this->arrmixTemplateParams['user']             = $this->objUser;
     }
     
     public function execute() {

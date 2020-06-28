@@ -4,6 +4,8 @@ class CTraineeRecordTypes extends CModel {
     
     protected static $_INSTANCE;
     
+    const PROGRESS = 10;
+    
     public function __construct() {
         parent::__construct();
         $this->strTableName = $this->strTablePrefix . 'wpsp_trainee_record_type';

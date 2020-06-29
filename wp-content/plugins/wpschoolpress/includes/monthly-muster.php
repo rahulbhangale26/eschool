@@ -62,6 +62,10 @@
     border-left:1px SOLID #000000;
 }
 
+#attendance-mustur-report {
+overflow-x: auto;
+}
+
 .ritz .waffle a { color: inherit; }.ritz .waffle .s4{border-bottom:1px SOLID #000000;border-right:1px SOLID #000000;background-color:#ffffff;text-align:center;color:#000000;font-family:'docs-Calibri',Arial;font-size:9pt;vertical-align:bottom;white-space:nowrap;direction:ltr;padding:0px 3px 0px 3px;}.ritz .waffle .s5{border-bottom:1px SOLID #000000;border-right:1px SOLID #000000;background-color:#ffffff;text-align:left;color:#000000;font-family:'docs-Calibri',Arial;font-size:9pt;vertical-align:bottom;white-space:nowrap;direction:ltr;padding:0px 3px 0px 3px;}
 .ritz .waffle .s7{background-color:#ffffff;text-align:left;color:#000000;font-family:'docs-Calibri',Arial;font-size:9pt;vertical-align:bottom;white-space:nowrap;direction:ltr;padding:0px 3px 0px 3px;
     border: none !important;}
@@ -69,7 +73,7 @@
 .ritz .waffle .s8{border-right:1px SOLID #000000;background-color:#ffffff;text-align:left;color:#000000;font-family:'docs-Calibri',Arial;font-size:9pt;vertical-align:bottom;white-space:nowrap;direction:ltr;padding:0px 3px 0px 3px;
 border: none !important;
 }.ritz .waffle .s1{border-bottom:1px SOLID #000000;border-right:1px SOLID #000000;background-color:#ffffff;text-align:left;color:#000000;font-family:'docs-Calibri',Arial;font-size:11pt;vertical-align:bottom;white-space:nowrap;direction:ltr;padding:0px 3px 0px 3px;}.ritz .waffle .s2{border-bottom:1px SOLID #000000;background-color:#ffffff;text-align:left;color:#000000;font-family:'docs-Calibri',Arial;font-size:11pt;vertical-align:bottom;white-space:nowrap;direction:ltr;padding:0px 3px 0px 3px;}</style>
-<div class="ritz grid-container" dir="ltr">
+<div class="ritz grid-container" dir="ltr" id="attendance-mustur-report">
    <table id="printMuster" class="waffle" cellspacing="0" cellpadding="0">
       <tbody>
          <tr style='height:19px;'>

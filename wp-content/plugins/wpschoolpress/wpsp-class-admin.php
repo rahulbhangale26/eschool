@@ -420,8 +420,13 @@ function wpsp_admin_menu() {
 			'jquery'
 		) , '1.0.0', true);
 		
+		/** MVC based arch **/
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		wp_enqueue_script( 'jquery-ui-jquery-ui112' , WPSP_PLUGIN_URL . 'plugins/jquery-ui/jquery-ui.min.js' );
+		
+		wp_enqueue_script( 'jquery-ui-jspdf' , WPSP_PLUGIN_URL . 'plugins/jquery-ui/jsPdf.js' );
+		
+		/*************************/
 		
 		// wp_enqueue_script('wpsp_wp_admin_jquery7', WPSP_PLUGIN_URL . 'js/bootstrap-datepicker.min.js', array( 	'jquery' ) , '1.0.0', true);
 		wp_enqueue_script('wpsp_wp_admin_jquery100', WPSP_PLUGIN_URL . 'js/wpsp-settingtab.js', array(

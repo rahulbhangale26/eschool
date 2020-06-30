@@ -5,6 +5,7 @@ class CTraineeAttendanceMonthlyManager extends CFactory {
     protected $arrobjTrades;
     protected $objTeacher;
     protected $objUnit;
+    protected $objTrade;
     protected $objBatch;
     
     protected $arrobjTraineeAttendances;
@@ -54,6 +55,7 @@ class CTraineeAttendanceMonthlyManager extends CFactory {
         $strAttendanceDate      = $this->getRequestData( [ 'data', 'attendance_date' ] );
         $strAttendanceDate      = $this->getRequestData( [ 'data', 'attendance_date' ] );
         
+        $this->objTrade         = CTrade::getInstance()->fetchTradeById( $intTradeId );
         $this->objUnit          = CUnits::getInstance()->fetchUnitById( $intUnitId );
         $this->objBatch         = CBatches::getInstance()->fetchBatchById( $intBatchId );
         $this->objTeacher       = CTeachers::getInstance()->fetchTeacherByUnitIdByBatchId( $intUnitId, $intBatchId );
@@ -92,6 +94,7 @@ class CTraineeAttendanceMonthlyManager extends CFactory {
         
         $this->arrmixTemplateParams['month']                            = $intMonth;
         $this->arrmixTemplateParams['year']                             = $intYear;
+        $this->arrmixTemplateParams['trade']                            = $this->objTrade;
         $this->arrmixTemplateParams['batch']                            = $this->objBatch;
         $this->arrmixTemplateParams['unit']                             = $this->objUnit;
         $this->arrmixTemplateParams['teacher']                          = $this->objTeacher;

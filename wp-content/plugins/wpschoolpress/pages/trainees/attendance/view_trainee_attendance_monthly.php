@@ -52,12 +52,14 @@
 	<div class="wpsp-card-head">
 		<div style="padding:20px 30px">
 			<button  style="padding: 10px 30px !important;font-size: large;"onclick="printDiv();" name="print_report" class="wpsp-btn wpsp-btn-success">Print</button>
+			<button  style="display: none; padding: 10px 30px !important;font-size: large;" id="download_report"  name="download_report" class="wpsp-btn wpsp-btn-success">Download</button>
 		</div>
 	</div>
 	<div class="wpsp-card-body" id="muster_report">
 	</div>
 </div>
 <script type="text/javascript">
+
 
 function printDiv() {
     var divToPrint = document.getElementById('muster_report');
@@ -148,6 +150,22 @@ $(function(){
 		});
 		
 	});
+
+/*  Code for download as pdf
+	var doc = new jsPDF();
+	var specialElementHandlers = {
+	    '#editor': function (element, renderer) {
+	        return true;
+	    }
+	};
+
+	$('#download_report').click(function () {
+	    doc.fromHTML($('#muster_report').html(), 15, 15, {
+	        'width': 170,
+	            'elementHandlers': specialElementHandlers
+	    });
+	    doc.save('sample-file.pdf');
+	}); */
 	
 });
 </script>

@@ -57,7 +57,7 @@ class CTraineeAttendances extends CModel {
                         
     }
     
-    public function fetchGroupedTraineeAttendanceByInstructorId( $intInstructorId ) {
+    public function fetchGroupedTraineeAttendanceByInstructorId( $intInstructorId, $arrstrFilter ) {
         
         if( false == isset( $arrstrFilter['start_date'] ) ) return [];
         if( false == isset( $arrstrFilter['end_date'] ) ) return [];

@@ -14,6 +14,7 @@
 						<th>Unit Name</th>
 						<th>Trade Name</th>
 						<th>Year/Semester</th>
+						<th>Batch</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -24,6 +25,7 @@
 							<td><?php echo $unit->unit_name; ?></td>
 							<td><?php echo $trades[$unit->trade_id]->name; ?></td>
 							<td><?php echo ordinal( $unit->year_or_semester_no ) . ' ' . $trades[$unit->trade_id]->trade_pattern; ?></td>
+							<td><?php echo $batches[$unit->batch_id]->name; ?></td>
 							<td></td>
 						</tr>
 					<?php } ?>

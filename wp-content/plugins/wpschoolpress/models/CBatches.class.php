@@ -38,6 +38,10 @@ class CBatches extends CModel {
         return $this->objDatabase->get_results( $strSql );
         
     }
+    
+    public function fetchBatchById( $intId ) {
+        return array_pop( $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName . ' WHERE id = ' . ( int ) $intId ) );
+    }
 
 }
 

@@ -8,6 +8,7 @@
 
 <?php
 $objModules     = new CModules();
+global $objUser;
 
 /** No need for new arch */
 if( false == isset( $slug_module ) ) {
@@ -96,7 +97,7 @@ function ewpsp_customcss(){
           				</li>
           			<?php } ?>
           		</ol>
-          		<?php if( true == isset( $arrstrCurrentModule['create_new' ] ) ) { ?>
+          		<?php if( true == isset( $arrstrCurrentModule['create_new' ] ) || (  true == isset( $arrstrCurrentModule['hide_from'] ) && false == in_array( $objUser->getTeacher()->designation_id, $arrstrCurrentModule['hide_from'] ) ) ) { ?>
           			<a class="wpsp-btn" href="<?php echo site_url( 'wp-admin/admin.php?page=' . $arrstrCurrentModule['slug']. '&page_action=' .  $arrstrCurrentModule['create_new'] ); ?>" >
           				<?php echo ( true == isset( $arrstrCurrentModule['create_new_title'] ) ? $arrstrCurrentModule['create_new_title'] : 'Create New' ); ?>
           			</a>

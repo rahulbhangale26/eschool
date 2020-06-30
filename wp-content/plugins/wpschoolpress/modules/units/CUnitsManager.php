@@ -84,7 +84,8 @@ class CUnitsManager extends CFactory {
                     'trade_id'              => ( int ) $arrmixRequestData['unit']['trade_id'],
                     'year_or_semester_no'   => ( int ) $arrmixRequestData['unit']['year_or_semester_no'],
                     'instructor_id'    => ( int ) $arrmixRequestData['unit']['instructor_incharge_id'],
-                    'unit_name'             => $arrmixRequestData['unit']['name']
+                    'unit_name'             => $arrmixRequestData['unit']['name'],
+                    'batch_id'              => ( int ) $arrmixRequestData['unit']['batch_id']
                 ];
                 
                 if( false == ( $intUnitId = ( new CUnits() )->insert( $arrmixUnit ) ) ) {
@@ -99,7 +100,8 @@ class CUnitsManager extends CFactory {
                         'instructor_id'         => ( int ) $intInstructorId,
                         'trade_id'              => ( int ) $arrmixRequestData['unit']['trade_id'],
                         'year_or_semester_no'   => ( int ) $arrmixRequestData['unit']['year_or_semester_no'],
-                        'unit_id'               => ( int ) $intUnitId
+                        'unit_id'               => ( int ) $intUnitId,
+                        
                     ];
 
                     
@@ -118,7 +120,7 @@ class CUnitsManager extends CFactory {
     
     
     public function displayViewUnits() {
-        
+        $this->arrmixTemplateParams['batches']          = $this->rekeyObjects( 'id', CBatches::getInstance()->fetchAllBatches() );
         $this->arrmixTemplateParams['units']            = CUnits::getInstance()->fetchAllUnits();
         $this->arrmixTemplateParams['trades']           = $this->rekeyObjects( 'id', CTrade::getInstance()->fetchAllTrades() );
         
@@ -131,6 +133,7 @@ class CUnitsManager extends CFactory {
         $this->arrmixTemplateParams['unit']             = $this->getRequestData([ 'data' ] );
         $this->arrmixTemplateParams['subjects']         = $this->arrobjSubjects;
         $this->arrmixTemplateParams['instructors']      = ( new CTeachers() )->fetchAllTeachers();
+        $this->arrmixTemplateParams['batches']          = CBatches::getInstance()->fetchAllBatches();
         
         $this->renderPage( 'units/view_create_unit.php' );
     }

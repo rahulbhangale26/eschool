@@ -27,5 +27,19 @@ class CTeachers extends CModel {
     public function fetchAllTeachers() {
         return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName );
     }
+    
+    public function fetchTeacherByUnitIdByBatchId( $intUnitId, $intBatchId ) {
+        $strSql = 'SELECT 
+                        * 
+                    FROM 
+                        ' . $this->strTableName . ' t
+                        JOIN ' . CUnits::getInstance()->strTableName . ' u ON u.instructor_id = t.tid 
+                    WHERE
+                        u.id = ' . ( int ) $intUnitId .' 
+                        AND u.batch_id = ' . ( int ) $intBatchId;
+        
+        return array_pop( $this->objDatabase->get_results( $strSql ) );
+        
+    }
 }
 

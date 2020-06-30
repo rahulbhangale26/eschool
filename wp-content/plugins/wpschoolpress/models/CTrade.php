@@ -18,7 +18,7 @@ class CTrade extends CModel  {
     }
     
     public function fetchTradeById( $intId ) {
-        return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName . 'WHERE id =' . $intId );
+        return array_pop( $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName . ' WHERE id =' . $intId ) );
     }
     
     public function fetchAllTrades() {

@@ -36,7 +36,7 @@ var Units = function() {
 			'page': 'sch-units',
 			'pageAction': 'view_create_unit',
 			'selector': '#unit_create_form',
-			data:  { 'trade_id': $('#trade_id').val(), 'year_or_semester_no': $('#year_or_semester_no').val() },
+			data:  { 'trade_id': $('#trade_id').val(), 'year_or_semester_no': $('#year_or_semester_no').val(), 'batch_id': $('#batch_id').val() },
 			success: function( res ) {
 				$('#unit_create_form').replaceWith(res);
 			}

@@ -72,7 +72,7 @@ class CUnits extends CModel {
     }
     
     
-    public function fetchUnitByUserByTradeId( $objUser, $intTradeId ) {
+    public function fetchUnitByUserByTradeIdByBatchId( $objUser, $intTradeId, $intBatchId ) {
         
         if( CRole::STUDENT == $objUser->getRole() ) {
             $strSql = 'SELECT
@@ -94,10 +94,11 @@ class CUnits extends CModel {
                             JOIN ' . $this->strTableName . ' u ON u.id = si.unit_id
                         WHERE
                             t.wp_usr_id = ' .( int ) $objUser->getUserId() . '
-                            AND u.trade_id = ' . ( int ) $intTradeId;
+                            AND u.trade_id = ' . ( int ) $intTradeId . '
+                            AND u.batch_id = ' . ( int ) $intBatchId; 
         }
         
-        if( CRole::ADMIN == $objUser->getRole() || ( CRole::TEACHER == $objUser->getRole() && ( CDesignations::PRINCIPAL == $objUser->getTeacher()->designation_id ) ) ) {
+        if( CRole::ADMIN == $objUser->getRole() || ( CRole::TEACHER == $objUser->getRole() && ( true == in_array( $objUser->getTeacher()->designation_id, [ CDesignations::CLERK, CDesignations::PRINCIPAL ] ) ) ) ) {
             return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName . ' WHERE trade_id = ' . ( int ) $intTradeId );
         }
         

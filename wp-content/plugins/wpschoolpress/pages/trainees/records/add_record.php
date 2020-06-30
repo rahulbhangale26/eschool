@@ -83,7 +83,7 @@ $( function() {
 	
 	 $('#from_date').datepicker({
 		autoclose: true,
-	    dateFormat: 'Y-m-d',
+	    dateFormat: 'yy-mm-dd',
 	    todayHighlight: true,
 	    changeMonth: true,
 	    changeYear: true,

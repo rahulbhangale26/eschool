@@ -180,7 +180,17 @@ function wpsp_admin_menu() {
 		    'wpsp_callback'
 		));
 		
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Subjets', 'edit_posts', 'sch-trainee_attendance_monthly', array(
+		    $this,
+		    'wpsp_callback'
+		));	
+		
 		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Subjets', 'edit_posts', 'sch-trainee_record', array(
+		    $this,
+		    'wpsp_callback'
+		));
+		
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Subjets', 'edit_posts', 'sch-trainee_attendance', array(
 		    $this,
 		    'wpsp_callback'
 		));
@@ -341,7 +351,8 @@ function wpsp_admin_menu() {
 		// wp_enqueue_style('wpsp_wp_admin_pnotify');
 		if (is_user_logged_in())
 		{
-			wp_register_style('wpsp_wp_admin_dataTablesresp', WPSP_PLUGIN_URL . 'css/datepicker.min.css', false, '1.0.0');
+		    wp_enqueue_style( 'jquery-ui-jquery-css' , WPSP_PLUGIN_URL . 'plugins/jquery-ui/jquery-ui.min.css' );
+			// wp_register_style('wpsp_wp_admin_dataTablesresp', WPSP_PLUGIN_URL . 'css/datepicker.min.css', false, '1.0.0');
 			wp_enqueue_style('wpsp_wp_admin_dataTablesresp');
 			wp_register_style('wpsp_wp_admin_dataTablesbootresp2', WPSP_PLUGIN_URL . 'plugins/datatables/responsive.bootstrap.min.css', false, '1.0.0');
 			wp_enqueue_style('wpsp_wp_admin_dataTablesbootresp2');
@@ -408,9 +419,11 @@ function wpsp_admin_menu() {
 		wp_enqueue_script('wpsp_wp_admin_jquery6', WPSP_PLUGIN_URL . 'plugins/slimScroll/jquery.slimscroll.min.js', array(
 			'jquery'
 		) , '1.0.0', true);
-		wp_enqueue_script('wpsp_wp_admin_jquery7', WPSP_PLUGIN_URL . 'js/bootstrap-datepicker.min.js', array(
-			'jquery'
-		) , '1.0.0', true);
+		
+		wp_enqueue_script( 'jquery-ui-datepicker' );
+		wp_enqueue_script( 'jquery-ui-jquery-ui112' , WPSP_PLUGIN_URL . 'plugins/jquery-ui/jquery-ui.min.js' );
+		
+		// wp_enqueue_script('wpsp_wp_admin_jquery7', WPSP_PLUGIN_URL . 'js/bootstrap-datepicker.min.js', array( 	'jquery' ) , '1.0.0', true);
 		wp_enqueue_script('wpsp_wp_admin_jquery100', WPSP_PLUGIN_URL . 'js/wpsp-settingtab.js', array(
 				'jquery'
 			) , '1.0.0', true);
@@ -491,7 +504,7 @@ function wpsp_admin_menu() {
 		}
 		if ($hook == 'itims_page_sch-class')
 		{
-			wp_deregister_script('jquery-ui-datepicker');
+			// wp_deregister_script('jquery-ui-datepicker');
 			wp_enqueue_script('wpsp_wp_admin_jquery20', WPSP_PLUGIN_URL . 'js/wpsp-class.js', array(
 				'jquery'
 			) , '1.0.0', true);

@@ -319,10 +319,22 @@ class CModules extends CModel {
     const TRAINEE_ATTENDANCE = [
         'id'                => 32,
         'title'             => 'Trainee Attendance',
-        'slug'              => 'sch-attendance',
+        'slug'              => 'sch-trainee_attendance',
         'icon_class'        => '',
         'parent_module_id'  => 31,
-        'has_sub_modules'   => true
+        'has_sub_modules'   => 0,
+        'create_new'        => 'add_trainee_attendance',
+        'create_new_title'  => 'Add Attendance',
+        'hide_from'         => [ CDesignations::CLERK ]
+    ];
+    
+    const TRAINEE_ATTENDANCE_MONTHLY = [
+        'id'                => 44,
+        'title'             => 'Trainee Attendance Monthly',
+        'slug'              => 'sch-trainee_attendance_monthly',
+        'icon_class'        => '',
+        'parent_module_id'  => 31,
+        'has_sub_modules'   => 0
     ];
     
     const INSTRUCTOR_ATTENDANCE = [
@@ -414,14 +426,16 @@ class CModules extends CModel {
     public function __construct() {
     
         $this->arrSlugModules = [
-            'sch-dashboard'     => self::DASHBOARD,
-            'sch-trades'        => self::TRADES,
-            'sch-units'         => self::UNITS,
-            'sch-student'       => self::TRAINEES,
-            'sch-subjects-new'  => self::SUBJECTS,
-            'sch-attendance'    => self::ATTENDANCE,
-            'sch-teacher'           => self::STAFF,
-            'sch-trainee_record'    => self::TRAINEE_RECORD
+            'sch-dashboard'             => self::DASHBOARD,
+            'sch-trades'                => self::TRADES,
+            'sch-units'                 => self::UNITS,
+            'sch-student'               => self::TRAINEES,
+            'sch-subjects-new'          => self::SUBJECTS,
+            'sch-attendance'            => self::ATTENDANCE,
+            'sch-teacher'               => self::STAFF,
+            'sch-trainee_record'        => self::TRAINEE_RECORD,
+            'sch-trainee_attendance'    => self::TRAINEE_ATTENDANCE,
+            'sch-trainee_attendance_monthly'    => self::TRAINEE_ATTENDANCE_MONTHLY
         ];
     
     }
@@ -498,6 +512,7 @@ class CModules extends CModel {
                  
              case self::ATTENDANCE['id']:
                  $arrmixModule[self::TRAINEE_ATTENDANCE['id']]      = self::TRAINEE_ATTENDANCE;
+                 $arrmixModule[self::TRAINEE_ATTENDANCE_MONTHLY['id']]      = self::TRAINEE_ATTENDANCE_MONTHLY;
                  break;
                  
              case self::SETTINGS['id']:
@@ -535,7 +550,8 @@ class CModules extends CModel {
                 break;
                 
             case self::ATTENDANCE['id']:
-                $arrmixModule[self::TRAINEE_ATTENDANCE['id']]      = self::TRAINEE_ATTENDANCE;
+                $arrmixModule[self::TRAINEE_ATTENDANCE['id']]              = self::TRAINEE_ATTENDANCE;
+                $arrmixModule[self::TRAINEE_ATTENDANCE_MONTHLY['id']]      = self::TRAINEE_ATTENDANCE_MONTHLY;
                 break;
                 
             case self::SETTINGS['id']:

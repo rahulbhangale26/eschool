@@ -2972,8 +2972,12 @@ td.drop.droppable {
 	background-color: #CCC !important	;
 }	
 
-#addAttendanceTable, #trainee_record_table {
+#addAttendanceTable, #trainee_record_table, .scroll-table, #trainee_attendance_table, #attendance-mustur-report {
 	overflow-x: auto;
     display: inline-block;
 }
 
+
+ {
+overflow-x: auto;
+}

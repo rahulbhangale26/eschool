@@ -4,7 +4,7 @@
 	</div>
 	<div class="wpsp-card-body">
 		<div class="subject-head">
-			<table id="trainee_record_table" class="wpsp-table" cellspacing="0" width="100%" style="width:100%">
+			<table id="trainee_record_list_table" class="wpsp-table" cellspacing="0" width="100%" style="width:100%">
 				<thead>
 					<tr role="row">
 						<th>Submitted On.</th>

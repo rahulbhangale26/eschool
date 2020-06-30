@@ -17,6 +17,20 @@
 					<div class="wpsp-row">
 						<div class="wpsp-col-lg-3 wpsp-col-md-12 wpsp-col-sm-12 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
+									<label class="wpsp-labelMain">Batch</label>
+									<select name="unit[batch_id]" id="batch_id" class="wpsp-form-control">
+										<option value="">Select Batch</option>
+										<?php foreach ( $batches as $batch ) { ?>
+											<option value="<?php echo $batch->id; ?>" <?php echo ( $batch->id == $unit['batch_id']) ? 'selected="selected"': ''; ?>><?php echo $batch->name; ?></option>
+										<?php } ?>
+									</select>
+							</div>
+						</div>
+					</div>
+				
+					<div class="wpsp-row">
+						<div class="wpsp-col-lg-3 wpsp-col-md-12 wpsp-col-sm-12 wpsp-col-xs-12">
+							<div class="wpsp-form-group">
 									<label class="wpsp-labelMain">Trade</label>
 									<select name="unit[trade_id]" id="trade_id" class="wpsp-form-control">
 										<option value="">Select Trade</option>

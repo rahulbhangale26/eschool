@@ -120,7 +120,7 @@ class CTraineeRecordManager extends CFactory {
     }
     
     public function displayAddRecord() {
-        
+       
         $this->arrmixTemplateParams['trainee_record_types']     = CTraineeRecordTypes::getInstance()->fetchAllTraineeRecordTypes();
         $this->arrmixTemplateParams['trades']                   = $this->arrobjTrades;
         

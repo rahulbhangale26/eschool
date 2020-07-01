@@ -1,18 +1,18 @@
 <div class="wpsp-card">
 	<div class="wpsp-card-head">
-		<?php 
-		  displaySuccessMsg( $success_messages );
-		  displayErrorMsg( $error_messages );
-		?>
+
 	</div>
-	<div class="wpsp-card-body" id="add_trainee_record">
-		<form action="" method="post">
+	<div class="wpsp-card-body" id="view_monthly_report">
+		<div class="subject-head">
+			
+		</div>
+		
 		<div class="wpsp-row">
 			<div class="wpsp-col-lg-5 wpsp-col-md-5 wpsp-col-sm-12 wpsp-col-xs-12">
 				<div class="line_box">
 					<div class="wpsp-form-group">
-						<label for="date" class="wpsp-labelMain">Select Date</label>
-						<input type="text" class="wpsp-form-control select_date" id="from_date" value="" name="from_date">
+						<label for="date" class="wpsp-labelMain">Select Month</label>
+						<input type="text" class="wpsp-form-control select_date" id="report_month" value="" name="report_month">
 					</div>
 
 					<div class="wpsp-form-group">
@@ -46,47 +46,48 @@
 					</div>
 				</div>
 			</div>
-			<div class="wpsp-row">
-				<div class="wpsp-col-md-12" id="trainee_record_check">
-									
-				</div>
-			</div>
-			<div class="wpsp-row">
-				<div class="wpsp-col-lg-5 wpsp-col-md-5 wpsp-col-sm-12 wpsp-col-xs-12">
-					<div class="wpsp-form-group">
-						<input type="submit" name="submit" value="submit" id="TraineeRecordSubmit" class="wpsp-btn wpsp-btn-success" />
-					</div>
-				</div>
-			</div>
-		</div>
-		</form>
 	</div>
 </div>
 
-<script>
+<div class="wpsp-card" id="monthly_report" style="display: none;">
+	<div class="wpsp-card-head">
+		<div style="padding:20px 30px">
+			<button  style="padding: 10px 30px !important;font-size: large;"onclick="printDiv();" name="print_report" class="wpsp-btn wpsp-btn-success">Print</button>
+		</div>
+	</div>
+	<div class="wpsp-card-body" id="trainee_record_report">
+	</div>
+</div>
+
+<script type="text/javascript">
 
 function bindUnitEvents() {
 	$('#unit_id').change(function(){
-		var unit_id = $('#unit_id').val();
-		var checked_on = $('#from_date').val();
-	
+
+		var unit_id 		= $('#unit_id').val();
+		var trade_id		= $('#trade_id').val();
+		var batch_id		= $('#batch_id').val();
+		var report_month	= $('#report_month').val();
+		
 		sch.ajaxRequest({
 			'page': 'sch-trainee_record',
-			'pageAction': 'trainee_record_check_form',
-			'selector': '#add_trainee_record',
-			data:  { 'unit_id': unit_id, 'checked_on': checked_on },
+			'pageAction': 'view_monthly_report_details',
+			'selector': '#view_monthly_report',
+			data:  { 'unit_id': unit_id, 'trade_id': trade_id, 'batch_id': batch_id, 'report_month': report_month},
 			success: function( res ) {
-				$('#trainee_record_check').html( res );
-				$('#TraineeRecordSubmit').show();		
+				$('#monthly_report').show();
+				$('#trainee_record_report').html(res);
 			}
 		});
 	});
+	
+
 }
 
-$( function() {
+$(function(){
 
-	$( "#from_date" ).datepicker({
-		dateFormat: 'yy-mm-dd',
+	$( "#report_month" ).datepicker({
+		dateFormat: 'yy-mm',
 		showOtherMonths: true,
 	    selectOtherMonths: true,
 	    showButtonPanel: true,
@@ -94,27 +95,27 @@ $( function() {
 	    changeYear: true
 	});
 	
-	$('#TraineeRecordSubmit').hide();
-	$('#batch_id').prop( 'disabled', true );
-	$('#trade_id').prop( 'disabled', true );
-	
-     $('#from_date').change( function() {
-    		$('#batch_id').prop( 'disabled', false );
-     });
+	$('#batch_id').prop('disabled', true );
+	$('#trade_id').prop('disabled', true );
+	$('#unit_id').prop('disabled', true );
 
-	$('#batch_id').change( function() {
-		$("#trade_id").prop('disabled', false );
+	$('#report_month').change(function(){
+		$('#batch_id').prop('disabled', false );
 	});
-     
-	$("#trade_id").change(function( e ){
+
+	$('#batch_id').change(function(){
+		$('#trade_id').prop('disabled', false );
+	});
+
+	$('#trade_id').change(function(){
 		var trade_id = $("#trade_id").val();
 		var batch_id = $("#batch_id").val();
-		
+
 		sch.ajaxRequest({
 			'page': 'sch-trades',
 			'pageAction': 'get_trade_unit_lists',
-			'selector': '#add_trainee_record',
-			data:  { 'TradeId': trade_id, 'BatchId': batch_id},
+			'selector': '#view_monthly_report',
+			data:  { 'TradeId': trade_id, 'BatchId': batch_id },
 			success: function( res ) {
 				
 				if( '' != res ) {
@@ -128,12 +129,11 @@ $( function() {
 								strOption +
 							'</select>';
 
-					$('#add_trainee_record #unit_id').replaceWith( strHTML );
+					$('#view_monthly_report #unit_id').replaceWith( strHTML );
 					bindUnitEvents();
 				}	
 			}
 		});
 	});
-
 });
 </script>

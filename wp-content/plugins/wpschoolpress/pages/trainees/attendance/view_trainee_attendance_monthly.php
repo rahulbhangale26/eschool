@@ -7,7 +7,7 @@
 				<div class="line_box">
 					<div class="wpsp-form-group">
 						<label for="date" class="wpsp-labelMain">Select Month</label>
-						<input type="month" class="wpsp-form-control select_date" id="attendance_date" value="" name="attendance_date">
+						<input type="text" class="wpsp-form-control select_date" id="attendance_date" value="" name="attendance_date">
 					</div>
 
 					<div class="wpsp-form-group">
@@ -97,6 +97,15 @@ function loadTraineeAttendanceMonthly() {
 
 $(function(){
 
+	$( "#attendance_date" ).datepicker({
+		dateFormat: 'yy-mm',
+		showOtherMonths: true,
+	    selectOtherMonths: true,
+	    showButtonPanel: true,
+	    changeMonth: true,
+	    changeYear: true
+	});
+	
 	$('#batch_id').prop('disabled', true );
 	$('#trade_id').prop('disabled', true );
 	$('#unit_id').prop('disabled', true );	

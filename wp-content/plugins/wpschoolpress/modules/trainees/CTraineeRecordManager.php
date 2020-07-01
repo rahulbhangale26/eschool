@@ -6,6 +6,8 @@ class CTraineeRecordManager extends CFactory {
     protected $arrobjStudents;
     protected $arrobjTraineeRecordSummary;
     
+    protected $arrobjBatches;
+    
     public function __construct() {
         
     }
@@ -28,12 +30,25 @@ class CTraineeRecordManager extends CFactory {
             case 'trainee_record_check_form':
                 $this->handleTraineeRecordCheckForm();
                 break;
+                
+            case 'view_monthly_report':
+                $this->handleViewMonthlyReport();
+                break;
+                
+            case 'view_monthly_report_details':
+                $this->handleViewMonthlyReportDetails();
+                break;
         }
     }
     
     public function handleViewTraineeDailyDiary() {
         
-        $this->arrobjTraineeRecordSummary = CTraineeRecords::getInstance()->fetchDailyGroupedTraineeRecords();
+        
+        if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
+            $this->arrobjTraineeRecordSummary = CTraineeRecords::getInstance()->fetchDailyGroupedTraineeRecords();
+        } else {
+            $this->arrobjTraineeRecordSummary = CTraineeRecords::getInstance()->fetchDailyGroupedTraineeRecordsByInstructorId(  $this->objUser->getTeacher()->tid );
+        }
         
         $this->displayViewTraineeDailyDiary();
     }
@@ -88,8 +103,6 @@ class CTraineeRecordManager extends CFactory {
             }
         }
         
-        
-        
         if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
             $this->arrobjTrades = CTrade::getInstance()->fetchAllTrades();
         } else {
@@ -97,6 +110,19 @@ class CTraineeRecordManager extends CFactory {
         }
         
         $this->displayAddRecord();
+    }
+    
+    public function handleViewMonthlyReport() {
+        
+        $this->arrobjBatches = CBatches::getInstance()->fetchAllBatches();
+        
+        if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
+            $this->arrobjTrades = CTrade::getInstance()->fetchAllTrades();
+        } else {
+            $this->arrobjTrades = CTrade::getInstance()->fetchTradesByInstructorId( $this->objUser->getTeacher()->tid );
+        }
+        
+        $this->displayViewMonthlyReport();
     }
     
     public function handleTraineeRecordCheckForm() {
@@ -107,6 +133,30 @@ class CTraineeRecordManager extends CFactory {
         
         $this->arrobjStudents = CStudents::getInstance()->fetchStudentsByUnitId( $intUnitId );
         $this->displayTraineeRecordCheckForm();
+    }
+    
+    public function handleViewMonthlyReportDetails() {
+        
+        $intUnitId      = $this->getRequestData( [ 'data', 'unit_id' ] );
+        $intTradeId     = $this->getRequestData( [ 'data', 'trade_id' ] );
+        $intBatchId     = $this->getRequestData( [ 'data', 'batch_id' ] );
+        $strReportMonth = $this->getRequestData( [ 'data', 'report_month' ] );
+        list( $intYear, $intMonth )     = explode( '-', $strReportMonth );
+        
+        
+        $this->arrobjStudents           = CStudents::getInstance()->fetchStudentsByUnitId( $intUnitId );
+        $arrobjTraineeRecords     = CTraineeRecords::getInstance()->fetchTraineeRecordsByUnitIdByMonthByYear( $intUnitId, $intMonth, $intYear );
+        
+        foreach ( $arrobjTraineeRecords AS $objTraineeRecord ) {
+            
+            if( false == isset( $this->arrobjTraineeRecords[$objTraineeRecord->student_id] ) ) {
+                $this->arrobjTraineeRecords[$objTraineeRecord->student_id] = [];
+            }
+            
+            $this->arrobjTraineeRecords[$objTraineeRecord->student_id][$objTraineeRecord->checked_on][] = $objTraineeRecord;
+        }
+                
+        $this->displayViewMonthlyReportDetails();
     }
     
     public function displayViewTraineeDailyDiary() {
@@ -123,6 +173,7 @@ class CTraineeRecordManager extends CFactory {
        
         $this->arrmixTemplateParams['trainee_record_types']     = CTraineeRecordTypes::getInstance()->fetchAllTraineeRecordTypes();
         $this->arrmixTemplateParams['trades']                   = $this->arrobjTrades;
+        $this->arrmixTemplateParams['batches']                  = CBatches::getInstance()->fetchAllBatches();
         
         $this->renderPage( 'trainees/records/add_record.php' );
     }
@@ -135,6 +186,21 @@ class CTraineeRecordManager extends CFactory {
         
         $this->renderPage( 'trainees/records/trainee_record_check_form.php' );
         
+    }
+    
+    public function displayViewMonthlyReport() {
+        
+        $this->arrmixTemplateParams['batches']          = $this->arrobjBatches;
+        $this->arrmixTemplateParams['trades']           = $this->arrobjTrades;
+        
+        $this->renderPage( 'trainees/records/view_monthly_report.php' );
+    }
+    
+    public function displayViewMonthlyReportDetails() {
+        $this->arrmixTemplateParams['students']         = $this->arrobjStudents;
+        $this->arrmixTemplateParams['trainee_records']  = $this->arrobjTraineeRecords;
+        
+        $this->renderPage( 'trainees/records/view_monthly_report_details.php' );
     }
     
 }

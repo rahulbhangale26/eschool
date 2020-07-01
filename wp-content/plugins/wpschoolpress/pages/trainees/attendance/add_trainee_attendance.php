@@ -12,7 +12,7 @@
 				<div class="line_box">
 					<div class="wpsp-form-group">
 						<label for="date" class="wpsp-labelMain">Select Date</label>
-						<input type="date" class="wpsp-form-control select_date" id="attendance_date" value="<?php echo ( isset( $edit_attendance['attendance_date'] ) ? $edit_attendance['attendance_date'] : '' )?>" name="attendance_date">
+						<input type="text" class="wpsp-form-control select_date" id="attendance_date" value="<?php echo ( isset( $edit_attendance['attendance_date'] ) ? $edit_attendance['attendance_date'] : '' )?>" name="attendance_date">
 					</div>
 
 					<div class="wpsp-form-group">
@@ -92,6 +92,15 @@ function loadEditForm() {
 }
 
 $( function() {
+
+	$( "#attendance_date" ).datepicker({
+		dateFormat: 'yy-mm-dd',
+		showOtherMonths: true,
+	    selectOtherMonths: true,
+	    showButtonPanel: true,
+	    changeMonth: true,
+	    changeYear: true
+	});
 	
 	$('#TraineeAttendanceSubmit').hide();
 

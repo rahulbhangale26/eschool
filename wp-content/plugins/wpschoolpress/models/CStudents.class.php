@@ -75,11 +75,12 @@ class CStudents extends CModel {
     }
     
     public function fetchStudentsByUnitId( $intUnitId ) {
-         $strSql = 'SELECT
+        $strSql = 'SELECT
                         s.*
                     FROM ' . $this->strTableName . ' s
                     WHERE
-                        s.current_unit_id = ' . ( int ) $intUnitId;
+                        s.current_unit_id = ' . ( int ) $intUnitId . '
+                    ORDER BY s.sid ASC';
         
         return $this->objDatabase->get_results( $strSql );
     }

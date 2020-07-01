@@ -4,6 +4,7 @@ class CTraineeRecordTypes extends CModel {
     
     protected static $_INSTANCE;
     
+    const DAILY_DIARY = 1;
     const PROGRESS = 10;
     
     public function __construct() {

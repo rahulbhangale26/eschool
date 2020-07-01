@@ -42,6 +42,25 @@
 
 <script>
 $(function(){
+
+	$( "#start_date" ).datepicker({
+		dateFormat: 'yy-mm-dd',
+		showOtherMonths: true,
+	    selectOtherMonths: true,
+	    showButtonPanel: true,
+	    changeMonth: true,
+	    changeYear: true
+	});
+
+	$( "#end_date" ).datepicker({
+		dateFormat: 'yy-mm-dd',
+		showOtherMonths: true,
+	    selectOtherMonths: true,
+	    showButtonPanel: true,
+	    changeMonth: true,
+	    changeYear: true
+	});
+	
 	 handleDatatables();
 });
 </script>

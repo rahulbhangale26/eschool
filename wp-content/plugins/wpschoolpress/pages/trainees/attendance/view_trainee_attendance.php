@@ -1,8 +1,8 @@
 <div class="wpsp-card">
 	<div class="wpsp-card-head">
 		<form method="post">
-			Select Start Date <input type="date" name="filter[start_date]" value="<?php echo $start_date; ?>" id="start_date"/>
-			Select End Date <input type="date" name="filter[end_date]" value="<?php echo $end_date; ?>" id="end_date"/>
+			Select Start Date <input type="text" name="filter[start_date]" value="<?php echo $start_date; ?>" id="start_date"/>
+			Select End Date <input type="text" name="filter[end_date]" value="<?php echo $end_date; ?>" id="end_date"/>
 			<input type="submit" name="filter[filter]" value="Filter" class="wpsp-btn wpsp-btn-success" />
 		</form>
 	</div>

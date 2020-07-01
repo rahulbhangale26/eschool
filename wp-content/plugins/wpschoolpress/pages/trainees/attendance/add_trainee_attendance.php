@@ -135,7 +135,8 @@ $( function() {
 					var units = $.parseJSON( res );
 
 					if( 0 == units.length ) {
-						$('#message').html('<div class="error_msg_div"><span class="error_msg_span">NO Unit assigned for this batch.</span></div>');
+						$('#message').html('<div class="error_msg_div"><span class="error_msg_span">No Unit assigned for this batch.</span></div>');
+						$('#unit_id').prop( 'disabled', true );	
 						return;
 					}
 

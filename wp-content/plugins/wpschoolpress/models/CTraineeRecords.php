@@ -55,7 +55,8 @@ class CTraineeRecords extends CModel {
 	                   tr.checked_on, 
                        tr.instructor_id,
                        s.trade_id ,
-                       s.current_unit_id AS unit_id
+                       s.current_unit_id AS unit_id,
+                       s.batch_id
                     FROM
 	                   iti_wpsp_trainee_records tr
                         JOIN iti_wpsp_trainee_record_type trt ON trt.id = tr.trainee_record_type_id
@@ -73,7 +74,8 @@ class CTraineeRecords extends CModel {
 	                   tr.checked_on,
                        tr.instructor_id,
                        s.trade_id ,
-                       s.current_unit_id AS unit_id
+                       s.current_unit_id AS unit_id,
+                       s.batch_id
                     FROM
 	                   iti_wpsp_trainee_records tr
                         JOIN iti_wpsp_trainee_record_type trt ON trt.id = tr.trainee_record_type_id

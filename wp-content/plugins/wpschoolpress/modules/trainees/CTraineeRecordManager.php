@@ -175,9 +175,11 @@ class CTraineeRecordManager extends CFactory {
     
     public function displayAddRecord() {
        
+        $this->arrmixTemplateParams['edit_trainee_record']           = $this->getRequestData( [] );
         $this->arrmixTemplateParams['trainee_record_types']     = CTraineeRecordTypes::getInstance()->fetchAllTraineeRecordTypes();
         $this->arrmixTemplateParams['trades']                   = $this->arrobjTrades;
         $this->arrmixTemplateParams['batches']                  = CBatches::getInstance()->fetchAllBatches();
+        $this->arrmixTemplateParams['units']                    = CUnits::getInstance()->fetchAllUnits();
         
         $this->renderPage( 'trainees/records/add_record.php' );
     }

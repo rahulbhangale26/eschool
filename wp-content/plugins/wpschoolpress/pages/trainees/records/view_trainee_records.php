@@ -21,7 +21,11 @@
 							<td><?php echo $units[$trainee_record_summary->unit_id]->unit_name; ?></td>
 							<td><?php echo $trades[$trainee_record_summary->trade_id]->name; ?></td>
 							<td><?php echo $instructors[$trainee_record_summary->instructor_id]->first_name . ' ' . $instructors[$trainee_record_summary->instructor_id]->last_name; ?></td>
-							<td></td>
+							<td>
+								<a href="admin.php?page=sch-trainee_record&page_action=add_record&batch_id=<?php echo $trainee_record_summary->batch_id; ?>&from_date=<?php echo date( 'Y-m-d', strtotime( $trainee_record_summary->checked_on ) ); ?>&unit_id=<?php echo $trainee_record_summary->unit_id; ?>&trade_id=<?php echo $trainee_record_summary->trade_id;?>">
+									<span class="dashicons dashicons-edit"></span>
+								</a>
+							</td>
 						</tr>
 					<?php } ?>
 				</tbody>

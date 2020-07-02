@@ -12,7 +12,7 @@
 				<div class="line_box">
 					<div class="wpsp-form-group">
 						<label for="date" class="wpsp-labelMain">Select Date</label>
-						<input type="text" class="wpsp-form-control select_date" id="from_date" value="" name="from_date">
+						<input type="text" class="wpsp-form-control select_date" id="from_date" value="<?php echo ( isset( $edit_trainee_record['from_date'] ) ? $edit_trainee_record['from_date'] : '' )?>" name="from_date">
 					</div>
 
 					<div class="wpsp-form-group">
@@ -21,6 +21,7 @@
 							<option value="" disabled selected>Select Batch</option>
 							<?php foreach( $batches as $batch ) { ?>
 								<option 
+								<?php echo ( isset( $edit_trainee_record['batch_id'] ) && $batch->id == $edit_trainee_record['batch_id']  ) ? 'selected="selected"' : '' ?>
 									value="<?php echo $batch->id?>"><?php echo $batch->name; ?></option>
 							<?php } ?>
 						</select>
@@ -31,7 +32,9 @@
 						<select class="wpsp-form-control" name="trade_id" id="trade_id">
 							<option value="" disabled selected>Select Trade</option>
 							<?php foreach( $trades as $trade ) { ?>
-								<option value="<?php echo $trade->id?>"><?php echo $trade->name; ?></option>
+								<option 
+									<?php echo ( isset( $edit_trainee_record['trade_id'] ) && $trade->id == $edit_trainee_record['trade_id']  ) ? 'selected="selected"' : '' ?>
+									value="<?php echo $trade->id?>"><?php echo $trade->name; ?></option>
 							<?php } ?>
 						</select>
 					</div>
@@ -40,7 +43,9 @@
 						<select class="wpsp-form-control" disabled name="unit_id" id="unit_id">
 							<option value="" disabled selected >Select Unit</option>
 							<?php foreach( $units as $unit ) { ?>
-								<option value="<?php echo $unit->id?>"><?php echo $unit->unit_name; ?></option>
+								<option 
+									<?php echo ( isset( $edit_trainee_record['unit_id'] ) && $unit->id == $edit_trainee_record['unit_id']  ) ? 'selected="selected"' : '' ?>
+									value="<?php echo $unit->id?>"><?php echo $unit->unit_name; ?></option>
 							<?php } ?>
 						</select>
 					</div>
@@ -63,25 +68,35 @@
 	</div>
 </div>
 
-<script>
+<script type="text/javascript">
+
+
+var ajax_url = '<?php echo admin_url('admin-ajax.php') ?>';
 
 function bindUnitEvents() {
 	$('#unit_id').change(function(){
-		var unit_id = $('#unit_id').val();
-		var checked_on = $('#from_date').val();
-	
-		sch.ajaxRequest({
-			'page': 'sch-trainee_record',
-			'pageAction': 'trainee_record_check_form',
-			'selector': '#add_trainee_record',
-			data:  { 'unit_id': unit_id, 'checked_on': checked_on },
-			success: function( res ) {
-				$('#trainee_record_check').html( res );
-				$('#TraineeRecordSubmit').show();		
-			}
-		});
+		loadTraineeRecord();
 	});
 }
+
+function loadTraineeRecord() {
+
+	var unit_id = $('#unit_id').val();
+	var checked_on = $('#from_date').val();
+
+	sch.ajaxRequest({
+		'page': 'sch-trainee_record',
+		'pageAction': 'trainee_record_check_form',
+		'selector': '#add_trainee_record',
+		data:  { 'unit_id': unit_id, 'checked_on': checked_on },
+		success: function( res ) {
+			$('#trainee_record_check').html( res );
+			$('#TraineeRecordSubmit').show();		
+		}
+	});
+	
+}
+
 
 $( function() {
 
@@ -135,5 +150,10 @@ $( function() {
 		});
 	});
 
+<?php  if( true == isset( $edit_trainee_record['from_date'] ) ) { ?>
+	loadTraineeRecord();
+<?php } ?>
+
 });
+
 </script>

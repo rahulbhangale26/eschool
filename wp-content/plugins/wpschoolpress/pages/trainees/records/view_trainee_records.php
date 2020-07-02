@@ -1,6 +1,6 @@
 <div class="wpsp-card">
 	<div class="wpsp-card-head">
-		<!--  <div class="pull-left"><a href="<?php echo site_url( '/wp-admin/admin.php?page=sch-trainee_record&page_action=view_monthly_report' )?>" style="padding: 10px 30px !important;font-size: large;" class="wpsp-btn wpsp-btn-success">Monthly Report</a></div>  -->
+		<div class="pull-left"><a href="<?php echo site_url( '/wp-admin/admin.php?page=sch-trainee_record&page_action=view_monthly_report' )?>" style="padding: 10px 30px !important;font-size: large;" class="wpsp-btn wpsp-btn-success">Monthly Report</a></div>
 	</div>
 	<div class="wpsp-card-body">
 		<div class="subject-head">

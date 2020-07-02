@@ -99,7 +99,7 @@ class CUnits extends CModel {
         }
         
         if( CRole::ADMIN == $objUser->getRole() || ( CRole::TEACHER == $objUser->getRole() && ( true == in_array( $objUser->getTeacher()->designation_id, [ CDesignations::CLERK, CDesignations::PRINCIPAL ] ) ) ) ) {
-            return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName . ' WHERE trade_id = ' . ( int ) $intTradeId );
+            return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName . ' WHERE trade_id = ' . ( int ) $intTradeId . ' AND batch_id = ' . ( int ) $intBatchId );
         }
         
         

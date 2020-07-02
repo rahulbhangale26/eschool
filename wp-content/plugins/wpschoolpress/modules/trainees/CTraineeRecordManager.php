@@ -145,7 +145,11 @@ class CTraineeRecordManager extends CFactory {
         
         
         $this->arrobjStudents           = CStudents::getInstance()->fetchStudentsByUnitId( $intUnitId );
-        $arrobjTraineeRecords     = CTraineeRecords::getInstance()->fetchTraineeRecordsByUnitIdByMonthByYear( $intUnitId, $intMonth, $intYear );
+        $this->objTeacher               = CTeachers::getInstance()->fetchTeacherByUnitIdByBatchId( $intUnitId, $intBatchId );
+        $this->objTrade                 = CTrade::getInstance()->fetchTradeById( $intTradeId );
+        $this->objUnit                  = CUnits::getInstance()->fetchUnitById( $intUnitId );
+        $this->objBatch                 = CBatches::getInstance()->fetchBatchById( $intBatchId );
+        $arrobjTraineeRecords           = CTraineeRecords::getInstance()->fetchTraineeRecordsByUnitIdByMonthByYear( $intUnitId, $intMonth, $intYear );
         
         foreach ( $arrobjTraineeRecords AS $objTraineeRecord ) {
             
@@ -153,7 +157,7 @@ class CTraineeRecordManager extends CFactory {
                 $this->arrobjTraineeRecords[$objTraineeRecord->student_id] = [];
             }
             
-            $this->arrobjTraineeRecords[$objTraineeRecord->student_id][$objTraineeRecord->checked_on][] = $objTraineeRecord;
+            $this->arrobjTraineeRecords[$objTraineeRecord->student_id][$objTraineeRecord->checked_on][$objTraineeRecord->trainee_record_type_id] = $objTraineeRecord;
         }
                 
         $this->displayViewMonthlyReportDetails();
@@ -197,8 +201,17 @@ class CTraineeRecordManager extends CFactory {
     }
     
     public function displayViewMonthlyReportDetails() {
+        global $wpsp_settings_data;
+        
+        
         $this->arrmixTemplateParams['students']         = $this->arrobjStudents;
+        $this->arrmixTemplateParams['trainee_record_types'] = CTraineeRecordTypes::getInstance()->fetchAllTraineeRecordTypes();
         $this->arrmixTemplateParams['trainee_records']  = $this->arrobjTraineeRecords;
+        $this->arrmixTemplateParams['teacher']          = $this->objTeacher;
+        $this->arrmixTemplateParams['trade']            = $this->objTrade;
+        $this->arrmixTemplateParams['batch']            = $this->objBatch;
+        $this->arrmixTemplateParams['unit']             = $this->objUnit;
+        $this->arrmixTemplateParams['iti_name']         = isset( $wpsp_settings_data['sch_name'] ) && !empty( $wpsp_settings_data['sch_name'] ) ? $wpsp_settings_data['sch_name'] : __( 'ITIMS','WPSchoolPress' );
         
         $this->renderPage( 'trainees/records/view_monthly_report_details.php' );
     }

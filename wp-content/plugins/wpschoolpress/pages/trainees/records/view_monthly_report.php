@@ -61,6 +61,34 @@
 
 <script type="text/javascript">
 
+/* 
+function printDiv() { 
+    var divContents = document.getElementById("trainee_record_report").innerHTML; 
+    var a = window.open(''); 
+    a.document.write('<html>'); 
+    a.document.write('<body > <h1>Div contents are <br>'); 
+    a.document.write(divContents); 
+    a.document.write('</body></html>'); 
+    a.document.close(); 
+    a.print(); 
+} 
+ */
+
+ function printDiv() {
+    var divToPrint = document.getElementById('trainee_record_report');
+    var htmlToPrint = '' +
+        '<style type="text/css">' +
+        'table th, table td {' +
+        'border:1px solid #555; !important' +
+        'padding:0.5em;' +
+        '}' +
+        '</style>';
+    htmlToPrint += divToPrint.outerHTML;
+    newWin = window.open("");
+    newWin.document.write('<html><head></head><body>' + htmlToPrint + '</body></html>');
+} 
+
+
 function bindUnitEvents() {
 	$('#unit_id').change(function(){
 

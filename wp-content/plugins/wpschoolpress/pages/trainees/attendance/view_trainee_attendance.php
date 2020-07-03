@@ -28,7 +28,7 @@
 							<td><?php echo $batches[$trainee_attendance->batch_id]->name; ?></td>
 							<td><?php echo $instructors[$trainee_attendance->instructor_id]->first_name . ' ' . $instructors[$trainee_attendance->instructor_id]->last_name; ?></td>
 							<td>
-								<a href="admin.php?page=sch-trainee_attendance&page_action=add_trainee_attendance&batch_id=<?php echo $trainee_attendance->batch_id; ?>&attendance_date=<?php echo date( 'Y-m-d', strtotime( $trainee_attendance->attendance_date ) ); ?>&unit_id=<?php echo $trainee_attendance->current_unit_id; ?>&trade_id=<?php echo $trainee_attendance->batch_id;?>">
+								<a href="admin.php?page=sch-trainee_attendance&page_action=add_trainee_attendance&batch_id=<?php echo $trainee_attendance->batch_id; ?>&attendance_date=<?php echo date( 'Y-m-d', strtotime( $trainee_attendance->attendance_date ) ); ?>&unit_id=<?php echo $trainee_attendance->current_unit_id; ?>&trade_id=<?php echo $trainee_attendance->trade_id;?>">
 									<span class="dashicons dashicons-edit"></span>
 								</a>
 							</td>

@@ -1,0 +1,13 @@
+{
+    "name": "wpandro/itims",
+    "description": "This is a project for industrial training institues to mange there institute",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Rahul Bhangale",
+            "email": "rahulbhangale26@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}

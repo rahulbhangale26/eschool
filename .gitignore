@@ -2,3 +2,4 @@ wp-config.php
 wp-admin/error_log
 error_log
 .htaccess
+/vendor/

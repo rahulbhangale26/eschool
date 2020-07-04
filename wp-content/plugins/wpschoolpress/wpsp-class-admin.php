@@ -444,7 +444,7 @@ function wpsp_admin_menu() {
 		}
 		if (is_user_logged_in())
 		{
-			wp_enqueue_script('wpsp_wp_admin_jquery8', WPSP_PLUGIN_URL . 'plugins/datatables/jquery.datatables.js', array(
+			wp_enqueue_script('wpsp_wp_admin_jquery8', WPSP_PLUGIN_URL . 'plugins/datatables/jquery.datatables.min.js', array(
 				'jquery'
 			) , '1.0.0', true);
 			wp_enqueue_script('wpsp_wp_admin_jquery999', WPSP_PLUGIN_URL . 'js/wpsp-custome.js', array(

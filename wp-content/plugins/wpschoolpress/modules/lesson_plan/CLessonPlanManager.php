@@ -115,6 +115,7 @@ class CLessonPlanManager extends CFactory {
             
             if( false == CLessonPlans::getInstance()->delete( [ 'id' => $arrmixRequestData['lesson_plan_id'] ] ) ) {
                 echo 'error';
+                exit;
             }
            
             $this->handleViewLessonPlan();

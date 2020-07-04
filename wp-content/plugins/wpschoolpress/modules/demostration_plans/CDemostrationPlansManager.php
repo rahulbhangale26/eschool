@@ -115,6 +115,7 @@ class CDemostrationPlansManager extends CFactory {
             
             if( false == CDemostrationPlans::getInstance()->delete( [ 'id' => $arrmixRequestData['demonstration_plan_id'] ] ) ) {
                 echo 'error';
+                exit;
             }
             
             $this->handleViewDemostrationPlans();

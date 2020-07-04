@@ -46,6 +46,7 @@ $(function () {
 		$("#DeleteModal").attr( 'data-id', $( '#trash-lesson-plan' ).attr( 'data-id') );
 	});
 
+	$('.ClassDeleteBt').unbind();
 	$('.ClassDeleteBt').click( function(e) {
 		$("#DeleteModal").css("display", "none");
 		sch.ajaxRequest({

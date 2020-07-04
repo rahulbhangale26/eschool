@@ -22,9 +22,9 @@
 						<tr>
 							<td><?php echo $s->id; ?></td>
 							<td><?php echo $s->name; ?></td>
-							<td><?php echo $trades[$s->trade_id]->name; ?></td>
+							<td><?php echo ( isset( $trades[$s->trade_id] ) ? $trades[$s->trade_id]->name : '-' ); ?></td>
 							<td>
-								<a href="<?php echo site_url( '/wp-admin/admin.php?page=sch-syllabus&page_action=read_syllabus&syllabus_id=' . $s->id ); ?>"><span class="dashicons dashicons-welcome-view-site"></span></a>
+								<a target="_blank" href="<?php echo WP_CONTENT_URL . $s->file_url; ?>"><span class="dashicons dashicons-welcome-view-site"></span></a>
 							</td>
 						</tr>
 					<?php } ?>

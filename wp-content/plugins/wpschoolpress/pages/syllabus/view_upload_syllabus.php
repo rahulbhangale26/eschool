@@ -31,6 +31,7 @@
 									<?php foreach ( $trades as $trade ) { ?>
 										<option value="<?php echo $trade->id; ?>" ><?php echo $trade->name; ?></option>
 									<?php } ?>
+									<option value="0" >Other</option>
 								</select>
 							</div>
 						</div>

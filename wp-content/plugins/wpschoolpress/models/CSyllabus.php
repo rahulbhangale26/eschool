@@ -26,7 +26,15 @@ class CSyllabus extends CModel {
     }
     
     public function fetchAllSyllabus() {
-       return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName ); 
+        
+        $strSql = 'SELECT
+                        s.*,
+                        CONCAT( f.file_path, f.file_name )  AS file_url
+                    FROM
+                        ' . $this->strTableName . ' s
+                        JOIN ' . CFiles::getInstance()->strTableName . ' f ON f.id = s.file_id';
+        
+        return $this->objDatabase->get_results( $strSql ); 
     }
     
     public function fetchSyllabusById( $intSyllabusId ) {

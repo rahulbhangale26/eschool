@@ -4,7 +4,7 @@ CREATE TABLE
 
 ALTER TABLE `files` ADD `is_active` BOOLEAN NOT NULL AFTER `file_path`, ADD `uploaded_by` INT NOT NULL AFTER `is_active`;
 
-RENAME TABLE `nutaniti`.`files` TO `nutaniti`.`iti_wpsp_files`;
+RENAME TABLE `files` TO `iti_wpsp_files`;
 
 CREATE TABLE `iti_wpsp_file_types` ( `id` INT NOT NULL AUTO_INCREMENT , `name` INT NOT NULL , `description` INT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
 

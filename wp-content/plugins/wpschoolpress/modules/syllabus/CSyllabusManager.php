@@ -118,7 +118,7 @@ class CSyllabusManager extends CFactory {
     public function  displayViewSyllabus() {
         
         $this->arrmixTemplateParams['syllabus']     = $this->arrobjSyllabus;
-        $this->arrmixTemplateParams['trades']       = CTrade::getInstance()->fetchAllTrades();
+        $this->arrmixTemplateParams['trades']       = $this->rekeyObjects( 'id', CTrade::getInstance()->fetchAllTrades() );
         
         $this->renderPage( 'syllabus/view_syllabus.php' );
     }

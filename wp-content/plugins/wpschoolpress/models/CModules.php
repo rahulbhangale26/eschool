@@ -146,11 +146,14 @@ class CModules extends CModel {
     
     const SYLLABUS = [
         'id'                => 13,
-        'title'             => 'Syllabus (split syllabus monthly yearly)',
-        'slug'              => 'sch-underconstruction',
-        'icon_class'        => '',
+        'title'             => 'Syllabus',
+        'slug'              => 'sch-syllabus',
+        'icon_class'        => 'dashicons dashicons-media-spreadsheet',
         'parent_module_id'  => 12,
         'has_sub_modules'   => 0,
+        'create_new'        => 'view_upload_syllabus',
+        'create_new_title'  => 'Upload Syllabus',
+        'hide_from'         => [ CDesignations::INSTRUCTOR, CDesignations::OTHER ]
     ];
     
     const TIME_TABLE =  [
@@ -435,7 +438,8 @@ class CModules extends CModel {
             'sch-teacher'               => self::STAFF,
             'sch-trainee_record'        => self::TRAINEE_RECORD,
             'sch-trainee_attendance'    => self::TRAINEE_ATTENDANCE,
-            'sch-trainee_attendance_monthly'    => self::TRAINEE_ATTENDANCE_MONTHLY
+            'sch-trainee_attendance_monthly'    => self::TRAINEE_ATTENDANCE_MONTHLY,
+            'sch-syllabus'                      => self::SYLLABUS
         ];
     
     }
@@ -610,11 +614,9 @@ class CModules extends CModel {
     private function getStudentModules() {
         $arrmixModule = [
             self::DASHBOARD['id']           => self::DASHBOARD,
+            self::SYLLABUS['id']            => self::SYLLABUS,
             self::EVENTS['id']              => self::EVENTS,
-            self::NOTIFY['id']              => self::NOTIFY,
-            self::TRANSPORT['id']           => self::TRANSPORT,
             self::PARENTS['id']             => self::PARENTS,
-            self::SETTINGS['id']            => self::SETTINGS,
         ];
         
         return $arrmixModule;

@@ -65,6 +65,7 @@ function wpsp_plugins_loaded()
 	    require_once $strFile;
 	}
 
+	require_once (WPSP_PLUGIN_PATH . 'lib/CUploader.php');
 	require_once (WPSP_PLUGIN_PATH . 'lib/translations.php');
 	$objUser                = new CUser();
 	$objUser->setUserId( $current_user->id );

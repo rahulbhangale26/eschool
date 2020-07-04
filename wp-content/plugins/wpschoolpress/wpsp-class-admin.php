@@ -153,6 +153,11 @@ function wpsp_admin_menu() {
 		
 		/** MVC Strarted **/
 		
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trades', 'edit_posts', 'sch-syllabus', array(
+		    $this,
+		    'wpsp_callback'
+		));
+		
 		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trades', 'edit_posts', 'sch-trades', array(
 		    $this,
 		    'wpsp_callback'

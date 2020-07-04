@@ -93,6 +93,7 @@ class CFactory {
         $this->arrmixTemplateParams['is_ajax_request']  = $this->boolIsAjaxRequest;
         $this->arrmixTemplateParams['slug_module']      = $this->getRequestData( [ 'page' ] );
         $this->arrmixTemplateParams['user']             = $this->objUser;
+        $this->arrmixTemplateParams['wp_content_url']   = WP_CONTENT_URL;
     }
     
     public function execute() {

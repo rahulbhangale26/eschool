@@ -91,13 +91,13 @@ function ewpsp_customcss(){
               			if( true == isset( $arrstrCurrentModule['id'] ) && 1 != $arrstrCurrentModule['id'] ) { 
               		?>
           				<li>
-          					<a href="<?php echo site_url( '/wp-admin/admin.php?page=' . $arrstrModule['slug'] ); ?>">
+          					<a href="<?php echo site_url( '/wp-admin/admin.php?page=' . $arrstrCurrentModule['slug'] ); ?>">
           						<span class="active"><?php echo $arrstrCurrentModule['title']; ?></span>
           					</a>
           				</li>
           			<?php } ?>
           		</ol>
-          		<?php if( true == isset( $arrstrCurrentModule['create_new' ] ) || (  true == isset( $arrstrCurrentModule['hide_from'] ) && false == in_array( $objUser->getTeacher()->designation_id, $arrstrCurrentModule['hide_from'] ) ) ) { ?>
+          		<?php if( true == isset( $arrstrCurrentModule['create_new' ] ) && (  true == isset( $arrstrCurrentModule['hide_from'] ) && false == in_array( $objUser->getTeacher()->designation_id, $arrstrCurrentModule['hide_from'] ) && CRole::TEACHER == $objUser->getRole() )  ) { ?>
           			<a class="wpsp-btn" href="<?php echo site_url( 'wp-admin/admin.php?page=' . $arrstrCurrentModule['slug']. '&page_action=' .  $arrstrCurrentModule['create_new'] ); ?>" >
           				<?php echo ( true == isset( $arrstrCurrentModule['create_new_title'] ) ? $arrstrCurrentModule['create_new_title'] : 'Create New' ); ?>
           			</a>

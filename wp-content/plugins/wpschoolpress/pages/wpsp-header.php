@@ -53,7 +53,7 @@ function ewpsp_customcss(){
 	<div class='sidebarScroll'>
 		<ul class='wpsp-navigation'>
 			<?php foreach ( $objModules->getModules() AS $arrstrModule ) { ?>
-    			<li class='<?php echo ( $slug_module == $arrstrModule['slug'] ? 'active' : '' ); ?> <?php echo ( true == $arrstrModule['has_sub_modules'] ) ? 'has-submenu' : ''; ?>'>
+    			<li class='<?php echo ( $slug_module == $arrstrModule['slug'] || $arrstrModule['id'] == $arrstrCurrentModule['parent_module_id'] ? 'active' : '' ); ?> <?php echo ( true == $arrstrModule['has_sub_modules'] ) ? 'has-submenu' : ''; ?>'>
     				<?php echo ( true == $arrstrModule['has_sub_modules'] ) ? '<span class="wpsp-droparrow"></span>' : ''; ?>
         			<a href='<?php echo site_url( '/wp-admin/admin.php?page=' . $arrstrModule['slug'] ); ?>'>
         	  			<i class='<?php echo $arrstrModule['icon_class']; ?>'></i>
@@ -62,9 +62,9 @@ function ewpsp_customcss(){
         	  		<?php if( true == $arrstrModule['has_sub_modules'] ) {      	  		    
         	  		       $arrsubModules = $objModules->getSubModules( $arrstrModule['id'] );
         	  		       echo '<ul class="sub-menu">';
-                           foreach( $arrsubModules AS $arrstrSubModule ) {
+        	  		       foreach( $arrsubModules AS $arrstrSubModule ) {
                                 ?>
-                                <li>
+                                <li class="<?php echo ( $slug_module == $arrstrSubModule['slug'] || $arrstrSubModule['id'] == $arrstrCurrentModule['parent_module_id'] ? 'active' : '' ); ?>" >
                                     <a href="<?php echo site_url( '/wp-admin/admin.php?page=' . $arrstrSubModule['slug'] ); ?>"><?php echo $arrstrSubModule['title']; ?></a>
                                 </li>
                                 <?php 

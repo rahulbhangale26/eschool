@@ -11,4 +11,6 @@ $arrstrModules = [
     'sch-trainee_attendance'    => WPSP_PLUGIN_PATH  . 'modules/trainees/CTraineeAttendanceManager.php',
     'sch-trainee_attendance_monthly'    => WPSP_PLUGIN_PATH  . 'modules/trainees/CTraineeAttendanceMonthlyManager.php',
     'sch-time-table'                     => WPSP_PLUGIN_PATH  . 'modules/timetable/CTimeTableManager.php',
+    'sch-lesson_plan'                    => WPSP_PLUGIN_PATH  . 'modules/lesson_plan/CLessonPlanManager.php',
+    'sch-demostration_plan'              => WPSP_PLUGIN_PATH  . 'modules/demostration_plans/CDemostrationPlansManager.php',
 ];

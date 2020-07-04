@@ -58,6 +58,7 @@ class CSyllabusManager extends CFactory {
                         $this->addErrorMessage( 'Please select the syllabus file to upload.' );
                         break;
                     }
+                    
                     $strSubPath     = '/uploads/files/' . CFileTypes::SYLLABUS . '/';
                     $strFilePath    = WP_CONTENT_DIR . $strSubPath;
                     $objUploader    =   new Uploader();

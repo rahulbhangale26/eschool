@@ -37,7 +37,7 @@ class Uploader {
         $name   =   $_FILES[$fileBrowse]["name"];
         $ext    =   pathinfo($name,PATHINFO_EXTENSION);
 
-        $this->uploadName=  $name;
+        $this->uploadName = time() . '-' . $name;
 
         if(empty($name))
         {

@@ -18,8 +18,8 @@ class CSyllabus extends CModel {
         return  self::$_INSTANCE = new self();
     }
     
-    public function insert( $arrmixSubject ) {
-        if( false != $this->objDatabase->insert( $this->strTableName, $arrmixSubject ) ) {
+    public function insert( $arrmixSyllabus ) {
+        if( false != $this->objDatabase->insert( $this->strTableName, $arrmixSyllabus ) ) {
             return $this->objDatabase->insert_id;
         }
         return false;

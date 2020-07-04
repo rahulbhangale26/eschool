@@ -168,19 +168,25 @@ class CModules extends CModel {
     const LESSON_PLAN = [
         'id'                => 15,
         'title'             => 'Lesson Plan',
-        'slug'              => 'sch-underconstruction',
+        'slug'              => 'sch-lesson_plan',
         'icon_class'        => '',
         'parent_module_id'  => 12,
         'has_sub_modules'   => 0,
+        'create_new'        => 'view_upload_lesson_plan',
+        'create_new_title'  => 'Upload Lesson Plan',
+        'hide_from'         => [ CDesignations::OTHER ]
     ];
     
     const DEMONSTRATION_PLAN = [
         'id'                => 16,
         'title'             => 'Demonstration Plan',
-        'slug'              => 'sch-underconstruction',
+        'slug'              => 'sch-demostration_plan',
         'icon_class'        => '',
         'parent_module_id'  => 12,
         'has_sub_modules'   => 0,
+        'create_new'        => 'view_upload_demostration_plan',
+        'create_new_title'  => 'Upload Demonstration Plan',
+        'hide_from'         => [ CDesignations::OTHER ]
     ];
     
     const INSTRUCTOR_DAILY_DIARY  = [
@@ -301,14 +307,14 @@ class CModules extends CModel {
         'has_sub_modules'   => 0,
     ];
     
-    const TIMETABLE  = [
+/*     const TIMETABLE  = [
         'id'                => 30,
         'title'             => 'Time Table',
         'slug'              => 'sch-timetable',
         'icon_class'        => '',
         'parent_module_id'  => 25,
         'has_sub_modules'   => 0,
-    ];
+    ]; */
     
     const ATTENDANCE = [
         'id'                => 31,
@@ -440,7 +446,9 @@ class CModules extends CModel {
             'sch-trainee_attendance'    => self::TRAINEE_ATTENDANCE,
             'sch-trainee_attendance_monthly'    => self::TRAINEE_ATTENDANCE_MONTHLY,
             'sch-syllabus'                      => self::SYLLABUS,
-            'sch-time-table'                    => self::TIME_TABLE
+            'sch-time-table'                    => self::TIME_TABLE,
+            'sch-lesson_plan'                   => self::LESSON_PLAN,
+            'sch-demostration_plan'             => self::DEMONSTRATION_PLAN
         ];
     
     }

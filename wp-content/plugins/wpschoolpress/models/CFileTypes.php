@@ -3,8 +3,10 @@ class CFileTypes extends CModel {
     
     protected static $_INSTANCE;
     
-    const SYLLABUS      = 1;
-    const TIMETABLE     = 2;
+    const SYLLABUS              = 1;
+    const TIMETABLE             = 2;
+    const LESSON_PLAN           = 3;
+    const DEMONSTRATION_PLAN    = 4;
     
     public function __construct() {
         parent::__construct();

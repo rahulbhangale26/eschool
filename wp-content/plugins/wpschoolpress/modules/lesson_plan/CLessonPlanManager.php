@@ -31,7 +31,7 @@ class CLessonPlanManager extends CFactory {
     
     public function handleViewLessonPlan() {
         
-        if( ( CRole::TEACHER == $this->objUser->getRole() && CDesignations::PRINCIPAL == $this->objUser->getTeacher()->designation_id ) || CRole::ADMIN == $this->objUser->getRole() ) {
+        if( ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) || CRole::ADMIN == $this->objUser->getRole() ) {
             $this->arrobjLessonPlans = CLessonPlans::getInstance()->fetchAllLessonPlans();
         } else {
             $this->arrobjLessonPlans = CLessonPlans::getInstance()->fetchLessonPlansByInstructorId( $this->objUser->getTeacher()->tid );

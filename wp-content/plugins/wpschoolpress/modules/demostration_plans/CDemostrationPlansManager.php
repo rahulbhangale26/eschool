@@ -31,7 +31,7 @@ class CDemostrationPlansManager extends CFactory {
     
     public function handleViewDemostrationPlans() {
         
-        if( ( CRole::TEACHER == $this->objUser->getRole() && CDesignations::PRINCIPAL == $this->objUser->getTeacher()->designation_id ) || CRole::ADMIN == $this->objUser->getRole() ) {
+        if( ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) || CRole::ADMIN == $this->objUser->getRole() ) {
             $this->arrobjDemostrationPlans = CDemostrationPlans::getInstance()->fetchAllDemostrationPlans();
         } else {
             $this->arrobjDemostrationPlans = CDemostrationPlans::getInstance()->fetchDemostrationPlansByInstructorId( $this->objUser->getTeacher()->tid );

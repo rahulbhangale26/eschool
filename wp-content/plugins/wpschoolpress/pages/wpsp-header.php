@@ -64,7 +64,7 @@ function ewpsp_customcss(){
         	  		       echo '<ul class="sub-menu">';
         	  		       foreach( $arrsubModules AS $arrstrSubModule ) {
                                 ?>
-                                <li class="<?php echo ( $slug_module == $arrstrSubModule['slug'] || $arrstrSubModule['id'] == $arrstrCurrentModule['parent_module_id'] ? 'active' : '' ); ?>" >
+                                <li class="<?php echo ( $slug_module == $arrstrSubModule['slug'] ? 'active' : '' ); ?>" >
                                     <a href="<?php echo site_url( '/wp-admin/admin.php?page=' . $arrstrSubModule['slug'] ); ?>"><?php echo $arrstrSubModule['title']; ?></a>
                                 </li>
                                 <?php 

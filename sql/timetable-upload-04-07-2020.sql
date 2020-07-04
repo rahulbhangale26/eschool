@@ -1,0 +1,1 @@
+INSERT INTO `iti_wpsp_file_types` (`id`, `name`, `description`) VALUES (NULL, 'Timetable', 'This file shows the time table.');

@@ -159,8 +159,8 @@ class CModules extends CModel {
     const TIME_TABLE =  [
         'id'                => 14,
         'title'             => 'TimeTable',
-        'slug'              => 'sch-underconstruction',
-        'icon_class'        => '',
+        'slug'              => 'sch-time-table',
+        'icon_class'        => 'dashicons dashicons-calendar-alt',
         'parent_module_id'  => 12,
         'has_sub_modules'   => 0,
     ];
@@ -439,7 +439,8 @@ class CModules extends CModel {
             'sch-trainee_record'        => self::TRAINEE_RECORD,
             'sch-trainee_attendance'    => self::TRAINEE_ATTENDANCE,
             'sch-trainee_attendance_monthly'    => self::TRAINEE_ATTENDANCE_MONTHLY,
-            'sch-syllabus'                      => self::SYLLABUS
+            'sch-syllabus'                      => self::SYLLABUS,
+            'sch-time-table'                    => self::TIME_TABLE
         ];
     
     }
@@ -615,6 +616,7 @@ class CModules extends CModel {
         $arrmixModule = [
             self::DASHBOARD['id']           => self::DASHBOARD,
             self::SYLLABUS['id']            => self::SYLLABUS,
+            self::TIME_TABLE['id']          => self::TIME_TABLE,
             self::EVENTS['id']              => self::EVENTS,
             self::PARENTS['id']             => self::PARENTS,
         ];

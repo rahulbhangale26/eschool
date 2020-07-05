@@ -2977,7 +2977,15 @@ td.drop.droppable {
     display: inline-block;
 }
 
+.pull-right {
+	float: right;
+	
+}
 
+.horizontal-center {
+	
+	margin: 0 auto;
+}
  {
 overflow-x: auto;
 }

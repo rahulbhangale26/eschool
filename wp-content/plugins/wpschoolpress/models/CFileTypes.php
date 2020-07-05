@@ -7,6 +7,7 @@ class CFileTypes extends CModel {
     const TIMETABLE             = 2;
     const LESSON_PLAN           = 3;
     const DEMONSTRATION_PLAN    = 4;
+    const JOB_DIAGRAM           = 5;
     
     public function __construct() {
         parent::__construct();

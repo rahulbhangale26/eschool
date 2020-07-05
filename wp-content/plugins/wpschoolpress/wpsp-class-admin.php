@@ -153,22 +153,28 @@ function wpsp_admin_menu() {
 		
 		/** MVC Strarted **/
 
-		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trades', 'edit_posts', 'sch-demostration_plan', array(
-		    $this,
-		    'wpsp_callback'
-		));	
-		
-		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trades', 'edit_posts', 'sch-lesson_plan', array(
-		    $this,
-		    'wpsp_callback'
-		));	
-		
-		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trades', 'edit_posts', 'sch-time-table', array(
+
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Jobs', 'edit_posts', 'sch-jobs', array(
 		    $this,
 		    'wpsp_callback'
 		));
 		
-		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trades', 'edit_posts', 'sch-syllabus', array(
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Demonstration Plans', 'edit_posts', 'sch-demostration_plan', array(
+		    $this,
+		    'wpsp_callback'
+		));	
+		
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Lesson Plans', 'edit_posts', 'sch-lesson_plan', array(
+		    $this,
+		    'wpsp_callback'
+		));	
+		
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Time Tables', 'edit_posts', 'sch-time-table', array(
+		    $this,
+		    'wpsp_callback'
+		));
+		
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Syllabus', 'edit_posts', 'sch-syllabus', array(
 		    $this,
 		    'wpsp_callback'
 		));
@@ -178,7 +184,7 @@ function wpsp_admin_menu() {
 		    'wpsp_callback'
 		));
 		
-		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Trades', 'edit_posts', 'sch-meetingroom', array(
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Meeting Room', 'edit_posts', 'sch-meetingroom', array(
 		    $this,
 		    'wpsp_callback'
 		));

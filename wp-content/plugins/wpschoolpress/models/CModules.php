@@ -198,13 +198,16 @@ class CModules extends CModel {
         'has_sub_modules'   => 0,
     ];
     
-    const JOB_EVALUATION  = [
+    const JOBS  = [
         'id'                => 18,
-        'title'             => 'Job Evaluation Report',
-        'slug'              => 'sch-underconstruction',
+        'title'             => 'Jobs',
+        'slug'              => 'sch-jobs',
         'icon_class'        => '',
         'parent_module_id'  => 12,
         'has_sub_modules'   => 0,
+        'create_new'        => 'view_add_job_form',
+        'create_new_title'  => 'Add Job',
+        'hide_from'         => [ CDesignations::OTHER ]
     ];
     
     const SKILL_CHART  = [
@@ -448,7 +451,8 @@ class CModules extends CModel {
             'sch-syllabus'                      => self::SYLLABUS,
             'sch-time-table'                    => self::TIME_TABLE,
             'sch-lesson_plan'                   => self::LESSON_PLAN,
-            'sch-demostration_plan'             => self::DEMONSTRATION_PLAN
+            'sch-demostration_plan'             => self::DEMONSTRATION_PLAN,
+            'sch-jobs'                          => self::JOBS
         ];
     
     }
@@ -507,7 +511,7 @@ class CModules extends CModel {
                 $arrmixModule[self::LESSON_PLAN['id']]                  = self::LESSON_PLAN;
                 $arrmixModule[self::DEMONSTRATION_PLAN['id']]           = self::DEMONSTRATION_PLAN;
                 $arrmixModule[self::INSTRUCTOR_DAILY_DIARY['id']]       = self::INSTRUCTOR_DAILY_DIARY;
-                $arrmixModule[self::JOB_EVALUATION['id']]               = self::JOB_EVALUATION;
+                $arrmixModule[self::JOBS['id']]                         = self::JOBS;
                 $arrmixModule[self::SKILL_CHART['id']]                  = self::SKILL_CHART;
                 $arrmixModule[self::PROGRESS_CHART['id']]               = self::PROGRESS_CHART;
                 $arrmixModule[self::QUESTION_BANK['id']]                = self::QUESTION_BANK;
@@ -549,7 +553,7 @@ class CModules extends CModel {
                 $arrmixModule[self::LESSON_PLAN['id']]                  = self::LESSON_PLAN;
                 $arrmixModule[self::DEMONSTRATION_PLAN['id']]           = self::DEMONSTRATION_PLAN;
                 $arrmixModule[self::INSTRUCTOR_DAILY_DIARY['id']]       = self::INSTRUCTOR_DAILY_DIARY;
-                $arrmixModule[self::JOB_EVALUATION['id']]               = self::JOB_EVALUATION;
+                $arrmixModule[self::JOBS['id']]                         = self::JOBS;
                 $arrmixModule[self::SKILL_CHART['id']]                  = self::SKILL_CHART;
                 $arrmixModule[self::PROGRESS_CHART['id']]               = self::PROGRESS_CHART;
                 $arrmixModule[self::QUESTION_BANK['id']]                = self::QUESTION_BANK;

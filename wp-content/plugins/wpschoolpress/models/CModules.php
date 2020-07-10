@@ -231,10 +231,13 @@ class CModules extends CModel {
     const QUESTION_BANK  = [
         'id'                => 21,
         'title'             => 'Question Bank',
-        'slug'              => 'sch-underconstruction',
+        'slug'              => 'sch-question_bank',
         'icon_class'        => '',
         'parent_module_id'  => 12,
         'has_sub_modules'   => 0,
+        'create_new'        => 'add_question_bank',
+        'create_new_title'  => 'Add Question Bank',
+        'hide_from'         => []
     ];
     
     const HANDTOOL_DISTRIBUTION  = [
@@ -452,7 +455,8 @@ class CModules extends CModel {
             'sch-time-table'                    => self::TIME_TABLE,
             'sch-lesson_plan'                   => self::LESSON_PLAN,
             'sch-demostration_plan'             => self::DEMONSTRATION_PLAN,
-            'sch-jobs'                          => self::JOBS
+            'sch-jobs'                          => self::JOBS,
+            'sch-question_bank'                 => self::QUESTION_BANK
         ];
     
     }

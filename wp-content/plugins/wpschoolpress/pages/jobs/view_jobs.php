@@ -25,7 +25,7 @@
 							<td><?php echo $job->id; ?></td>
 							<td><?php echo '<strong>' . $job->title . '</strong><br>' . $instructors[$job->instructor_id]->first_name . ' ' . $instructors[$job->instructor_id]->last_name; ?></td>
 							<td><?php echo $job->description; ?></td>
-							<td><?php echo date( 'Y-m-d', strtotime( $job->start_date ) ) . ' - ' . date( 'Y-m-d', strtotime( $job->end_date ) ); ?><br><?php echo 'Time Given: ' . $job->time_given; ?></td>
+							<td><?php echo date( 'Y-m-d', strtotime( $job->start_date ) ) . ' - ' . date( 'Y-m-d', strtotime( $job->end_date ) ); ?><br><?php echo 'Time Given: ' . $job->time_given; ?> Hours</td>
 							<td><?php echo $job->tolerance; ?></td>
 							<td><?php echo $job->material; ?></td>
 							<td>

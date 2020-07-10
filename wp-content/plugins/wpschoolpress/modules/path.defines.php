@@ -14,4 +14,5 @@ $arrstrModules = [
     'sch-lesson_plan'                   => WPSP_PLUGIN_PATH  . 'modules/lesson_plan/CLessonPlanManager.php',
     'sch-demostration_plan'             => WPSP_PLUGIN_PATH  . 'modules/demostration_plans/CDemostrationPlansManager.php',
     'sch-jobs'                          => WPSP_PLUGIN_PATH  . 'modules/jobs/CJobsManager.php',
+    'sch-question_bank'                 => WPSP_PLUGIN_PATH . 'modules/question_banks/CQuestionBanksManager.php'
 ];

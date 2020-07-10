@@ -28,6 +28,10 @@ class CJobsManager extends CFactory {
                 $this->handleViewAddJobForm();
                 break;
                 
+            case 'edit_job':
+                $this->handleEditJob();
+                break;
+                
             case 'view_evaluation_sheet':
                 $this->handleViewEvaluationSheet();
                 break;
@@ -138,11 +142,118 @@ class CJobsManager extends CFactory {
                         }
                     }
                     
+                    $this->addSuccessMessage( 'Job added successfully.' );
             }
             
         }
         
         $this->displayViewAddJobForm();
+    }
+    
+    public function handleEditJob() {
+        
+        $arrmixRequestData = $this->getRequestData( [] );
+        
+        if( true == isset( $arrmixRequestData['edit_job'] ) ) {
+            $boolIsFileUpdate = false;
+            
+            switch( NULL ) {
+                default:
+                    if( false == isset( $arrmixRequestData['title'] ) || "" == $arrmixRequestData['title'] ) {
+                        $this->addErrorMessage( 'Job Title is required.' );
+                        break;
+                    }
+                    
+                    if( false == isset( $arrmixRequestData['time_given'] ) || "" == $arrmixRequestData['time_given'] ) {
+                        $this->addErrorMessage( 'Please provide the time given.' );
+                        break;
+                    }
+                    
+                    if( false == isset( $arrmixRequestData['start_date'] ) || "" == $arrmixRequestData['start_date'] ) {
+                        $this->addErrorMessage( 'Please provide the start date.' );
+                        break;
+                    }
+                    
+                    if( false == isset( $arrmixRequestData['end_date'] ) || "" == $arrmixRequestData['end_date'] ) {
+                        $this->addErrorMessage( 'Please provide the end date.' );
+                        break;
+                    }
+                    
+                    
+                    if( "" != $_FILES['job_diagram_file']['name'] ) {
+                        $strSubPath     = '/uploads/files/' . CFileTypes::JOB_DIAGRAM . '/';
+                        $strFilePath    = WP_CONTENT_DIR . $strSubPath;
+                        $objUploader    =   new Uploader();
+                        $objUploader->setExtensions( [ 'jpg', 'png', 'jpeg' ] );
+                        $objUploader->setMaxSize( 2 ); // size in mb.
+                        $objUploader->setDir( $strFilePath );
+                        
+                        if( $objUploader->uploadFile( 'job_diagram_file' ) )  {
+                            $strFileName  =   $objUploader->getUploadName();
+                        }
+                        else {
+                            $this->addErrorMessage( $objUploader->getMessage() );
+                            break;
+                        }
+                        
+                        $arrmixFile = [
+                            'file_type_id'      => CFileTypes::JOB_DIAGRAM,
+                            'file_name'         => $strFileName,
+                            'file_path'         => $strSubPath,
+                            'is_active'         => true,
+                            'uploaded_by'       => $this->objUser->getUserId(),
+                            'uploaded_on'       => date('Y-m-d H:i:s' )
+                        ];
+                        
+                        if( false == ( $intFileId = CFiles::getInstance()->insert( $arrmixFile ) ) ) {
+                            $this->addErrorMessage( 'Unable to insert into files. Please contact administrator.' );
+                            break;
+                        }
+                        
+                        $boolIsFileUpdated = true;
+                    }
+                    
+                    $arrmixJob = [
+                        'instructor_id'     => $this->objUser->getTeacher()->tid,
+                        'title'             => $arrmixRequestData['title'],
+                        'description'       => $arrmixRequestData['description'],
+                        'start_date'        => date( 'Y-m-d H:i:s', strtotime( $arrmixRequestData['start_date'] ) ),
+                        'end_date'          => date( 'Y-m-d H:i:s', strtotime( $arrmixRequestData['end_date'] ) ),
+                        'time_given'        => $arrmixRequestData['time_given'],
+                        'tolerance'         => $arrmixRequestData['tolerance'],
+                        'material'          => $arrmixRequestData['material']
+                    ];
+                    
+                    if( true == $boolIsFileUpdated ) {
+                        $arrmixJob['file_id']   = $intFileId;
+                    }
+                                          
+                    if( false === CJobs::getInstance()->update( $arrmixJob, [ 'id' => $this->getRequestData( [ 'job_id' ] ) ] ) ) {
+                        $this->addErrorMessage( 'Unable to update Job. Unexpected error occured. Please contact administrator.' );
+                        break;
+                    }
+                    
+                    foreach( $arrmixRequestData['skill_id'] AS $intIndex => $intJobOpSkillId  ) {
+                        $arrmixSkill = [
+                            'name'          => ( true == isset( $arrmixRequestData['skill_name'] ) && true == isset(  $arrmixRequestData['skill_name'][$intIndex] ) ) ? $arrmixRequestData['skill_name'][$intIndex] : '',
+                            'marks'         => ( true == isset( $arrmixRequestData['marks'] ) && true == isset(  $arrmixRequestData['marks'][$intIndex] ) ) ? $arrmixRequestData['marks'][$intIndex] : 0
+                        ];
+                        
+                        if( false === CJobOperationalSkills::getInstance()->update( $arrmixSkill, [ 'id' => $intJobOpSkillId, 'job_id' => $this->getRequestData( [ 'job_id' ] ) ] ) ) {
+                            $this->addErrorMessage( 'Unable to insert Job Operation Skills. Unexpected error occured. Please contact administrator.' );
+                            break;
+                        }
+                    }
+
+                    $this->addSuccessMessage( 'Job updated successfully.' );
+                    
+            }
+        }
+        
+        $this->objJob                       = CJobs::getInstance()->fetchJobById( $this->getRequestData( [ 'job_id'] ) );
+        $this->arrobjJobOperationalSkills   = CJobOperationalSkills::getInstance()->fetchJobOperationalSkillsBYJobId( $this->getRequestData( [ 'job_id' ] ) );
+        
+        $this->displayEditJob();
     }
     
     public function handleViewEvaluationSheet() {
@@ -167,6 +278,14 @@ class CJobsManager extends CFactory {
     }
     
     public function displayViewAddJobForm() {
+        
+        $this->renderPage( 'jobs/view_add_job_form.php' );
+    }
+    
+    public function displayEditJob() {
+        
+        $this->arrmixTemplateParams['job']          = $this->objJob;
+        $this->arrmixTemplateParams['job_ops']      = $this->arrobjJobOperationalSkills;
         
         $this->renderPage( 'jobs/view_add_job_form.php' );
     }

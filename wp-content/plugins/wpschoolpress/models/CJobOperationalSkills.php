@@ -26,6 +26,10 @@ class CJobOperationalSkills extends CModel {
         return false;
     }
     
+    public function update( $arrstrUpdatedFields, $arrstrWhereFields ) {
+        return $this->objDatabase->update( $this->strTableName, $arrstrUpdatedFields, $arrstrWhereFields );
+    }
+    
     public function delete( $arrmixTraineeRecords ) {
         return $this->objDatabase->delete( $this->strTableName, $arrmixTraineeRecords );
     }

@@ -232,7 +232,7 @@ class CModules extends CModel {
         'id'                => 21,
         'title'             => 'Question Bank',
         'slug'              => 'sch-question_bank',
-        'icon_class'        => '',
+        'icon_class'        => 'dashicons dashicons-format-aside',
         'parent_module_id'  => 12,
         'has_sub_modules'   => 0,
         'create_new'        => 'add_question_bank',

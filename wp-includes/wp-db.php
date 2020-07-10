@@ -2164,6 +2164,7 @@ class wpdb {
 		$sql = "UPDATE `$table` SET $fields WHERE $conditions";
 
 		$this->check_current_query = false;
+
 		return $this->query( $this->prepare( $sql, $values ) );
 	}
 

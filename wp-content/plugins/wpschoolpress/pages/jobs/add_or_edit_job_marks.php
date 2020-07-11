@@ -1,5 +1,11 @@
 <div class="wpsp-card">
 	<div class="wpsp-card-head" id="message">
+		
+	</div>
+	
+	<div class="wpsp-card-head">
+		<h3> Add Student Marks </h3>
+		<h4>Job Title: <?php echo $job-> title; ?> | Job No: <?php echo $job->id; ?></h4>
 	</div>
 	<div class="wpsp-card-body" id="add_job_marks" data-JobId="<?php echo $job->id; ?>" >
 		<div class="wpsp-row">

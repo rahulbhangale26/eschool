@@ -32,4 +32,19 @@ class CJobMarks extends CModel {
         return $this->objDatabase->get_results( ' SELECT * FROM ' . $this->strTableName . ' WHERE student_id = ' . ( int ) $intStudentId . ' AND job_id = ' . ( int ) $intJobId );
     }
     
+    public function fetchJobMarksByStudentIdsByJobId( $arrintStudentIds, $intJobId ) {
+        
+        if( 0 >= count( $arrintStudentIds ) ) return [];
+        
+        $strSql = 'SELECT
+                        *
+                    FROM
+                        ' . $this->strTableName . '
+                    WHERE
+                        student_id IN ( ' . implode( ',', $arrintStudentIds ) . ' )
+                        AND job_id = ' . ( int ) $intJobId;
+        
+        return $this->objDatabase->get_results( $strSql );
+    }
+    
 }

@@ -8,6 +8,7 @@
 			<div class="wpsp-col-md-2 wpsp-col-md-12">
 				<label for="batch" class="wpsp-labelMain"><?php echo $skill->name?></label>
 				<input type="number" class="wpsp-form-control" name="ops_skill_<?php echo $skill->id?>" value="<?php echo ( isset( $skill_job_marks[$skill->id] ) ? $skill_job_marks[$skill->id]->obtained_marks : 0 );?>" />
+				<span style="font-size: 10px; color: #00bdda; font-weight: bolder;">Out of <?php echo $skill->marks; ?></span>
 			</div>
 		<?php } ?>
 	<?php } ?>
@@ -15,10 +16,15 @@
 	<div class="wpsp-col-md-2 wpsp-col-md-12">
 		<label for="batch" class="wpsp-labelMain">Grade Marks</label>
 		<input type="number" class="wpsp-form-control" name="grade" value="<?php echo ( true == is_object( $grade_job_marks ) ? $grade_job_marks->obtained_marks : 0 ); ?>" />
+		<span style="font-size: 10px; color: #00bdda; font-weight: bolder;">Out of 20</span>
 	</div>
 	<div class="wpsp-col-md-2 wpsp-col-md-12">
 		<label for="batch" class="wpsp-labelMain">Deduction For Extra Time</label>
 		<input type="number" class="wpsp-form-control" name="extra_time_deduction" value="<?php echo ( true == is_object( $deduction_job_marks ) ? $deduction_job_marks->obtained_marks : 0 ); ?>" />
+	</div>
+	<div class="wpsp-col-md-2 wpsp-col-md-12">
+		<label for="batch" class="wpsp-labelMain">Remark</label>
+		<input type="text" class="wpsp-form-control" name="remark" value="<?php echo ( true == is_object( $remark_job_marks ) ? $remark_job_marks->remark : '' ); ?>" />
 	</div>
 </div>
 <div class="wpsp-row pull-right">

@@ -7,6 +7,7 @@ class CJobEvaluationTypes extends CModel {
     const SKILLS                    = 1;
     const GRADES                    = 2;
     const EXTRA_TIME_DEDUCTION      = 3;
+    const REMARK                    = 4;
     
     public function __construct() {
         parent::__construct();

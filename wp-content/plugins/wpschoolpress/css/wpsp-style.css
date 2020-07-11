@@ -2986,11 +2986,17 @@ td.drop.droppable {
 	
 	margin: 0 auto;
 }
- {
+.x-scroll {
 overflow-x: auto;
 }
 
 .ui-state-active {
     background-color: #00bdda;
     border-color: #00BDD8;
+}
+
+.button-active {
+    color: #398439;
+    border-color: #398439;
+    background-color: transparent;
 }

@@ -9,9 +9,12 @@ class CJobsManager extends CFactory {
     protected $arrobjSkillJobMarks;
     protected $objGradeJobMarks;
     protected $objDeductionJobMarks;
+    protected $objRemarkJobMarks;
     
     protected $objJob;
     protected $objStudent;
+    
+    protected $arrobjJobMarks;
     
     protected $intTotalMarks;
     
@@ -57,6 +60,14 @@ class CJobsManager extends CFactory {
             case 'view_evaluation_sheet':
                 $this->handleViewEvaluationSheet();
                 break;
+                
+            case 'view_evaluation_sheet_second':
+                $this->handleViewEvaluationSheetSecond();
+                break;
+                
+            case 'view_evaluation_sheet_second_details':
+                $this->handleViewEvaluationSheetSecondDetails();
+                break;                
         }
     }
     
@@ -315,6 +326,8 @@ class CJobsManager extends CFactory {
                 $this->objGradeJobMarks = $objJobMark;
             } else if( $objJobMark->job_evaluation_type_id == CJobEvaluationTypes::EXTRA_TIME_DEDUCTION ) {
                 $this->objDeductionJobMarks = $objJobMark;
+            } else if( $objJobMark->job_evaluation_type_id == CJobEvaluationTypes::REMARK ) {
+                $this->objRemarkJobMarks = $objJobMark;
             }
         }
         
@@ -385,6 +398,19 @@ class CJobsManager extends CFactory {
                 exit;
             }
             
+            $arrmixJobMarks = [
+                'student_id'                => ( int ) sanitize_text_field( $arrmixRequestData['student_id'] ),
+                'job_id'                    => ( int ) sanitize_text_field( $arrmixRequestData[ 'job_id' ] ),
+                'instructor_id'             => ( int ) $this->objUser->getTeacher()->tid,
+                'job_evaluation_type_id'    => CJobEvaluationTypes::REMARK,
+                'remark'                    => sanitize_text_field( $arrmixRequestData['remark'] )
+            ];
+            
+            if( false == CJobMarks::getInstance()->insert( $arrmixJobMarks ) ) {
+                echo json_encode( [ 'status' => false, message => 'Unable to save remark.' ] );
+                exit;
+            }
+                        
             echo json_encode( [ 'status' => true, message => 'Marks saved successfully.' ] );
         }
     }
@@ -400,6 +426,44 @@ class CJobsManager extends CFactory {
         }
         
         $this->displayViewEvaluationSheet();
+    }
+    
+    public function handleViewEvaluationSheetSecond() {
+        
+        if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
+            $this->arrobjTrades = CTrade::getInstance()->fetchAllTrades();
+        } else {
+            $this->arrobjTrades = CTrade::getInstance()->fetchTradesByInstructorId( $this->objUser->getTeacher()->tid );
+        }
+        
+        $this->objJob                       = CJobs::getInstance()->fetchJobById( $this->getRequestData( [ 'job_id'] ) );
+        
+        $this->displayViewEvaluationSheetSecond();
+    }
+    
+    public function handleViewEvaluationSheetSecondDetails() {
+        
+        $this->objJob                       = CJobs::getInstance()->fetchJobById( $this->getRequestData( ['data', 'job_id'] ) );
+        $this->arrobjJobOperationalSkills   = CJobOperationalSkills::getInstance()->fetchJobOperationalSkillsBYJobId( $this->objJob->id );
+        $this->arrobjStudents               = $this->rekeyObjects( 'sid', CStudents::getInstance()->fetchStudentsByUnitId( $this->getRequestData( ['data', 'unit_id' ] ) ) );
+        $arrobjJobMarks                     = CJobMarks::getInstance()->fetchJobMarksByStudentIdsByJobId( array_keys( $this->arrobjStudents ), $this->getRequestData( [ 'data', 'job_id' ] ) );
+
+        foreach( $this->arrobjStudents AS $objStudent ) {
+            foreach( $arrobjJobMarks AS $objJobMarks ) {
+               
+                if( $objJobMarks->student_id == $objStudent->sid && $objJobMarks->job_evaluation_type_id == CJobEvaluationTypes::SKILLS ) {
+                    $objStudent->skill_marks[$objJobMarks->job_operational_skill_id] = $objJobMarks;
+                } else if( $objJobMarks->student_id == $objStudent->sid && $objJobMarks->job_evaluation_type_id == CJobEvaluationTypes::GRADES ) {
+                    $objStudent->grade_marks = $objJobMarks;
+                } else if( $objJobMarks->student_id == $objStudent->sid && $objJobMarks->job_evaluation_type_id == CJobEvaluationTypes::EXTRA_TIME_DEDUCTION ) {
+                    $objStudent->deduction_marks = $objJobMarks;
+                } else if( $objJobMarks->student_id == $objStudent->sid && $objJobMarks->job_evaluation_type_id == CJobEvaluationTypes::REMARK ) {
+                    $objStudent->remark = $objJobMarks;
+                }
+            }
+        }
+        
+        $this->displayViewEvaluationSheetSecondDetails();
     }
     
     public function displayViewJobs() {
@@ -446,6 +510,7 @@ class CJobsManager extends CFactory {
         $this->arrmixTemplateParams['skill_job_marks']      = $this->arrobjSkillJobMarks;
         $this->arrmixTemplateParams['grade_job_marks']      = $this->objGradeJobMarks;
         $this->arrmixTemplateParams['deduction_job_marks']  = $this->objDeductionJobMarks;
+        $this->arrmixTemplateParams['remark_job_marks']     = $this->objRemarkJobMarks;
 
         $this->renderPage( 'jobs/student_job_marks_form.php' );
     }
@@ -457,6 +522,30 @@ class CJobsManager extends CFactory {
         $this->arrmixTemplateParams['total_marks']  = $this->intTotalMarks;
         
         $this->renderPage( 'jobs/view_evaluation_sheet.php' );
+    }
+    
+    public function displayViewEvaluationSheetSecond() {
+        
+        $this->arrmixTemplateParams['batches']      = CBatches::getInstance()->fetchAllBatches();
+        $this->arrmixTemplateParams['trades']       = $this->arrobjTrades;
+        $this->arrmixTemplateParams['job']          = $this->objJob;
+        
+        $this->renderPage( 'jobs/view_evaluation_sheet_second.php' );
+    }
+    
+    public function displayViewEvaluationSheetSecondDetails() {
+        global $wpsp_settings_data;
+        
+        $this->arrmixTemplateParams['batch']        = CBatches::getInstance()->fetchBatchById( $this->getRequestData( [ 'data', 'batch_id' ] ) );
+        $this->arrmixTemplateParams['trade']        = CTrade::getInstance()->fetchTradeById( $this->getRequestData( [ 'data', 'trade_id' ] ) );
+        $this->arrmixTemplateParams['unit']         = CUnits::getInstance()->fetchUnitById( $this->getRequestData( ['data', 'unit_id'] ) );
+        $this->arrmixTemplateParams['iti_name']     = isset( $wpsp_settings_data['sch_name'] ) && !empty( $wpsp_settings_data['sch_name'] ) ? $wpsp_settings_data['sch_name'] : __( 'ITIMS','WPSchoolPress' );
+        $this->arrmixTemplateParams['job']          = $this->objJob;
+        $this->arrmixTemplateParams['instructors']  = $this->rekeyObjects( 'tid', CTeachers::getInstance()->fetchAllTeachers() );
+        $this->arrmixTemplateParams['job_ops_skills']   = $this->arrobjJobOperationalSkills;
+        $this->arrmixTemplateParams['students']     = $this->arrobjStudents;
+        
+        $this->renderPage( 'jobs/view_evaluation_sheet_second_details.php' );
     }
 }
 

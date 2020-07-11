@@ -29,8 +29,10 @@
 							<td><?php echo $job->tolerance; ?></td>
 							<td><?php echo $job->material; ?></td>
 							<td>
-								<a href="<?php echo site_url( '/wp-admin/admin.php?page=sch-jobs&page_action=edit_job&job_id=' . $job->id ); ?>"><span class="dashicons dashicons-edit" style="color: orange;"></span></a>
+								<a title="Edit Job" href="<?php echo site_url( '/wp-admin/admin.php?page=sch-jobs&page_action=edit_job&job_id=' . $job->id ); ?>"><span class="dashicons dashicons-edit" style="color: orange;"></span></a>
+								<a title="Submit Student Job Details" href="<?php echo site_url( '/wp-admin/admin.php?page=sch-jobs&page_action=add_or_edit_job_marks&job_id=' . $job->id ); ?>"><span class="dashicons dashicons-plus"></span></a>
 								<a href="<?php echo site_url( '/wp-admin/admin.php?page=sch-jobs&page_action=view_evaluation_sheet&job_id=' . $job->id ); ?>"><span class="dashicons dashicons-media-spreadsheet" style="color: blue;"></span></a>
+								
 								<!-- <span class="dashicons dashicons-trash" style="color: red;"></span> -->
 							</td>
 						</tr>

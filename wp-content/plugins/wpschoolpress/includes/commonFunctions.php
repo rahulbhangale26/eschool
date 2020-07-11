@@ -15,7 +15,6 @@ function displayErrorMsg( $arrstrErrorMessage ) {
     if( true == is_array( $arrstrErrorMessage ) ) { echo '<div class="error_msg_div"><span class="error_msg_span">' . implode(', ', $arrstrErrorMessage ) . '</span></div>'; }
 }
 
-
 class CValidations {
     
     function valObj( $objObject, $strClassName ) {

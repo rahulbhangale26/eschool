@@ -68,7 +68,8 @@ class CModules extends CModel {
         'parent_module_id'  => 0,
         'has_sub_modules'   => false,
         'create_new'        => 'add_record',
-        'create_new_title' => 'Add Record'
+        'create_new_title' => 'Add Record',
+        'hide_from'         => [ CDesignations::OTHER ]
     ];
 
     /* 

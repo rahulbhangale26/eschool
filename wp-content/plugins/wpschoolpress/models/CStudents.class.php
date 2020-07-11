@@ -19,6 +19,9 @@ class CStudents extends CModel {
         return  self::$_INSTANCE = new self();
     }
     
+    public function fetchStudentById( $intStudentId ) {
+        return array_pop( $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName . ' WHERE sid = ' . ( int ) $intStudentId ) );
+    }
     
     public function fetchAllStudents() {
         return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName );

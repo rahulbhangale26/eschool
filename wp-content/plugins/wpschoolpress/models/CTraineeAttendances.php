@@ -169,6 +169,56 @@ class CTraineeAttendances extends CModel {
         return $this->objDatabase->get_results( $strSql );
     }
     
+    public function fetchTotalSummaryAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId, $strAttendanceDate, $intMonth, $intYear ) {
+        if( $intMonth < 8 ) {
+            $intStartYear = $intYear - 1;
+        } else {
+            $intStartYear = $intYear;
+        }
+        
+        $strSql = 'SELECT
+                        DAY( ta.attendance_date ),
+                        ta.student_id,
+                        SUM( CASE
+                                    WHEN ta.attendance_type_id = 1 THEN 1 ELSE 0
+                                END
+                        ) AS present_count,
+            
+                        SUM( CASE
+                                    WHEN ta.attendance_type_id = 2 THEN 1 ELSE 0
+                                END
+                        ) AS absent_count,
+            
+                        SUM( CASE
+                                    WHEN ta.attendance_type_id = 3 THEN 1 ELSE 0
+                                END
+                        ) AS sl_count,
+            
+                        SUM( CASE
+                                    WHEN ta.attendance_type_id = 4 THEN 1 ELSE 0
+                                END
+                        ) AS cl_count,
+                        SUM( CASE
+                                    WHEN ta.attendance_type_id = 5 THEN 1 ELSE 0
+                                END
+                        ) AS spl_count,
+                        COUNT( ta.id ) AS total_working_day_count
+                    FROM
+                        ' . $this->strTableName . ' ta
+                        JOIN  ' . CStudents::getInstance()->strTableName . ' s ON s.sid = ta.student_id
+                        JOIN ' . CAttendanceTypes::getInstance()->strTableName . ' ats ON ats.id = ta.attendance_type_id
+                    WHERE
+                        s.batch_id = ' . ( int ) $intBatchId . '
+                        AND s.trade_id = ' . ( int ) $intTradeId . '
+                        AND s.current_unit_id = ' . ( int ) $intUnitId . '
+                        AND CAST( ta.attendance_date AS DATE ) BETWEEN \'' . $intStartYear . '-08-01\' AND \'' . $intYear . '-07-31\'
+                        AND CAST( ta.attendance_date AS DATE ) <= \'' . $intYear . '-' . $intMonth . '-31\'
+                    GROUP BY
+                        ta.student_id';
+        
+        return $this->objDatabase->get_results( $strSql );
+    }
+    
     public function fetchDailyAttendanceStatByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId, $strAttendanceDate, $intMonth, $intYear ) {
         $strSql = 'SELECT
                         DAY( ta.attendance_date ) AS attendance_date,

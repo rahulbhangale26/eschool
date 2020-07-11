@@ -71,7 +71,7 @@ class CTraineeAttendanceMonthlyManager extends CFactory {
             $intLastMonth = 12;
         }
         
-        $this->arrobjLastMonthTraineeAttendancesSummary  = CTraineeAttendances::getInstance()->fetchSummaryAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId,  $strAttendanceDate, $intLastMonth, $intYear );
+        $this->arrobjLastMonthTraineeAttendancesSummary  = CTraineeAttendances::getInstance()->fetchTotalSummaryAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId,  $strAttendanceDate, $intMonth, $intYear );
                 
         $this->displayViewMusterReport();
     }

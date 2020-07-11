@@ -100,7 +100,7 @@ border: none !important;
             <td class="s1" colspan="7">Batch: <?php echo $batch->name ?></td>
          </tr>
          <tr style='height:19px;'>
-            <td class="s1 border-left" colspan="8">Last Month Details</td>
+            <td class="s1 border-left" colspan="8">Total Year Summary</td>
             <td class="s1 " style="text-align: center" colspan="32">Month: <?php echo ( new DateTime )->createFromFormat('!m', $month )->format( 'F' ); ?> <?php echo $year; ?></td>
             <td class="s1" colspan="7">Current Month Details </td>
          </tr>

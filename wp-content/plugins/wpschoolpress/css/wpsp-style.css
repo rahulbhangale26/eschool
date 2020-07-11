@@ -2989,3 +2989,8 @@ td.drop.droppable {
  {
 overflow-x: auto;
 }
+
+.ui-state-active {
+    background-color: #00bdda;
+    border-color: #00BDD8;
+}

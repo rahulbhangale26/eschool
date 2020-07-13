@@ -22,6 +22,10 @@ class CQuestionBanksManager extends CFactory {
             case 'add_question_bank':
                 $this->handleAddQuestionBank();
                 break;
+                
+            case 'delete_question_bank':
+                $this->handleDeleteQuestionBank();
+                break;
         }
     }
     
@@ -56,7 +60,7 @@ class CQuestionBanksManager extends CFactory {
                     $strSubPath     = '/uploads/files/' . CFileTypes::QUESTION_BANKS . '/';
                     $strFilePath    = WP_CONTENT_DIR . $strSubPath;
                     $objUploader    =   new Uploader();
-                    $objUploader->setExtensions( [ 'pdf' ] );
+                    $objUploader->setExtensions( [ 'pdf', 'jpeg', 'png', 'jpg' ] );
                     $objUploader->setMaxSize( 2 ); // size in mb.
                     $objUploader->setDir( $strFilePath );
                     
@@ -99,6 +103,20 @@ class CQuestionBanksManager extends CFactory {
         }
         
         $this->displayAddQuestionBank();
+    }
+    
+    public function handleDeleteQuestionBank() {
+        if( true == is_null( $this->getRequestData( [ 'data', 'question_bank_id' ] ) ) ) {
+            echo 'error';
+            exit;
+        }
+        
+        if( false == CQuestionBanks::getInstance()->delete( [ 'id' => ( int ) $this->getRequestData( [ 'data', 'question_bank_id' ] ) ] ) ) {
+            echo 'error';
+            exit;
+        }
+        
+        $this->handleViewQuestionBanks();
     }
     
     public function displayViewQuestionBanks() {

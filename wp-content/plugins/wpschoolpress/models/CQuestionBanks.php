@@ -23,6 +23,10 @@ class CQuestionBanks extends CModel {
         return false;
     }
     
+    public function delete( $arrstrWhere ) {
+        return $this->objDatabase->delete( $this->strTableName, $arrstrWhere );
+    }
+    
     public function fetchAllQuestionBanks() {
         $strSql = 'SELECT
                         qb.*,

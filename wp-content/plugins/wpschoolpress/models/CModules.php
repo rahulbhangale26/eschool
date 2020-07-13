@@ -1,4 +1,4 @@
-<?php
+\<?php
 
 class CModules extends CModel {
 
@@ -193,15 +193,18 @@ class CModules extends CModel {
     const INSTRUCTOR_DAILY_DIARY  = [
         'id'                => 17,
         'title'             => 'Daily Diary',
-        'slug'              => 'sch-underconstruction',
+        'slug'              => 'sch-daily_diary',
         'icon_class'        => '',
         'parent_module_id'  => 12,
         'has_sub_modules'   => 0,
+        'create_new'        => 'add_notes',
+        'create_new_title'  => 'Add Daily Entry',
+        'hide_from'         => []
     ];
     
     const JOBS  = [
         'id'                => 18,
-        'title'             => 'Jobs',
+        'title'             => 'Jobs Evaluation',
         'slug'              => 'sch-jobs',
         'icon_class'        => '',
         'parent_module_id'  => 12,
@@ -457,7 +460,8 @@ class CModules extends CModel {
             'sch-lesson_plan'                   => self::LESSON_PLAN,
             'sch-demostration_plan'             => self::DEMONSTRATION_PLAN,
             'sch-jobs'                          => self::JOBS,
-            'sch-question_bank'                 => self::QUESTION_BANK
+            'sch-question_bank'                 => self::QUESTION_BANK,
+            'sch-daily_diary'                   => self::INSTRUCTOR_DAILY_DIARY,
         ];
     
     }

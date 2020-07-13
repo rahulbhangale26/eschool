@@ -152,7 +152,12 @@ function wpsp_admin_menu() {
 		));
 		
 		/** MVC Strarted **/
-
+		
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Daily Diary', 'edit_posts', 'sch-daily_diary', array(
+		    $this,
+		    'wpsp_callback'
+		));
+		
 		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Question Banks', 'edit_posts', 'sch-question_bank', array(
 		    $this,
 		    'wpsp_callback'

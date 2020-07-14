@@ -18,7 +18,7 @@
 						<div class="wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
 								<label class="wpsp-labelMain">Note Date<span></span></label>
-								<input type="text" class="wpsp-form-control" id="note_date" placeholder="" name="note_date" />
+								<input type="text" class="wpsp-form-control" id="note_date" placeholder="" name="note_date" autocomplete="off" value="<?php echo ( true == isset( $note ) ) ? date( 'Y-m-d', strtotime( $note->created_on ) ) : '';  ?>" />
 							</div>
 						</div>
 					</div>					
@@ -29,7 +29,7 @@
 								<select class="wpsp-form-control" id="note_type_id" name="note_type_id">
 									<option value="">Select Note Type</option>
 									<?php foreach( $note_types AS $note_type ) { ?>
-										<option value="<?php echo $note_type->id; ?>"><?php echo $note_type->name; ?></option>
+										<option value="<?php echo $note_type->id; ?>" <?php echo ( true == isset( $note ) && $note->note_type_id == $note_type->id ) ? 'selected="selected"' : '';  ?>><?php echo $note_type->name; ?></option>
 									<?php } ?>
 								</select>
 							</div>
@@ -39,14 +39,17 @@
 						<div class="wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
 								<label class="wpsp-labelMain">Notes<span></span></label>
-								<textarea class="wpsp-form-control" name="note"></textarea>
+								<textarea class="wpsp-form-control" name="note"><?php echo ( true == isset( $note ) ) ? $note->note : '';  ?></textarea>
 							</div>
 						</div>
 					</div>
 					<div class="wpsp-row">
 						<div class="wpsp-col-md-12 wpsp-col-sm-12 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
-								<input type="submit" name="add_note" value="Add Note" class="wpsp-btn wpsp-btn-success" />
+								<input type="submit" name="add_note" value="<?php echo ( true == isset( $note ) ? 'Update Note' : 'Add Note' )?>" class="wpsp-btn wpsp-btn-success" />
+								<?php if( true == isset( $note ) ) { ?>
+									<input type="hidden" name="note_id" value="<?php echo $note->id?>" />
+								<?php }?>
 							</div>
 						</div>
 					</div>

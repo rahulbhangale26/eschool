@@ -24,12 +24,43 @@ class CNotes extends CModel {
         return false;
     }
     
-    public function fetchAllNotes() {
-        return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName );
+    public function update( $arrmixFieldsToUpdate, $arrstrWhere ) {
+    	return $this->objDatabase->update( $this->strTableName, $arrmixFieldsToUpdate, $arrstrWhere );
     }
     
-    public function fetchNotesByInstructorId( $intInstructorId ) {
-        return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName .' WHERE instructor_id = ' . ( int ) $intInstructorId );
+    public function delete( $arrstrWhere ) {
+    	return $this->objDatabase->delete( $this->strTableName, $arrstrWhere );
+    }
+    
+    public function fetchNoteById( $intNoteId ) {
+    	
+    	$strSql = 'SELECT * FROM ' . $this->strTableName . ' WHERE id = ' . ( int ) $intNoteId;
+
+    	return array_pop( $this->objDatabase->get_results( $strSql ) );
+    }
+    
+    public function fetchNotesByFilter( $arrmixFilter ) {
+    	
+    	$strSql = 'SELECT 
+						* 
+					FROM 
+						' . $this->strTableName . '
+					WHERE
+						created_on BETWEEN \'' . date( 'Y-m-d', strtotime( $arrmixFilter['start_date'] ) ) . ' 00:00:00\' AND \'' . date( 'Y-m-d', strtotime( $arrmixFilter['end_date'] ) ) . ' 23:59:59\'';
+    	    	
+        return $this->objDatabase->get_results( $strSql );
+    }
+    
+    public function fetchNotesByInstructorIdByFilter( $intInstructorId, $arrmixFilter ) {
+    	$strSql = 'SELECT 
+						*
+					FROM 
+						' . $this->strTableName .' 
+					WHERE 
+						instructor_id = ' . ( int ) $intInstructorId . '
+						AND created_on BETWEEN \'' . date( 'Y-m-d', strtotime( $arrmixFilter['start_date'] ) ) . ' 00:00:00\' AND \'' . date( 'Y-m-d', strtotime( $arrmixFilter['end_date'] ) ) . ' 23:59:59\'';
+    	
+    	return $this->objDatabase->get_results( $strSql );
     }
        
 }

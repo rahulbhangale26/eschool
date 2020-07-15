@@ -12,8 +12,8 @@ if( 7 <= ( int ) date( 'm', strtotime( $start_date ) ) ) {
 	$year_start_date = ( date( 'Y', strtotime( $start_date ) ) - 1 ) . '-08-01';
 }
 
-$start_week_no 		= ceil( ( strtotime( $start_date ) - strtotime( $year_start_date ) ) / ( 60 * 60 * 24 * 7 ) );
-$end_week_no		= ceil( ( strtotime( $filter['end_date'] ) - strtotime( $year_start_date ) ) / ( 60 * 60 * 24 * 7 ) );
+$start_week_no 		= round( ( strtotime( $start_date ) - strtotime( $year_start_date ) ) / ( 60 * 60 * 24 * 7 ) );
+$end_week_no		= round( ( strtotime( $filter['end_date'] ) - strtotime( $year_start_date ) ) / ( 60 * 60 * 24 * 7 ) );
 $current_week_no	= $start_week_no;
 ?>
 

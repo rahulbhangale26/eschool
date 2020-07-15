@@ -22,7 +22,7 @@ class CBatches extends CModel {
     
     
     public function fetchAllBatches() {
-        return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName );
+        return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName . ' ORDER BY id DESC' );
     }
     
     public function fetchBatchesByInstructorId( $intInstructorId ) {

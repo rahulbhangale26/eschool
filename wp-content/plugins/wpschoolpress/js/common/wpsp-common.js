@@ -32,6 +32,47 @@ sch.formJsonSerialize = function( $form ) {
     return indexed_array;
 }
 
+sch.loadUnitFilter = function( options ) {
+	$( options.unit_selector ).prop( 'disabled', false );	
+	var trade_id = options.trade_id;
+	var batch_id = options.batch_id;	
+
+	sch.ajaxRequest({
+		'page': 'sch-trades',
+		'pageAction': 'get_trade_unit_lists',
+		'selector': options.selector,
+		data:  { 'TradeId': trade_id, 'BatchId': batch_id },
+		success: function( res ) {
+			
+			if( '' != res ) {
+				var units = $.parseJSON( res );
+
+				if( 0 == units.length ) {
+					$('#message').html('<div class="error_msg_div"><span class="error_msg_span">No Unit assigned for this batch.</span></div>');
+					$('#unit_id').prop( 'disabled', true );	
+					return;
+				}
+
+				strOption = '';
+				$(units).each( function( index, unit ){
+					strOption += '<option value="' + unit.id + '">' + unit.unit_name+ '</option>';
+				});
+				strHTML = '<select name="unit_id" id = "unit_id" class="wpsp-form-control">' +
+							'<option value="" disabled selected>Select Unit</option>' +
+							strOption +
+						'</select>';
+
+				$( options.selector + ' ' + options.unit_selector ).replaceWith( strHTML );
+
+				$(options.selector + ' ' + options.unit_selector).change( function(e) {
+					options.onChange()
+				});
+			}	
+		}
+	});
+	
+}
+
 var Units = function() {
 		
 	var bindEssentials = function() {

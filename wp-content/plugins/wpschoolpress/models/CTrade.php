@@ -22,7 +22,7 @@ class CTrade extends CModel  {
     }
     
     public function fetchAllTrades() {
-        return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName );
+        return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName . ' ORDER BY name ASC' );
     }
     
     public function fetchTradesByInstructorId( $intInstructorId ) {
@@ -32,7 +32,8 @@ class CTrade extends CModel  {
                     FROM ' . $this->strTableName . ' t
                         JOIN ' . $this->strTablePrefix . 'wpsp_subject_instructors si ON si.trade_id = t.id
                     WHERE
-                        si.instructor_id = ' . ( int ) $intInstructorId;
+                        si.instructor_id = ' . ( int ) $intInstructorId . '
+					ORDER BY name ASC';
         
         return $this->objDatabase->get_results( $strSql );
         

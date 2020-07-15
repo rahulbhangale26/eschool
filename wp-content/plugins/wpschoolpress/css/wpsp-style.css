@@ -3000,3 +3000,21 @@ overflow-x: auto;
     border-color: #398439;
     background-color: transparent;
 }
+
+#note-filter input, #note-filter select {
+	width: 100%;
+}
+
+optgroup {
+    font-weight: 100;
+    color: #333;
+    margin: 10px !important;
+    padding: 10px;
+    border: 1px solid;
+}
+option {
+    color: #000;
+}
+.batch-optgroup {
+	font-weight: bold;
+}

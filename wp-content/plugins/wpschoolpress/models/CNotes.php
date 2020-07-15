@@ -109,9 +109,9 @@ class CNotes extends CModel {
     		$strSql .= ' AND n.note_type_id = ' . ( int ) $arrmixFilter['note_type_id'];
     	}
     	
-    	$strSql .= ' GROUP BY CAST ( n.created_on AS DATE )';
+    	$strSql .= ' GROUP BY CAST( n.created_on AS DATE )';
     	$strSql .= ' ORDER BY ' . $strOrder;
-    	
+
     	return $this->objDatabase->get_results( $strSql );
     }
     

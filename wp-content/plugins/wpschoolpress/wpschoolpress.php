@@ -49,7 +49,9 @@ add_action('plugins_loaded', 'wpsp_plugins_loaded');
 function wpsp_plugins_loaded()
 {
  
-    
+	if(!session_id()) {
+		session_start();
+	}
   
     global $current_user;
     global $objUser;

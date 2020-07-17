@@ -2,7 +2,21 @@
 if (!defined( 'ABSPATH' ) )exit('No Such File');
 
 global $objUser;
-$intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
+
+if( true == isset( $_POST['BatchId'] ) ) {
+	$intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
+	$_SESSION['trainee_filter']['BatchId'] = $intBatchId;
+} else if( true == isset( $_SESSION['trainee_filter']['BatchId'] ) ) {
+	$intBatchId = $_SESSION['trainee_filter']['BatchId'];
+}
+
+if( true == isset( $_POST['TradeId'] ) ) {
+	$intTradeId = $_POST['TradeId'];
+	$_SESSION['trainee_filter']['TradeId'] = $intTradeId;
+} else if( true == isset( $_SESSION['trainee_filter']['TradeId'] ) ) {
+	$intTradeId = $_SESSION['trainee_filter']['TradeId'];
+}
+
  $proversion	=	wpsp_check_pro_version();
 	  $proclass		=	!$proversion['status'] && isset( $proversion['class'] )? $proversion['class'] : '';
 	  $protitle		=	!$proversion['status'] && isset( $proversion['message'] )? $proversion['message']	: '';
@@ -70,8 +84,7 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 				<select name="TradeId" id="TradeId" class="wpsp-form-control">
 					<option value="all" >Select Trade</option>
 					<?php 
-    					   $intTradeId = $_POST['TradeId'];
-					       foreach ( $arrobjTrades AS $objTrade ) { ?>
+						  foreach ( $arrobjTrades AS $objTrade ) { ?>
 								<option <?php echo ( $intTradeId == $objTrade->id ) ? 'selected="selected"' : ''; ?>value="<?php echo $objTrade->id; ?>"><?php echo $objTrade->name ?></option>
 					<?php } ?>
 				</select>
@@ -186,11 +199,9 @@ $intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
 							    }
 							    $units = $tempUnits;
 							    
-								$TradeId    = intval($_POST['TradeId']);
-								$intBatchId = intval($_POST['BatchId']);
 								$studentlists	= ( new CStudents() )->fetchStudentByFilters( [ 
 								        'batch_id' => $intBatchId, 
-								        'trade_id'  => $TradeId
+								        'trade_id'  => $intTradeId
 								] ); 
 								
 								foreach ( $studentlists as $stinfo ) {

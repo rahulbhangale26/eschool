@@ -83,7 +83,7 @@ class CStudents extends CModel {
                     FROM ' . $this->strTableName . ' s
                     WHERE
                         s.current_unit_id = ' . ( int ) $intUnitId . '
-                    ORDER BY s.sid ASC';
+                    ORDER BY s.s_rollno ASC';
         
         return $this->objDatabase->get_results( $strSql );
     }

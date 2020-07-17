@@ -66,7 +66,7 @@ function wpsp_AddStudent(){
 		exit;
 	}
 	
-	if( false == isset( $_POST['BatchId'] ) || "" == $_POST['BatchId'] ) {
+	if( false == isset( $_POST['batch_id'] ) || "" == $_POST['batch_id'] ) {
 	    echo "Please select the batch.";
 	    exit;   
 	}
@@ -256,17 +256,14 @@ function wpsp_AddStudent(){
 		}
 	}
 
-	if (!is_wp_error($user_id))
-
-	{
-
+	if (!is_wp_error($user_id)) {	
 		$studenttable = array(
 			'wp_usr_id' => $user_id,
 			'parent_wp_usr_id' => $parent_id,
 			'class_id' => isset($_POST['Class']) ? serialize($_POST['Class']) : '0',
 			'class_date' => isset($_POST['Classdata']) ? serialize($_POST['Classdata']) : '0',
 			's_rollno' => isset($_POST['s_rollno']) ? intval($_POST['s_rollno']) : '',
-		    'batch_id' => sanitize_text_field( $_POST['BatchId'] ),
+		    'batch_id' => sanitize_text_field( $_POST['batch_id'] ),
 		    'current_unit_id'     =>  intval( $_POST['CurrentUnitId'] ),
 			's_fname' => $firstname,
 			's_mname' => isset($_POST['s_mname']) ? sanitize_text_field($_POST['s_mname']) : '',
@@ -274,7 +271,7 @@ function wpsp_AddStudent(){
 			's_zipcode' => isset($_POST['s_zipcode']) ? intval($_POST['s_zipcode']) : '',
 			's_country' => isset($_POST['s_country']) ? sanitize_text_field($_POST['s_country']) : '',
 			's_gender' => isset($_POST['s_gender']) ? sanitize_text_field($_POST['s_gender']) : '',
-			's_address' => isset($_POST['s_address']) ? sanitize_text_field($_POST['s_address']) : '',
+			's_paddress' => isset($_POST['s_paddress']) ? sanitize_text_field($_POST['s_paddress']) : '',
 			's_bloodgrp' => isset($_POST['s_bloodgrp']) ? sanitize_text_field($_POST['s_bloodgrp']) : '',
 			's_dob' => isset($_POST['s_dob']) && !empty($_POST['s_dob']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_dob'])) : '',
 			's_doj' => isset($_POST['s_doj']) && !empty($_POST['s_doj']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_doj'])) : '',
@@ -651,14 +648,15 @@ function wpsp_UpdateStudent(){
 
 		$studenttable = array(
 		's_fname' => isset($_POST['s_fname']) ? sanitize_text_field($_POST['s_fname']) : '',
-    'class_id' => isset($_POST['Class']) ? serialize($_POST['Class']) : '0',
+    	'class_id' => isset($_POST['Class']) ? serialize($_POST['Class']) : '0',
+		's_rollno' => isset($_POST['s_rollno']) ? sanitize_text_field($_POST['s_rollno']) : '',
 		'class_date' => isset($_POST['Classdata']) ? serialize($_POST['Classdata']) : '0',
 		's_mname' => isset($_POST['s_mname']) ? sanitize_text_field($_POST['s_mname']) : '',
 		's_lname' => isset($_POST['s_lname']) ? sanitize_text_field($_POST['s_lname']) : '',
 		's_zipcode' => isset($_POST['s_zipcode']) ? intval($_POST['s_zipcode']) : '',
 		's_country' => isset($_POST['s_country']) ? sanitize_text_field($_POST['s_country']) : '',
 		's_gender' => isset($_POST['s_gender']) ? sanitize_text_field($_POST['s_gender']) : '',
-		's_address' => isset($_POST['s_address']) ? sanitize_text_field($_POST['s_address']) : '',
+		's_paddress' => isset($_POST['s_paddress']) ? sanitize_text_field($_POST['s_paddress']) : '',
 		's_bloodgrp' => isset($_POST['s_bloodgrp']) ? sanitize_text_field($_POST['s_bloodgrp']) : '',
 		's_dob' => isset($_POST['s_dob']) && !empty($_POST['s_dob']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_dob'])) : '',
 		's_city' => isset($_POST['s_city']) ? sanitize_text_field($_POST['s_city']) : '',
@@ -689,7 +687,7 @@ function wpsp_UpdateStudent(){
 		's_zipcode' => isset($_POST['s_zipcode']) ? intval($_POST['s_zipcode']) : '',
 		's_country' => isset($_POST['s_country']) ? sanitize_text_field($_POST['s_country']) : '',
 		's_gender' => isset($_POST['s_gender']) ? sanitize_text_field($_POST['s_gender']) : '',
-		's_address' => isset($_POST['s_address']) ? sanitize_text_field($_POST['s_address']) : '',
+		's_paddress' => isset($_POST['s_paddress']) ? sanitize_text_field($_POST['s_paddress']) : '',
 		's_bloodgrp' => isset($_POST['s_bloodgrp']) ? sanitize_text_field($_POST['s_bloodgrp']) : '',
 		's_dob' => isset($_POST['s_dob']) && !empty($_POST['s_dob']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_dob'])) : '',
 		's_doj' => isset($_POST['s_doj']) && !empty($_POST['s_doj']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_doj'])) : '',
@@ -711,32 +709,23 @@ function wpsp_UpdateStudent(){
 
   //End Update date Details onclass mapping table
 
-
   $stu_upd = $wpdb->update($wpsp_student_table, $studenttable, array(
     'wp_usr_id' => $user_id
   ));
 
   $pusername = sanitize_user($_POST['pUsername']);
 
-  if (wpsp_CheckUsername($pusername, true) === true){
-				echo "Given Parent User Name Already Exists!";
-				exit;
+	if (wpsp_CheckUsername($pusername, true) === true){
+		echo "Given Parent User Name Already Exists!";
+		exit;
+	}
 
-			}
+	if (email_exists(sanitize_email($_POST['pEmail']))) {
+		echo "Parent Email ID Already Exists!";
+		exit;
+	}
 
-			if (email_exists(sanitize_email($_POST['pEmail'])))
-
-			{
-
-				echo "Parent Email ID Already Exists!";
-
-				exit;
-
-			}
-
-			if (!empty($_POST['pEmail']))
-
-				{
+	if (!empty($_POST['pEmail'])) {
 					$response = getparentInfo(sanitize_email($_POST['pEmail'])); //check for parent email id
 					if (isset($response['parentID']) && !empty($response['parentID']))
 
@@ -819,12 +808,11 @@ function wpsp_UpdateStudent(){
         updateStudentClassDate($user_id);
         //End Update date Details onclass mapping table
 
-
-
 				 $sp_stu_ins = $wpdb->update($wpsp_student_table, $parenttable, array(
 			 	'wp_usr_id' => $user_id
 			 		));
-					do_action('wpsp_student_data_field',$user_id);
+
+				do_action('wpsp_student_data_field',$user_id);
 				if (is_wp_error($user_id))
 				{
 					$msg1 = $user_id->get_error_message();
@@ -834,7 +822,7 @@ function wpsp_UpdateStudent(){
 	} else {
 		$studenttable = array(
 		'class_id' => isset($_POST['Class']) ? serialize($_POST['Class']) : '0',
-    'class_date' => isset($_POST['Classdata']) ? serialize($_POST['Classdata']) : '0',
+    	'class_date' => isset($_POST['Classdata']) ? serialize($_POST['Classdata']) : '0',
 		's_rollno' => isset($_POST['s_rollno']) ? sanitize_text_field($_POST['s_rollno']) : '',
 		's_fname' => isset($_POST['s_fname']) ? sanitize_text_field($_POST['s_fname']) : '',
 		's_mname' => isset($_POST['s_mname']) ? sanitize_text_field($_POST['s_mname']) : '',
@@ -842,7 +830,7 @@ function wpsp_UpdateStudent(){
 		's_zipcode' => isset($_POST['s_zipcode']) ? intval($_POST['s_zipcode']) : '',
 		's_country' => isset($_POST['s_country']) ? sanitize_text_field($_POST['s_country']) : '',
 		's_gender' => isset($_POST['s_gender']) ? sanitize_text_field($_POST['s_gender']) : '',
-		's_address' => isset($_POST['s_address']) ? sanitize_text_field($_POST['s_address']) : '',
+		's_paddress' => isset($_POST['s_paddress']) ? sanitize_text_field($_POST['s_paddress']) : '',
 		's_bloodgrp' => isset($_POST['s_bloodgrp']) ? sanitize_text_field($_POST['s_bloodgrp']) : '',
 		's_dob' => isset($_POST['s_dob']) && !empty($_POST['s_dob']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_dob'])) : '',
 		's_doj' => isset($_POST['s_doj']) && !empty($_POST['s_doj']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_doj'])) : '',
@@ -882,8 +870,6 @@ function wpsp_UpdateStudent(){
     updateStudentClassDate($user_id);
     //End Update date Details onclass mapping table
 
-
-
 	$stu_upd = $wpdb->update($wpsp_student_table, $parenttable, array(
 		'parent_wp_usr_id' => $_POST['parentid']
 	));
@@ -891,7 +877,8 @@ function wpsp_UpdateStudent(){
 	 $stu_upd = $wpdb->update($wpsp_student_table, $studenttable, array(
 	 	'wp_usr_id' => $user_id
 	 ));
-do_action('wpsp_student_data_field',$user_id);
+	 
+	do_action('wpsp_student_data_field',$user_id);
 	 // Send Email if class assign and Addon Purchased
 
 	 if($stu_upd){
@@ -962,6 +949,7 @@ do_action('wpsp_student_data_field',$user_id);
             ));
         }
     }
+
 	 if (is_wp_error($stu_upd))
 	{
 		$msg =  $stu_upd->get_error_message() ;
@@ -1026,7 +1014,7 @@ function wpsp_StudentPublicProfile()
 
 								<tr>
 									<td><strong>Date of Join: </strong>" . wpsp_ViewDate($stinfo->s_doj) . "</td>
-									<td><strong>Street Address: </strong>$stinfo->s_address</td>
+									<td><strong>Street Address: </strong>$stinfo->s_paddress</td>
 								</tr>
 								<tr>
 									<td><strong>Pin Code: </strong>$stinfo->s_zipcode</td>

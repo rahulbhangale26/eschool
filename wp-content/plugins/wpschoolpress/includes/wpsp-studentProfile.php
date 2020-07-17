@@ -265,21 +265,21 @@ if( !empty( $stinfo ) ) {
                               <?php
                               $pl="";
                                $item =  apply_filters( 'wpsp_student_personal_title_item',esc_html("Current Address","WPSchoolPress"));
-                              if(isset($item['section']) && $item['section'] == "personal" && isset($item['s_address'])){
-                                    $pl = esc_html($item['s_address'],"WPSchoolPress");
+                              if(isset($item['section']) && $item['section'] == "personal" && isset($item['s_paddress'])){
+                                    $pl = esc_html($item['s_paddress'],"WPSchoolPress");
                               }else{
                                   $pl = esc_html("Current Address","WPSchoolPress");
                               }
                               /*Check Required Field*/
-                              if(isset($is_required_item['section']) && $is_required_item['section'] == "personal" && isset($is_required_item['s_address'])){
-                                  $is_required =  $is_required_item['s_address'];
+                              if(isset($is_required_item['section']) && $is_required_item['section'] == "personal" && isset($is_required_item['s_paddress'])){
+                                  $is_required =  $is_required_item['s_paddress'];
                               }else{
                                   $is_required = true;
                               }
 
                               ?>
                                 <label class="wpsp-label" for="Address"><?php echo $pl; ?><span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span></label>
-                                <input type="text" name="s_address" data-is_required="<?php echo $is_required; ?>" class="wpsp-form-control" rows="4" id="current_address" value="<?php echo $stinfo->s_address; ?>" placeholder="<?php echo $pl; ?>" />
+                                <input type="text" name="s_paddress" data-is_required="<?php echo $is_required; ?>" class="wpsp-form-control" rows="4" id="current_address" value="<?php echo $stinfo->s_paddress; ?>" placeholder="<?php echo $pl; ?>" />
                             </div>
                         </div>
                         <div class="wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
@@ -893,7 +893,7 @@ if( !empty( $stinfo ) ) {
                             <label class="wpsp-label" for="dateofbirth">  Batch Year
                                   <span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span>
                             </label>
-                            <select name="BatchId" id = "BatchId" class="wpsp-form-control">
+                            <select name="batch_id" id = "BatchId" class="wpsp-form-control">
 								<option value="">Select Batch</option>
 								<?php 
                 					foreach ( $arrobjBatches AS $objBatch ) {

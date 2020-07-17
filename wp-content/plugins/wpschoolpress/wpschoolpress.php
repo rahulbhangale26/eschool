@@ -77,6 +77,10 @@ function wpsp_plugins_loaded()
 	    $objUser->setTeacher( ( new CTeachers() )->fetchTeacherByUserId( $objUser->getUserId() ) );
 	}
 	
+	if( 'student' == $objUser->strRole ) {
+		$objUser->setStudent( CStudents::getInstance()->fetchStudentByUserId( $objUser->getUserId() ) );
+	}
+	
 	
 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks.php');
 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks-student.php');

@@ -23,6 +23,10 @@ class CStudents extends CModel {
         return array_pop( $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName . ' WHERE sid = ' . ( int ) $intStudentId ) );
     }
     
+    public function fetchStudentByUserId( $intUserId ) {
+    	return array_pop( $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName . ' WHERE wp_usr_id = ' . ( int ) $intUserId ) );
+    }
+    
     public function fetchAllStudents() {
         return $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName );
     }

@@ -3,6 +3,8 @@
 class CQuestionBanksManager extends CFactory {
     
     protected $arrobjTrades;
+    protected $arrobjQuestionBanks;
+    
     
     public function __construct() {
         
@@ -30,7 +32,14 @@ class CQuestionBanksManager extends CFactory {
     }
     
     public function handleViewQuestionBanks() {
-        
+    	if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
+	    	$this->arrobjQuestionBanks = CQuestionBanks::getInstance()->fetchAllQuestionBanks();
+    	} else if( CRole::TEACHER == $this->objUser->getRole() )  {
+    		$this->arrobjQuestionBanks = CQuestionBanks::getInstance()->fetchQuestionBanksByInstructorId( $this->objUser->getTeacher()->tid );
+    	} else if( CRole::STUDENT == $this->objUser->getRole() ) {
+    		$this->arrobjQuestionBanks = CQuestionBanks::getInstance()->fetchQuestionBanksByTradeId( $this->objUser->getStudent()->trade_id );
+    	}
+    	
         $this->displayViewQuestionBanks();
     }
     
@@ -121,7 +130,7 @@ class CQuestionBanksManager extends CFactory {
     
     public function displayViewQuestionBanks() {
         
-        $this->arrmixTemplateParams['question_banks']       = CQuestionBanks::getInstance()->fetchAllQuestionBanks();
+        $this->arrmixTemplateParams['question_banks']       = $this->arrobjQuestionBanks;
         $this->arrmixTemplateParams['trades']               = $this->rekeyObjects( 'id', CTrade::getInstance()->fetchAllTrades() );
         $this->renderPage( 'question_banks/view_question_banks.php' );
     }

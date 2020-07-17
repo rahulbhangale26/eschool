@@ -4,6 +4,7 @@ class CUser extends CModel {
     
     public $intUserId;
     public $objTeacher;
+    public $objStudent;
     
     public $strRole;
     public function __construct() {
@@ -19,6 +20,10 @@ class CUser extends CModel {
         $this->objTeacher = $objTeacher;
     }
     
+    public function setStudent( $objStudent ) {
+    	$this->objStudent = $objStudent;
+    }
+    
     public function setRole( $strRole ) {
         $this->strRole = $strRole;
     }
@@ -29,6 +34,10 @@ class CUser extends CModel {
     
     public function getTeacher() {
         return $this->objTeacher;
+    }
+    
+    public function getStudent() {
+    	return $this->objStudent;
     }
     
     public function getRole() {

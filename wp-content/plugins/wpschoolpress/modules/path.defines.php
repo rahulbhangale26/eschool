@@ -15,5 +15,6 @@ $arrstrModules = [
     'sch-demostration_plan'             => WPSP_PLUGIN_PATH  . 'modules/demostration_plans/CDemostrationPlansManager.php',
     'sch-jobs'                          => WPSP_PLUGIN_PATH  . 'modules/jobs/CJobsManager.php',
     'sch-question_bank'                 => WPSP_PLUGIN_PATH . 'modules/question_banks/CQuestionBanksManager.php',
-    'sch-daily_diary'                   => WPSP_PLUGIN_PATH . 'modules/daily_diary/CDailyDiaryManager.php'
+    'sch-daily_diary'                   => WPSP_PLUGIN_PATH . 'modules/daily_diary/CDailyDiaryManager.php',
+	CModules::PROGRESS_CARD['slug']		=> WPSP_PLUGIN_PATH . 'modules/progress_card/CProgressCardManager.php'
 ];

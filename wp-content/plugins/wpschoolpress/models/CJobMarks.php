@@ -47,4 +47,31 @@ class CJobMarks extends CModel {
         return $this->objDatabase->get_results( $strSql );
     }
     
+    public function fetchProgressDetailsByStudentId( $intStudentId ) {
+    	$strSql = 'SELECT
+						jm.job_id,
+						j.title,
+						SUM(
+							CASE
+								WHEN jm.job_evaluation_type_id IN (' . implode( ',', [ CJobEvaluationTypes::SKILLS, CJobEvaluationTypes::GRADES ] ) .' ) THEN jm.obtained_marks
+								WHEN jm.job_evaluation_type_id = ' . CJobEvaluationTypes::EXTRA_TIME_DEDUCTION . ' THEN -1 * jm.obtained_marks
+								ELSE 0
+							END
+						) AS total_marks,
+						MAX( 
+							CASE
+								WHEN jm.job_evaluation_type_id = ' . CJobEvaluationTypes::REMARK . ' THEN jm.remark ELSE NULL 
+							END
+						 ) AS remark,
+						j.start_date 
+					FROM
+						' . $this->strTableName . ' jm
+						JOIN ' . CJobs::getInstance()->strTableName . ' j ON j.id = jm.job_id
+					WHERE
+						jm.student_id = ' . ( int ) $intStudentId . '
+					GROUP BY jm.job_id';
+    	
+    	return $this->objDatabase->get_results( $strSql );
+    }
+    
 }

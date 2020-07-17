@@ -6,7 +6,7 @@ if( 'Monday' == date( 'l', strtotime( $filter['start_date'] ) ) ) {
 	$start_date = date( 'Y-m-d', strtotime( 'last monday', strtotime( $filter['start_date'] ) ) );
 }
 
-if( 7 <= ( int ) date( 'm', strtotime( $start_date ) ) ) {
+if( 7 < ( int ) date( 'm', strtotime( $start_date ) ) ) {
 	$year_start_date = date( 'Y', strtotime( $start_date ) ) . '-08-01';
 } else {
 	$year_start_date = ( date( 'Y', strtotime( $start_date ) ) - 1 ) . '-08-01';

@@ -214,6 +214,15 @@ class CModules extends CModel {
         'hide_from'         => [ CDesignations::OTHER ]
     ];
     
+    const PROGRESS_CARD	= [
+    	'id'                => 45,
+    	'title'             => 'Progress Card',
+    	'slug'              => 'sch-progress_card',
+    	'icon_class'        => 'dashicons dashicons-welcome-learn-more',
+    	'parent_module_id'  => 12,
+    	'has_sub_modules'   => 0,
+    ];
+    
     const SKILL_CHART  = [
         'id'                => 19,
         'title'             => 'Skill Chart',
@@ -460,6 +469,7 @@ class CModules extends CModel {
             'sch-lesson_plan'                   => self::LESSON_PLAN,
             'sch-demostration_plan'             => self::DEMONSTRATION_PLAN,
             'sch-jobs'                          => self::JOBS,
+       		'sch-progress_card'					=> self::PROGRESS_CARD,
             'sch-question_bank'                 => self::QUESTION_BANK,
             'sch-daily_diary'                   => self::INSTRUCTOR_DAILY_DIARY,
         ];
@@ -521,6 +531,7 @@ class CModules extends CModel {
                 $arrmixModule[self::DEMONSTRATION_PLAN['id']]           = self::DEMONSTRATION_PLAN;
                 $arrmixModule[self::INSTRUCTOR_DAILY_DIARY['id']]       = self::INSTRUCTOR_DAILY_DIARY;
                 $arrmixModule[self::JOBS['id']]                         = self::JOBS;
+                $arrmixModule[self::PROGRESS_CARD]						= self::PROGRESS_CARD;
                 $arrmixModule[self::SKILL_CHART['id']]                  = self::SKILL_CHART;
                 $arrmixModule[self::PROGRESS_CHART['id']]               = self::PROGRESS_CHART;
                 $arrmixModule[self::QUESTION_BANK['id']]                = self::QUESTION_BANK;
@@ -563,6 +574,7 @@ class CModules extends CModel {
                 $arrmixModule[self::DEMONSTRATION_PLAN['id']]           = self::DEMONSTRATION_PLAN;
                 $arrmixModule[self::INSTRUCTOR_DAILY_DIARY['id']]       = self::INSTRUCTOR_DAILY_DIARY;
                 $arrmixModule[self::JOBS['id']]                         = self::JOBS;
+                $arrmixModule[self::PROGRESS_CARD['id']]				= self::PROGRESS_CARD;
                 $arrmixModule[self::SKILL_CHART['id']]                  = self::SKILL_CHART;
                 $arrmixModule[self::PROGRESS_CHART['id']]               = self::PROGRESS_CHART;
                 $arrmixModule[self::QUESTION_BANK['id']]                = self::QUESTION_BANK;

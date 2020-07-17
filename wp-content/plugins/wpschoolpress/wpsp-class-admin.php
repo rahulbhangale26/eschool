@@ -153,6 +153,11 @@ function wpsp_admin_menu() {
 		
 		/** MVC Strarted **/
 		
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Progress Card', 'edit_posts', CModules::PROGRESS_CARD['slug'], array(
+				$this,
+				'wpsp_callback'
+		));
+		
 		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Daily Diary', 'edit_posts', 'sch-daily_diary', array(
 		    $this,
 		    'wpsp_callback'

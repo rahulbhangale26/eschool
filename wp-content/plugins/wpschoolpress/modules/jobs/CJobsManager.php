@@ -247,7 +247,6 @@ class CJobsManager extends CFactory {
                     }
                     
                     $arrmixJob = [
-                        'instructor_id'     => $this->objUser->getTeacher()->tid,
                         'title'             => $arrmixRequestData['title'],
                         'description'       => $arrmixRequestData['description'],
                         'start_date'        => date( 'Y-m-d H:i:s', strtotime( $arrmixRequestData['start_date'] ) ),

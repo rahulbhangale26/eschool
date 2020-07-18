@@ -33,12 +33,27 @@
 		<div class="wpsp-col-md-4 wpsp-col-md-12">
 			<div class="wpsp-form-group">
 				<br>
-				<input type="button" name="print" value="Show Progress Card" id="show_progress_card" class="wpsp-btn wpsp-btn-success" />
+				<input type="button" name="show" value="Show Progress Card" id="show_progress_card" class="wpsp-btn wpsp-btn-success" />
+				<input type="button" name="print" value="Print" id="print_btn" onclick="printDiv();" class="wpsp-btn wpsp-btn-success" />
 			</div>
 		</div>
 	</div>
 </div>
 <script>
+
+function printDiv() {
+
+	var divToPrint = $('.progress-card').html();
+    var htmlToPrint = '';
+    htmlToPrint += divToPrint;
+    newWin = window.open("");
+    newWin.document.write('<html><head></head><body>' + htmlToPrint + '</body></html>');
+
+    setTimeout(function(){
+    	newWin.print();
+    }, 1000 );
+} 
+
 $( function(){
 	$('#unit_id').unbind();
 	$('#unit_id').change(function(){

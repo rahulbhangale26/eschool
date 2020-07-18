@@ -13,12 +13,20 @@
 	font-size: 36px !important;
 	font-weight: bolder !important;
 }
+.sub-main-heading {
+		font-size: 24px !important;
+	font-weight: bolder !important;
+    color: #54667a;
+}
 .no-border {
 	border: none !important;
 }
 .s2 {
 	width: 130px;
 	padding: 10px;
+}
+.text-center {
+text-align: center !important;
 }
 .text-left {
 text-align: left !important;
@@ -49,42 +57,39 @@ text-align: left !important;
    <table class="waffle main-container" cellspacing="0" cellpadding="0">
       <tbody>
          <tr style='height:20px;'>
-         	<td class="s2" rowspan="2"><?php echo $iti_name; ?></td>
-            <td class="s0 appendex no-border" colspan="13">APPENDIX "A"</td>
-            <td class="s2" rowspan="2"></td>
+            <td class="s0 appendex no-border" colspan="15">APPENDIX "A"</td>
          </tr>
          <tr style='height:20px;'>
-            <td class="s0 short-heading no-border" colspan="13">CRAFTSMEN TRAINING SCHEME</td>
+            <td class="s0 short-heading no-border" colspan="15">CRAFTSMEN TRAINING SCHEME</td>
          </tr>
          <tr style='height:20px;'>
-         	<td class="s2"></td>
-            <td class="s1 main-heading no-border" dir="ltr" colspan="13">PROGRESS CARD</td>
-            <td class="s2"></td>
+            <td class="s1 main-heading no-border" dir="ltr" colspan="15">PROGRESS CARD</td>
          </tr>
+         <tr style="height: 20px;">
+      	 	<td class="sub-main-heading text-center" colspan="15"><?php echo $iti_name; ?></td>
+      	 </tr>
          <tr style='height:20px;'>
             <td class="s1 text-left no-border" dir="ltr" colspan="15">Trainee Name : <?php echo $student->s_fname . ' ' . $student->s_lname; ?></td>
          </tr>
          <tr style='height:20px;'>
-            <td class="s1 text-left no-border" dir="ltr" colspan="15">Roll No : <?php echo $student->s_rollno; ?></td>
+            <td class="s1 text-left no-border" dir="ltr" colspan="7">Roll No : <?php echo $student->s_rollno; ?></td>
+            <td class="s1 text-left no-border" colspan="8">Unit: <?php echo ( true == isset( $units[$student->current_unit_id] ) ? $units[$student->current_unit_id]->unit_name : '-' ) ?></td>
+            
          </tr>
          <tr style='height:20px;'>
             <td class="s1 text-left no-border" dir="ltr" colspan="7">Batch : <?php echo ( true == isset( $batches[$student->batch_id] ) ? $batches[$student->batch_id]->name : '-' ) ?></td>
             <td class="s1 text-left no-border" dir="ltr" colspan="8">Trade : <?php echo ( true == isset( $trades[$student->trade_id] ) ? $trades[$student->trade_id]->name : '-' ) ?></td>
          </tr>
          <tr style='height:20px;'>
-            <td class="s1 text-left no-border" dir="ltr" colspan="7">Trade : <?php echo ( true == isset( $trades[$student->trade_id] ) ? $trades[$student->trade_id]->name : '-' ) ?></td>
-            <td class="s1 text-left no-border" colspan="8">Unit: <?php echo ( true == isset( $units[$student->current_unit_id] ) ? $units[$student->current_unit_id]->unit_name : '-' ) ?></td>
-         </tr>
-         <tr style='height:20px;'>
             <td class="s1 text-left no-border" dir="ltr" colspan="7">Addmission Date : </td>
             <td class="s1 text-left no-border" dir="ltr" colspan="8">Date Of Leaving: </td>
          </tr>
          <tr style="height: 20px">
-         	<td class="s3 no-left-border" colspan="1">Week No</td>
-         	<td class="s3" colspan="6">Exercises Done During the Week</td>
-         	<td class="s3" colspan="2">Grading</td>
-         	<td class="s3" colspan="2">Instructor Check</td>
-         	<td class="s3" colspan="2">G. I. Initials</td>
+         	<td class="s3 no-left-border" style="max-width: 60px;" colspan="1">Week No</td>
+         	<td class="s3" style="min-width: 500px;" colspan="6">Exercises Done During the Week</td>
+         	<td class="s3" style="max-width: 70px;" colspan="2">Grading</td>
+         	<td class="s3" style="max-width: 60px;" colspan="2">I. Initials </td>
+         	<td class="s3" style="max-width: 60px;" colspan="2">G. I. Initials </td>
          	<td class="s3 no-right-border" colspan="2">Remarks</td>
          </tr>
          <?php for( $intIndex=1; $intIndex<=52; $intIndex++) { ?>
@@ -106,9 +111,9 @@ text-align: left !important;
          				
          				if( 80 <= $job->total_marks ) {
          					echo 'A <br> ';
-         				} else if( 60 <= $job->total_marks ) {
+         				} else if( 70 <= $job->total_marks ) {
          					echo 'B <br> ';
-         				} else if( 45 <= $job->total_marks ) {
+         				} else if( 60 <= $job->total_marks ) {
          					echo 'C <br> ';
          				} else {
          					echo 'D <br> ';

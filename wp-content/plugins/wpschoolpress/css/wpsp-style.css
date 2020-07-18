@@ -3001,6 +3001,10 @@ overflow-x: auto;
     background-color: transparent;
 }
 
+.width-100 {
+	width: 100%
+}
+
 #note-filter input, #note-filter select {
 	width: 100%;
 }

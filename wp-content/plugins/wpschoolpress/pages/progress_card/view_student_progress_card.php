@@ -135,6 +135,9 @@ text-align: left !important;
          	</td>
          </tr>
          <?php } ?>
+         <tr style="height: 20px; padding:10px;">
+         	<td colspan="15" > <span style="float: right;">A = 79% Above<br>8 = 70 To 79%<br>C = 60 To 69%<br>D = 59% Below</span></td>
+         <tr>
       </tbody>
    </table>
 </div>

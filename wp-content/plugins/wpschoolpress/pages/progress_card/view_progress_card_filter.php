@@ -1,8 +1,8 @@
-<div class="wpsp-col-md-12 line_box filter-container">
+<div class="wpsp-col-xs-12 line_box filter-container">
 	<div class="wpsp-row">
 		<div class="wpsp-col-md-4 wpsp-col-md-12">
 			<div class="wpsp-form-group">
-				Select Unit
+				Select Unit<br>
 				<select id="unit_id" class="wpsp-form-control" name="unit_id">
 					<option value="">Select Unit</option>
 					<?php foreach( $batches AS $batch ) { ?>
@@ -21,7 +21,7 @@
 		</div>
 		<div class="wpsp-col-md-4 wpsp-col-md-12">
 			<div class="wpsp-form-group">
-				Select Student
+				Select Student<br>
 				<select <?php echo ( true == isset( $students ) ? '' : 'disabled' ); ?> id="student_id" class="wpsp-form-control" name="student_id">
 					<option value="">Select Student</option>
 					<?php foreach ( $students AS $student ) { ?>
@@ -30,10 +30,15 @@
 				</select>
 			</div>
 		</div>
-		<div class="wpsp-col-md-4 wpsp-col-md-12">
+		<div class="wpsp-col-md-3 wpsp-col-xs-12">
 			<div class="wpsp-form-group">
 				<br>
 				<input type="button" name="show" value="Show Progress Card" id="show_progress_card" class="wpsp-btn wpsp-btn-success" />
+			</div>
+		</div>
+		<div class="wpsp-col-md-1 wpsp-col-xs-12">
+			<div class="wpsp-form-group">
+				<br>
 				<input type="button" name="print" value="Print" id="print_btn" onclick="printDiv();" class="wpsp-btn wpsp-btn-success" />
 			</div>
 		</div>

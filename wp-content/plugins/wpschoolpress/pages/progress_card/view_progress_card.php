@@ -6,7 +6,7 @@
 	</div>
 	
 	<div class="wpsp-card-body">
-		<div class="progress-card">
+		<div class="progress-card x-scroll">
 			
 
 		</div>

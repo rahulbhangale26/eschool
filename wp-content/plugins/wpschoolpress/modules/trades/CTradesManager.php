@@ -29,11 +29,6 @@ class CTradesManager extends CFactory {
     
     public function handleViewTrades() {
         
-        if( CRole::ADMIN != $this->objUser->getRole() ) {
-            $this->renderPage( 'messages/error_messages.php' );
-            return false;
-        }
-        
         $this->arrmixTrades = CTrade::getInstance()->fetchAllTrades();
         
         $this->displayViewTrades();

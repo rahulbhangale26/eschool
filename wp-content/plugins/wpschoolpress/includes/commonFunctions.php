@@ -1,4 +1,13 @@
 <?php 
+function rekeyObjects( $strKey, $arrObjects ) {
+	$arrobjReKeyedObjects = [];
+	foreach ( $arrObjects AS $obj ) {
+		$arrobjReKeyedObjects[$obj->$strKey] = $obj;
+	}
+	
+	return $arrobjReKeyedObjects;
+}
+
 function ordinal($number) {
     $ends = array('th','st','nd','rd','th','th','th','th','th','th');
     if ((($number % 100) >= 11) && (($number%100) <= 13))

@@ -256,41 +256,44 @@ function wpsp_AddStudent(){
 		}
 	}
 
+	$objUnit = CUnits::getInstance()->fetchUnitById( intval( sanitize_text_field( $_POST[ 'CurrentUnitId' ] ) ) );
+	
 	if (!is_wp_error($user_id)) {	
 		$studenttable = array(
-			'wp_usr_id' => $user_id,
-			'parent_wp_usr_id' => $parent_id,
-			'class_id' => isset($_POST['Class']) ? serialize($_POST['Class']) : '0',
-			'class_date' => isset($_POST['Classdata']) ? serialize($_POST['Classdata']) : '0',
-			's_rollno' => isset($_POST['s_rollno']) ? intval($_POST['s_rollno']) : '',
-		    'batch_id' => sanitize_text_field( $_POST['batch_id'] ),
-		    'current_unit_id'     =>  intval( $_POST['CurrentUnitId'] ),
-			's_fname' => $firstname,
-			's_mname' => isset($_POST['s_mname']) ? sanitize_text_field($_POST['s_mname']) : '',
-			's_lname' => isset($_POST['s_lname']) ? sanitize_text_field($_POST['s_lname']) : '',
-			's_zipcode' => isset($_POST['s_zipcode']) ? intval($_POST['s_zipcode']) : '',
-			's_country' => isset($_POST['s_country']) ? sanitize_text_field($_POST['s_country']) : '',
-			's_gender' => isset($_POST['s_gender']) ? sanitize_text_field($_POST['s_gender']) : '',
-			's_paddress' => isset($_POST['s_paddress']) ? sanitize_text_field($_POST['s_paddress']) : '',
-			's_bloodgrp' => isset($_POST['s_bloodgrp']) ? sanitize_text_field($_POST['s_bloodgrp']) : '',
-			's_dob' => isset($_POST['s_dob']) && !empty($_POST['s_dob']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_dob'])) : '',
-			's_doj' => isset($_POST['s_doj']) && !empty($_POST['s_doj']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_doj'])) : '',
-			's_phone' => isset($_POST['s_phone']) ? sanitize_text_field($_POST['s_phone']) : '',
-		    'category'    => sanitize_text_field(  $_POST['category'] ),
-		    'qualification'   => ( true == isset( $_POST['qualification'] ) ) ? sanitize_text_field(  $_POST['qualification'] ) : '',
-			'p_fname' => $pfirstname,
-			'p_mname' => $pmiddlename,
-			'p_lname' => $plastname,
-			'p_gender' => $pgender,
-			'p_edu' => $pedu,
-			'p_profession' => $pprofession,
-			's_paddress' => isset($_POST['s_paddress']) ? sanitize_text_field($_POST['s_paddress']) : '',
-			'p_bloodgrp' => $pbloodgroup,
-			's_city' => isset($_POST['s_city']) ? sanitize_text_field($_POST['s_city']) : '',
-			's_pcountry' => isset($_POST['s_pcountry']) ? sanitize_text_field($_POST['s_pcountry']) : '',
-			's_pcity' => isset($_POST['s_pcity']) ? sanitize_text_field($_POST['s_pcity']) : '',
-			's_pzipcode' => isset($_POST['s_pzipcode']) ? intval($_POST['s_pzipcode']) : '',
-			'p_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : ''
+			'wp_usr_id' 			=> $user_id,
+			'parent_wp_usr_id' 		=> $parent_id,
+			'class_id' 				=> isset($_POST['Class']) ? serialize($_POST['Class']) : '0',
+			'class_date' 			=> isset($_POST['Classdata']) ? serialize($_POST['Classdata']) : '0',
+			's_rollno' 				=> isset($_POST['s_rollno']) ? intval($_POST['s_rollno']) : '',
+		    'batch_id' 				=> sanitize_text_field( $_POST['batch_id'] ),
+		    'current_unit_id'     	=>  intval( $_POST['CurrentUnitId'] ),
+			'trade_id'				=> ( true == is_object( $objUnit ) ? $objUnit->trade_id : 0 ),
+			's_fname' 				=> $firstname,
+			's_mname' 				=> isset($_POST['s_mname']) ? sanitize_text_field($_POST['s_mname']) : '',
+			's_lname' 				=> isset($_POST['s_lname']) ? sanitize_text_field($_POST['s_lname']) : '',
+			's_zipcode' 			=> isset($_POST['s_zipcode']) ? intval($_POST['s_zipcode']) : '',
+			's_country' 			=> isset($_POST['s_country']) ? sanitize_text_field($_POST['s_country']) : '',
+			's_gender' 				=> isset($_POST['s_gender']) ? sanitize_text_field($_POST['s_gender']) : '',
+			's_paddress' 			=> isset($_POST['s_paddress']) ? sanitize_text_field($_POST['s_paddress']) : '',
+			's_bloodgrp' 			=> isset($_POST['s_bloodgrp']) ? sanitize_text_field($_POST['s_bloodgrp']) : '',
+			's_dob' 				=> isset($_POST['s_dob']) && !empty($_POST['s_dob']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_dob'])) : '',
+			's_doj' 				=> isset($_POST['s_doj']) && !empty($_POST['s_doj']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_doj'])) : '',
+			's_phone' 				=> isset($_POST['s_phone']) ? sanitize_text_field($_POST['s_phone']) : '',
+		    'category'    			=> sanitize_text_field(  $_POST['category'] ),
+		    'qualification'   		=> ( true == isset( $_POST['qualification'] ) ) ? sanitize_text_field(  $_POST['qualification'] ) : '',
+			'p_fname' 				=> $pfirstname,
+			'p_mname' 				=> $pmiddlename,
+			'p_lname' 				=> $plastname,
+			'p_gender' 				=> $pgender,
+			'p_edu' 				=> $pedu,
+			'p_profession' 			=> $pprofession,
+			's_paddress' 			=> isset($_POST['s_paddress']) ? sanitize_text_field($_POST['s_paddress']) : '',
+			'p_bloodgrp' 			=> $pbloodgroup,
+			's_city' 				=> isset($_POST['s_city']) ? sanitize_text_field($_POST['s_city']) : '',
+			's_pcountry' 			=> isset($_POST['s_pcountry']) ? sanitize_text_field($_POST['s_pcountry']) : '',
+			's_pcity' 				=> isset($_POST['s_pcity']) ? sanitize_text_field($_POST['s_pcity']) : '',
+			's_pzipcode' 			=> isset($_POST['s_pzipcode']) ? intval($_POST['s_pzipcode']) : '',
+			'p_phone'  				=>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : ''
 
 		);
 
@@ -644,6 +647,9 @@ function wpsp_UpdateStudent(){
 	$studenteditprofile = sanitize_text_field($_POST['studenteditprofile']);
 	$studentprofileparentnew = sanitize_text_field($_POST['studentprofileparentnew']);
 
+	$objUnit = CUnits::getInstance()->fetchUnitById( intval( sanitize_text_field( $_POST[ 'current_unit_id' ] ) ) );
+	
+	
 	if ($studenteditprofile == 'studenteditprofile'){
 
 		$studenttable = array(
@@ -663,6 +669,7 @@ function wpsp_UpdateStudent(){
 		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
 		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
 		'current_unit_id'     => isset( $_POST['current_unit_id'] ) ? sanitize_text_field( $_POST['current_unit_id'] ) : '',
+		'trade_id'				=> is_object( $objUnit ) ? $objUnit->trade_id : 0,
 		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
 		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
 	);
@@ -699,6 +706,7 @@ function wpsp_UpdateStudent(){
 		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
 		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
         'current_unit_id'     => isset( $_POST['current_unit_id'] ) ? sanitize_text_field( $_POST['current_unit_id'] ) : '',
+		'trade_id'				=> is_object( $objUnit ) ? $objUnit->trade_id : 0,
 		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
 		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
 
@@ -850,6 +858,7 @@ function wpsp_UpdateStudent(){
 		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
 		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
 		'current_unit_id'     => isset( $_POST['current_unit_id'] ) ? sanitize_text_field( $_POST['current_unit_id'] ) : '',
+		'trade_id'				=> is_object( $objUnit ) ? $objUnit->trade_id : 0,
 		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
 		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
 	);

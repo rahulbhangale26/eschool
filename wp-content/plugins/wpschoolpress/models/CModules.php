@@ -57,7 +57,9 @@ class CModules extends CModel {
         'icon_class'        => 'dashicons dashicons dashicons-welcome-widgets-menus icon',
         'parent_module_id'  => 0,
         'has_sub_modules'   => 0,
-        'create_new'        => 'addstudent'
+    	'create_new'        => 'addstudent',
+        'create_new_title' 	=> 'Add Trainee',
+    	'hide_from'			=> [ CDesignations::INSTRUCTOR, CDesignations::OTHER ]
     ];
     
     const TRAINEE_RECORD    = [
@@ -531,7 +533,7 @@ class CModules extends CModel {
                 $arrmixModule[self::DEMONSTRATION_PLAN['id']]           = self::DEMONSTRATION_PLAN;
                 $arrmixModule[self::INSTRUCTOR_DAILY_DIARY['id']]       = self::INSTRUCTOR_DAILY_DIARY;
                 $arrmixModule[self::JOBS['id']]                         = self::JOBS;
-                $arrmixModule[self::PROGRESS_CARD]						= self::PROGRESS_CARD;
+                $arrmixModule[self::PROGRESS_CARD['id']]				= self::PROGRESS_CARD;
                 $arrmixModule[self::SKILL_CHART['id']]                  = self::SKILL_CHART;
                 $arrmixModule[self::PROGRESS_CHART['id']]               = self::PROGRESS_CHART;
                 $arrmixModule[self::QUESTION_BANK['id']]                = self::QUESTION_BANK;

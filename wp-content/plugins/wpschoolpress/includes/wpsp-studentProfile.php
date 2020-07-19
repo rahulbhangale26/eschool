@@ -847,17 +847,32 @@ if( !empty( $stinfo ) ) {
                       ?>
                         <div class="wpsp-form-group">
                             <label class="wpsp-label" for="Class">Unit<span class="wpsp-required">*</span></label>
+                            
                             <?php
-                              echo '<select data-is_required="true" class="wpsp-form-control" name="current_unit_id">';
-                              echo '<option value="" disabled selected>Select Class</option>';
-
-                            foreach ($units as $unit) {
+                            global $objUser;
+                            if(  CRole::ADMIN == $objUser->getRole() || ( CRole::TEACHER == $objUser->getRole() && true == in_array( $objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
+                            	$arrobjTrades	= rekeyObjects( 'id', CTrade::getInstance()->fetchAllTrades() );
+                              	$arrobjUnits	= rekeyObjects( 'id', CUnits::getInstance()->fetchAllUnits() );
+                            } else {
+                              	$arrobjTrades 	= rekeyObjects( 'id', CTrade::getInstance()->fetchTradesByInstructorId( $objUser->getTeacher()->tid ) );
+                              	$arrobjUnits	= rekeyObjects( 'id', CUnits::getInstance()->fetchUnitByInstructorUserId( $objUser->getTeacher()->tid ) );
+                            }  
                             ?>
-                              <option value="<?php echo $unit->id; ?>" <?php echo ( $stinfo->current_unit_id == $unit->id ) ? 'selected' : ''; ?>>
-                                <?php echo $unit->unit_name; ?>
-                              </option>
-                            <?php }?>
-                          </select>
+                            
+                            <select id="unit_id" class="wpsp-form-control" name="current_unit_id">
+								<option value="">Select Unit</option>
+									<?php foreach( $arrobjBatches AS $batch ) { ?>
+										<optgroup class="batch-optgroup" label="<?php echo $batch->name; ?>">
+											<?php foreach( $arrobjTrades AS $trade ) { ?>								
+												<?php foreach( $arrobjUnits AS $unit ) {
+													if( $batch->id == $unit->batch_id && $trade->id == $unit->trade_id ) {
+														echo '<option ' . ( $stinfo->current_unit_id == $unit->id ? 'selected="selected"' : '' ) . ' value="' . $unit->id . '"> ' . $trade->name . ' - ' . $unit->unit_name . '</option>';
+													}
+												}?>
+											<?php } ?>
+										</optgroup>
+									<?php }?>
+							</select>
                         </div>
                         <div class="wpsp-col-md-3 wpsp-col-sm-3 wpsp-col-xs-12">
                         	<div class="date-input-block">

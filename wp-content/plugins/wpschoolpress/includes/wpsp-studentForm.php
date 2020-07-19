@@ -963,16 +963,31 @@ $arrobjBatches = ( new CBatches() )->fetchAllBatches();
                                   	<span class="wpsp-required">*</span>
                                 </label>
                             <?php
-                              $units = CUnits::getInstance()->fetchAllUnits();
-                                echo '<select class="wpsp-form-control" data-is_required="true"  name="CurrentUnitId">';
-                                echo '<option value="" disabled selected>Select Unit</option>';
-                                foreach($units as $unit) {
-                             ?>
-                              	<option value="<?php echo $unit->id; ?>"><?php echo $unit->unit_name; ?></option>
-                          	<?php
-                                }
+                            global $objUser;
+                            if(  CRole::ADMIN == $objUser->getRole() || ( CRole::TEACHER == $objUser->getRole() && true == in_array( $objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
+                            	$arrobjTrades	= rekeyObjects( 'id', CTrade::getInstance()->fetchAllTrades() );
+                              	$arrobjUnits	= rekeyObjects( 'id', CUnits::getInstance()->fetchAllUnits() );
+                            } else {
+                              	$arrobjTrades 	= rekeyObjects( 'id', CTrade::getInstance()->fetchTradesByInstructorId( $objUser->getTeacher()->tid ) );
+                              	$arrobjUnits	= rekeyObjects( 'id', CUnits::getInstance()->fetchUnitByInstructorUserId( $objUser->getTeacher()->tid ) );
+                            }  
                             ?>
-                          </select>
+                            
+                            <select id="unit_id" class="wpsp-form-control" name="CurrentUnitId">
+								<option value="">Select Unit</option>
+									<?php foreach( $arrobjBatches AS $batch ) { ?>
+										<optgroup class="batch-optgroup" label="<?php echo $batch->name; ?>">
+											<?php foreach( $arrobjTrades AS $trade ) { ?>								
+												<?php foreach( $arrobjUnits AS $unit ) {
+													if( $batch->id == $unit->batch_id && $trade->id == $unit->trade_id ) {
+														echo '<option ' . ( $filter['unit_id'] == $unit->id ? 'selected="selected"' : '' ) . ' value="' . $unit->id . '"> ' . $trade->name . ' - ' . $unit->unit_name . '</option>';
+													}
+												}?>
+											<?php } ?>
+										</optgroup>
+									<?php }?>
+							</select>
+                            
                            <div class="date-input-block">
                              <table class="table table-bordered" width="100%" cellspacing="0" cellpadding="5"></table>
                           </div>

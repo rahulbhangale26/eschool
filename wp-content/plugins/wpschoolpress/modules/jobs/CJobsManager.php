@@ -90,7 +90,16 @@ class CJobsManager extends CFactory {
             
             switch ( NULL ) {
                 default:
-                    
+                	if( false == isset( $arrmixRequestData['number'] ) || "" == $arrmixRequestData['number'] ) {
+                		$this->addErrorMessage( 'Job Number is required.' );
+                		break;
+                	}
+                	
+                	if( false == is_int( ( int ) $arrmixRequestData['number'] ) ) {
+                		$this->addErrorMessage( 'Job Number should be numberic.' );
+                		break;
+                	}
+                	
                     if( false == isset( $arrmixRequestData['title'] ) || "" == $arrmixRequestData['title'] ) {
                         $this->addErrorMessage( 'Job Title is required.' );
                         break;
@@ -148,6 +157,7 @@ class CJobsManager extends CFactory {
                     $arrmixJob = [
                         'file_id'           => $intFileId,
                         'instructor_id'     => $this->objUser->getTeacher()->tid,
+                   		'number'			=> intval( $arrmixRequestData['number'] ),
                         'title'             => $arrmixRequestData['title'],
                         'description'       => $arrmixRequestData['description'],
                         'start_date'        => date( 'Y-m-d H:i:s', strtotime( $arrmixRequestData['start_date'] ) ),
@@ -192,6 +202,16 @@ class CJobsManager extends CFactory {
             
             switch( NULL ) {
                 default:
+                	if( false == isset( $arrmixRequestData['number'] ) || "" == $arrmixRequestData['number'] ) {
+                		$this->addErrorMessage( 'Job Number is required.' );
+                		break;
+                	}
+                	
+                	if( false == is_int( ( int ) $arrmixRequestData['number'] ) ) {
+                		$this->addErrorMessage( 'Job Number should be numberic.' );
+                		break;
+                	}
+                	
                     if( false == isset( $arrmixRequestData['title'] ) || "" == $arrmixRequestData['title'] ) {
                         $this->addErrorMessage( 'Job Title is required.' );
                         break;
@@ -247,6 +267,7 @@ class CJobsManager extends CFactory {
                     }
                     
                     $arrmixJob = [
+                   		'number'			=> intval( $arrmixRequestData['number'] ),
                         'title'             => $arrmixRequestData['title'],
                         'description'       => $arrmixRequestData['description'],
                         'start_date'        => date( 'Y-m-d H:i:s', strtotime( $arrmixRequestData['start_date'] ) ),

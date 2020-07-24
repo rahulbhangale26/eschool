@@ -321,9 +321,9 @@ class CModules extends CModel {
     
     const EXAMS  = [
         'id'                => 29,
-        'title'             => 'Exams',
-        'slug'              => 'sch-exams',
-        'icon_class'        => '',
+        'title'             => 'Exams Management',
+        'slug'              => 'sch-exam',
+        'icon_class'        => 'dashicons dashicons-clipboard',
         'parent_module_id'  => 25,
         'has_sub_modules'   => 0,
     ];
@@ -474,6 +474,7 @@ class CModules extends CModel {
        		'sch-progress_card'					=> self::PROGRESS_CARD,
             'sch-question_bank'                 => self::QUESTION_BANK,
             'sch-daily_diary'                   => self::INSTRUCTOR_DAILY_DIARY,
+        	'sch-exam'							=> self::EXAMS,
         ];
     
     }
@@ -612,9 +613,10 @@ class CModules extends CModel {
             self::UNITS['id']               => self::UNITS,
             self::STAFF['id']               => self::STAFF,
             self::TRAINEES['id']            => self::TRAINEES,
-            self::TRAINEE_RECORD['id']      => self::TRAINEE_RECORD,
+        	self::ATTENDANCE['id']          => self::ATTENDANCE,
+        	self::EXAMS['id']				=> self::EXAMS,
+        	self::TRAINEE_RECORD['id']      => self::TRAINEE_RECORD,
             self::INSTRUCTOR_RECORD['id']   => self::INSTRUCTOR_RECORD,
-            self::ATTENDANCE['id']          => self::ATTENDANCE,
             self::MEETING_ROOM['id']        => self::MEETING_ROOM,
             self::EVENTS['id']              => self::EVENTS,
             self::NOTIFY['id']              => self::NOTIFY,
@@ -631,6 +633,7 @@ class CModules extends CModel {
             self::DASHBOARD['id']           => self::DASHBOARD,
             self::TRAINEES['id']            => self::TRAINEES,
             self::ATTENDANCE['id']          => self::ATTENDANCE,
+       		self::EXAMS['id']				=> self::EXAMS,
             self::TRAINEE_RECORD['id']      => self::TRAINEE_RECORD,
             self::INSTRUCTOR_RECORD['id']   => self::INSTRUCTOR_RECORD,
             self::STAFF['id']               => self::STAFF,

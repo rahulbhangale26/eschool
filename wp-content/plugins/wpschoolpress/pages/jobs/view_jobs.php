@@ -10,7 +10,7 @@
 			<table id="jobs_table" class="wpsp-table" cellspacing="0" width="100%" style="width:100%">
 				<thead>
 					<tr role="row">
-						<th>Id.</th>
+						<th>Job No.</th>
 						<th>Title</th>
 						<th>Description</th>
 						<th>Time Frame</th>
@@ -22,7 +22,7 @@
 				<tbody>
 					<?php foreach( $jobs AS $job ) { ?>
 						<tr>
-							<td><?php echo $job->id; ?></td>
+							<td><?php echo $job->number; ?></td>
 							<td><?php echo '<strong>' . $job->title . '</strong><br>' . $instructors[$job->instructor_id]->first_name . ' ' . $instructors[$job->instructor_id]->last_name; ?></td>
 							<td><?php echo $job->description; ?></td>
 							<td><?php echo date( 'Y-m-d', strtotime( $job->start_date ) ) . ' - ' . date( 'Y-m-d', strtotime( $job->end_date ) ); ?><br><?php echo 'Time Given: ' . $job->time_given; ?> Hours</td>

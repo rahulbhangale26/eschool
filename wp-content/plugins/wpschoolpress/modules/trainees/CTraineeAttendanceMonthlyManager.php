@@ -8,6 +8,7 @@ class CTraineeAttendanceMonthlyManager extends CFactory {
     protected $objTrade;
     protected $objBatch;
     
+    protected $arrobjUnits;
     protected $arrobjTraineeAttendances;
     protected $arrobjTraineeAttendancesSummary;
     protected $arrobjDailyTraineeAttendanceStat;
@@ -39,8 +40,10 @@ class CTraineeAttendanceMonthlyManager extends CFactory {
     public function handleViewTraineAttendanceMonthly() {
         
         if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
+        	$this->arrobjUnits	= CUnits::getInstance()->fetchAllUnits();
             $this->arrobjTrades = CTrade::getInstance()->fetchAllTrades();
         } else {
+        	$this->arrobjUnits	= CUnits::getInstance()->fetchUnitByInstructorUserId( $this->objUser->getTeacher()->tid );
             $this->arrobjTrades = CTrade::getInstance()->fetchTradesByInstructorId( $this->objUser->getTeacher()->tid );
         }
         
@@ -49,14 +52,16 @@ class CTraineeAttendanceMonthlyManager extends CFactory {
     
     public function handleViewMusterReport() {
         
-        $intBatchId             = $this->getRequestData( [ 'data', 'batch_id' ] );
-        $intTradeId             = $this->getRequestData( [ 'data', 'trade_id' ] );
         $intUnitId              = $this->getRequestData( [ 'data', 'unit_id' ] );
         $strAttendanceDate      = $this->getRequestData( [ 'data', 'attendance_date' ] );
         $strAttendanceDate      = $this->getRequestData( [ 'data', 'attendance_date' ] );
         
-        $this->objTrade         = CTrade::getInstance()->fetchTradeById( $intTradeId );
         $this->objUnit          = CUnits::getInstance()->fetchUnitById( $intUnitId );
+        
+        $intBatchId             = $this->objUnit->batch_id;
+        $intTradeId             = $this->objUnit->trade_id;
+        
+        $this->objTrade         = CTrade::getInstance()->fetchTradeById( $intTradeId );
         $this->objBatch         = CBatches::getInstance()->fetchBatchById( $intBatchId );
         $this->objTeacher       = CTeachers::getInstance()->fetchTeacherByUnitIdByBatchId( $intUnitId, $intBatchId );
         $this->arrobjStudents   =  CStudents::getInstance()->fetchStudentsByUnitId( $intUnitId );
@@ -80,6 +85,7 @@ class CTraineeAttendanceMonthlyManager extends CFactory {
         
         $this->arrmixTemplateParams['batches']          = CBatches::getInstance()->fetchAllBatches();
         $this->arrmixTemplateParams['trades']           = $this->arrobjTrades;
+        $this->arrmixTemplateParams['units']			= $this->arrobjUnits;
         
         $this->renderPage( 'trainees/attendance/view_trainee_attendance_monthly.php' );
         

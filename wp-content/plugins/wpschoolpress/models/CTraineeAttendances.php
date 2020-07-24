@@ -170,12 +170,12 @@ class CTraineeAttendances extends CModel {
     }
     
     public function fetchTotalSummaryAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId, $strAttendanceDate, $intMonth, $intYear ) {
-        if( $intMonth < 8 ) {
-            $intStartYear = $intYear - 1;
-        } else {
+        if( 7 < $intMonth ) {
             $intStartYear = $intYear;
+        } else {
+        	$intStartYear = $intYear - 1;
         }
-        
+
         $strSql = 'SELECT
                         DAY( ta.attendance_date ),
                         ta.student_id,
@@ -211,8 +211,7 @@ class CTraineeAttendances extends CModel {
                         s.batch_id = ' . ( int ) $intBatchId . '
                         AND s.trade_id = ' . ( int ) $intTradeId . '
                         AND s.current_unit_id = ' . ( int ) $intUnitId . '
-                        AND CAST( ta.attendance_date AS DATE ) BETWEEN \'' . $intStartYear . '-08-01\' AND \'' . $intYear . '-07-31\'
-                        AND CAST( ta.attendance_date AS DATE ) <= \'' . $intYear . '-' . $intMonth . '-31\'
+                        AND CAST( ta.attendance_date AS DATE ) BETWEEN \'' . $intStartYear . '-08-01\' AND \'' . $intYear . '-' . ( $intMonth - 1 ). '-31\'
                     GROUP BY
                         ta.student_id';
         

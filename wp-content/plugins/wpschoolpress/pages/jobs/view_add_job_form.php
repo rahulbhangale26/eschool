@@ -18,6 +18,14 @@
 					<div class="wpsp-row">
 						<div class="wpsp-col-md-12">
 							<div class="wpsp-form-group">
+								<label class="wpsp-labelMain">Job Number<span></span></label>
+								<input type="text" class="wpsp-form-control" id="number" placeholder="Job Number" name="number" value="<?php echo ( true == isset( $job ) ? $job->number : '' );?>" />
+							</div>
+						</div>
+					</div>
+					<div class="wpsp-row">
+						<div class="wpsp-col-md-12">
+							<div class="wpsp-form-group">
 								<label class="wpsp-labelMain">Job Title<span></span></label>
 								<input type="text" class="wpsp-form-control" id="title" placeholder="Job Title" name="title" value="<?php echo ( true == isset( $job ) ? $job->title : '' );?>" />
 							</div>
@@ -226,9 +234,9 @@
 						<div class="wpsp-col-md-6 wpsp-col-md-12">
 							<div class="wpsp-form-group pull-right">
 								<?php if( true == isset( $job ) ) { ?>
-									<input type="submit" name="edit_job" value="Update Job And Skills" class="wpsp-btn wpsp-btn-success" />
+									<input type="submit" name="edit_job" value="Update Job And Skills" class="wpsp-btn wpsp-btn-success submit-form" />
 								<?php } else { ?>
-									<input type="submit" name="add_job" value="Add Job And Skills" class="wpsp-btn wpsp-btn-success" />
+									<input type="submit" name="add_job" value="Add Job And Skills" class="wpsp-btn wpsp-btn-success submit-form" />
 								<?php } ?>
 							</div>
 						</div>
@@ -260,6 +268,10 @@ $(function() {
 
 	$('#job_diagram_file').change( function( e ) {
 		$('#job_img_preview').remove();
+	});
+
+	$('.submit-form').click(function(){
+		$('#view_job_add_form').append( '<div class="loaderOverlay"></div><div class="loader"></div>')
 	});
 	
 });

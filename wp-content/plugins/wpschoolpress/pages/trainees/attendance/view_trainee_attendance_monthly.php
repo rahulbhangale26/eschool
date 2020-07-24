@@ -7,42 +7,26 @@
 				<div class="line_box">
 					<div class="wpsp-form-group">
 						<label for="date" class="wpsp-labelMain">Select Month</label>
-						<input type="text" class="wpsp-form-control select_date" id="attendance_date" value="" name="attendance_date">
+						<input type="text" class="wpsp-form-control select_date" id="attendance_date" value="" name="attendance_date" autocomplete="off">
 					</div>
 
 					<div class="wpsp-form-group">
-						<label for="trade" class="wpsp-labelMain">Select Batch</label>
-						<select class="wpsp-form-control" name="batch_id" id="batch_id">
-							<option value="" disabled selected>Select Batch</option>
-							<?php foreach( $batches as $batch ) { ?>
-								<option 
-									value="<?php echo $batch->id?>"><?php echo $batch->name; ?></option>
-							<?php } ?>
-						</select>
-					</div>
-					
-					<div class="wpsp-form-group">
-						<label for="trade" class="wpsp-labelMain">Select Trade</label>
-						<select class="wpsp-form-control" disabled name="trade_id" id="trade_id">
-							<option value="" disabled selected >Select Trade</option>
-							<?php foreach( $trades as $trade ) { ?>
-								<option
-									value="<?php echo $trade->id?>"><?php echo $trade->name; ?></option>
-							<?php } ?>
-						</select>
-					</div>
-					
-					<div class="wpsp-form-group">
 						<label for="trade" class="wpsp-labelMain">Select Unit</label>
-						<select class="wpsp-form-control" disabled name="unit_id" id="unit_id">
-							<option value="" disabled selected >Select Unit</option>
-							<?php foreach( $units as $unit ) { ?>
-								<option s
-									value="<?php echo $unit->id?>"><?php echo $unit->unit_name; ?></option>
-							<?php } ?>
+						<select id="unit_id" class="wpsp-form-control" name="unit_id">
+							<option value="">Select Unit</option>
+								<?php foreach( $batches AS $batch ) { ?>
+									<optgroup class="batch-optgroup" label="<?php echo $batch->name; ?>">
+										<?php foreach( $trades AS $trade ) { ?>								
+											<?php foreach( $units AS $unit ) {
+												if( $batch->id == $unit->batch_id && $trade->id == $unit->trade_id ) {
+													echo '<option value="' . $unit->id . '"> ' . $trade->name . ' - ' . $unit->unit_name . '</option>';
+												}
+											}?>
+										<?php } ?>
+									</optgroup>
+								<?php }?>
 						</select>
-					</div>
-					
+					</div>					
 				</div>
 			</div>
 	</div>
@@ -86,7 +70,7 @@ function loadTraineeAttendanceMonthly() {
 		'page': 'sch-trainee_attendance_monthly',
 		'pageAction': 'view_muster_report',
 		'selector': '#trainee_attendance_monthly',
-		data:  { 'trade_id': trade_id, 'batch_id': batch_id, 'attendance_date': attendance_date, 'unit_id': unit_id  },
+		data:  { 'attendance_date': attendance_date, 'unit_id': unit_id  },
 		success: function( res ) {
 			$('#monthly_report').show();
 			$('#muster_report').html(res);
@@ -111,53 +95,11 @@ $(function(){
 	$('#unit_id').prop('disabled', true );	
 	
     $('#attendance_date').change( function() {
-   	 	$('#batch_id').prop( 'disabled', false );
+   	 	$('#unit_id').prop( 'disabled', false );
     });
 
-	$("#batch_id").change(function( e ){
-		 $('#trade_id').prop( 'disabled', false );		 
-	});
-
-	$('#trade_id').change( function(e) {
-
-		$('#unit_id').prop( 'disabled', false );
-			
-		var trade_id = $("#trade_id").val();
-		var batch_id = $("#batch_id").val();	
-
-		sch.ajaxRequest({
-			'page': 'sch-trades',
-			'pageAction': 'get_trade_unit_lists',
-			'selector': '#trainee_attendance_monthly',
-			data:  { 'TradeId': trade_id, 'BatchId': batch_id },
-			success: function( res ) {
-				
-				if( '' != res ) {
-					var units = $.parseJSON( res );
-
-					if( 0 == units.length ) {
-						$('#message').html('<div class="error_msg_div"><span class="error_msg_span">NO Unit assigned for this batch.</span></div>');
-						return;
-					}
-
-					strOption = '';
-					$(units).each( function( index, unit ){
-						strOption += '<option value="' + unit.id + '">' + unit.unit_name+ '</option>';
-					});
-					strHTML = '<select name="unit_id" id = "unit_id" class="wpsp-form-control">' +
-								'<option value="" disabled selected>Select Unit</option>' +
-								strOption +
-							'</select>';
-
-					$('#trainee_attendance_monthly #unit_id').replaceWith( strHTML );
-
-					$('#trainee_attendance_monthly #unit_id').change( function(e) {
-						loadTraineeAttendanceMonthly();
-					});
-				}	
-			}
-		});
-		
+    $('#trainee_attendance_monthly #unit_id').change( function(e) {
+		loadTraineeAttendanceMonthly();
 	});
 
 /*  Code for download as pdf

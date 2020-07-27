@@ -4,6 +4,10 @@ class CFactory {
     
     protected $objUser;
     
+    protected $arrobjUnits;
+    protected $arrobjTrades;
+    protected $arrobjBatches;
+    
     protected $arrmixHeaderParams;
     protected $arrmixFooterParams;
     protected $arrmixTemplateParams;
@@ -67,8 +71,8 @@ class CFactory {
         return $arrstrRequestParam;
     }
        
-    public function setSessionData( $strKey, $strValue ) {
-        $_SESSION[$strKey] = $strValue;
+    public function setSessionData( $strKey, $arrstrValue ) {
+        $_SESSION[$strKey] = $arrstrValue;
     }
     
     public function run() {
@@ -86,10 +90,48 @@ class CFactory {
             $this->boolIsAjaxRequest = true;
         }
         
+        if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
+        	$this->arrobjTrades 	= $this->rekeyObjects( 'id', CTrade::getInstance()->fetchAllTrades() );
+        	$this->arrobjUnits		= $this->rekeyObjects( 'id', CUnits::getInstance()->fetchAllUnits() );
+        	$this->arrobjBatches	= $this->rekeyObjects( 'id', CBatches::getInstance()->fetchAllBatches() );
+        } else {
+        	$this->arrobjTrades 	= $this->rekeyObjects( 'id', CTrade::getInstance()->fetchTradesByInstructorId( $this->objUser->getTeacher()->tid ) );
+        	$this->arrobjUnits		= $this->rekeyObjects( 'id', CUnits::getInstance()->fetchUnitByUser( $this->objUser ) );
+        	$this->arrobjBatches	= $this->rekeyObjects( 'id', CBatches::getInstance()->fetchBatchesByInstructorId( $this->objUser->getTeacher()->tid ) );
+        }
+        
+        /** Setting default filters */
+        if( false == $this->getSessionData( [ 'filter', 'unit_id' ] ) ) {
+        	$objCurrentUnit = current( $this->arrobjUnits );
+        }
+        
+        /** Setting filter if passed in request */
+        if( false == is_null( $this->getRequestData( ['filter', 'unit_id'] ) ) || false == is_null( $this->getRequestData( [ 'data', 'filter', 'unit_id' ] ) ) ) {
+        	
+        	if( false == is_null( $this->getRequestData( ['filter', 'unit_id'] ) ) ) {
+        		$objCurrentUnit = $this->arrobjUnits[$this->getRequestData( [ 'filter', 'unit_id' ] ) ];
+        	} else {
+        		$objCurrentUnit = $this->arrobjUnits[$this->getRequestData( [ 'data', 'filter', 'unit_id'] )];
+        	}
+        }
+
+        if( true == is_object( $objCurrentUnit ) ) {
+        	$this->setSessionData( 'filter', [
+        		'unit_id' 	=> $objCurrentUnit->id,
+        		'batch_id'	=> $objCurrentUnit->batch_id,
+        		'trade_id'	=> $objCurrentUnit->trade_id ] 
+        	);
+        }
+              
         $this->loadLinks();
     }
     
     public function initalizeTemplateParams() {
+    	
+    	$this->arrmixTemplateParams['filter']			= $this->getSessionData( ['filter'] );
+    	$this->arrmixTemplateParams['units']			= $this->arrobjUnits;
+    	$this->arrmixTemplateParams['trades']			= $this->arrobjTrades;
+    	$this->arrmixTemplateParams['batches']			= $this->arrobjBatches;
         $this->arrmixTemplateParams['is_ajax_request']  = $this->boolIsAjaxRequest;
         $this->arrmixTemplateParams['slug_module']      = $this->getRequestData( [ 'page' ] );
         $this->arrmixTemplateParams['page_action']      = $this->getRequestData( [ 'page_action' ] );

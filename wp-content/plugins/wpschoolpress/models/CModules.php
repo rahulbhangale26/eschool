@@ -326,6 +326,9 @@ class CModules extends CModel {
         'icon_class'        => 'dashicons dashicons-clipboard',
         'parent_module_id'  => 25,
         'has_sub_modules'   => 0,
+   		'create_new'        => 'add_exam',
+   		'create_new_title'  => 'Add Exam',
+   		'hide_from'         => [ CDesignations::OTHER ]
     ];
     
 /*     const TIMETABLE  = [

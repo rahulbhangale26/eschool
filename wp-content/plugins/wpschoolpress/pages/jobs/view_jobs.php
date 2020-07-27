@@ -32,8 +32,7 @@
 								<a title="Edit Job" href="<?php echo site_url( '/wp-admin/admin.php?page=sch-jobs&page_action=edit_job&job_id=' . $job->id ); ?>"><span class="dashicons dashicons-edit" style="color: orange;"></span></a>
 								<a title="Submit Student Job Details" href="<?php echo site_url( '/wp-admin/admin.php?page=sch-jobs&page_action=add_or_edit_job_marks&job_id=' . $job->id ); ?>"><span class="dashicons dashicons-plus"></span></a>
 								<a href="<?php echo site_url( '/wp-admin/admin.php?page=sch-jobs&page_action=view_evaluation_sheet&job_id=' . $job->id ); ?>"><span class="dashicons dashicons-media-spreadsheet" style="color: blue;"></span></a>
-								
-								<!-- <span class="dashicons dashicons-trash" style="color: red;"></span> -->
+								<a title="Delete Job" href="javascript:;"  id="trash-job" class="wpsp-popclick" data-id="<?php echo $job->id; ?>" data-pop="DeleteModal"><span class="dashicons dashicons-trash" style="color: red;"></span></a>
 							</td>
 						</tr>
 					<?php } ?>
@@ -47,26 +46,26 @@
 $(function () {
 	handleDatatables();
 
-	$(document).on('click', '#trash-lesson-plan', function(e) {
+	$(document).on('click', '.wpsp-popclick', function(e) {
 		$("#DeleteModal").css("display", "block");
 		$("#DeleteModal").attr('data-single-delete', true);
-		$("#DeleteModal").attr( 'data-id', $( '#trash-lesson-plan' ).attr( 'data-id') );
+		$("#DeleteModal").attr( 'data-id', $( this ).attr( 'data-id') );
 	});
 
 	$('.ClassDeleteBt').unbind();
 	$('.ClassDeleteBt').click( function(e) {
 		$("#DeleteModal").css("display", "none");
 		sch.ajaxRequest({
-			'page': 'sch-lesson_plan',
-			'pageAction': 'delete_lesson_plan',
-			'selector': '#view_lesson_plan',
-			data:  { 'lesson_plan_id': $("#DeleteModal").attr( 'data-id' ) },
+			'page': 'sch-jobs',
+			'pageAction': 'delete_job',
+			'selector': '#view_jobs',
+			data:  { 'job_id': $("#DeleteModal").attr( 'data-id' ) },
 			success: function( res ) {
 				if( 'error' == res ) {
-					$('#lesson-plan-filter').html('<div class="error_msg_div"><span class="error_msg_div">Problem occurred while deleting lesson plan.</span></div>');
+					$('#jobs-filter').html('<div class="error_msg_div"><span class="error_msg_div">Problem occurred while deleting Job.</span></div>');
 				} else {
-					$('#view_lesson_plan').replaceWith( res );
-					$('#lesson-plan-filter').html('<div class="success_msg_div"><span class="success_msg_span">Lesson Plan Deleted Successfully.</span></div>');				
+					$('#view_jobs').replaceWith( res );
+					$('#jobs-filter').html('<div class="success_msg_div"><span class="success_msg_span">Job Deleted Successfully.</span></div>');				
 				}
 			}
 		});

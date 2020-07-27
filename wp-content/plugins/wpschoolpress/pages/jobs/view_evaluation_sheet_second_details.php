@@ -28,7 +28,7 @@
          </tr>
          <tr style='height:20px;'>
             <td class="s4 border-left" dir="ltr">JOB NO :</td>
-            <td class="s9" dir="ltr" colspan="4"><?php echo $job->id; ?></td>
+            <td class="s9" dir="ltr" colspan="4"><?php echo $job->number; ?></td>
             <td class="s4 softmerge" dir="ltr" colspan="10">
                <div class="softmerge-inner" >TITLE : <?php echo $job->title;?></div>
             </td>

@@ -27,13 +27,15 @@ class CBatches extends CModel {
     
     public function fetchBatchesByInstructorId( $intInstructorId ) {
         
-       $strSql = 'SELECT
+      $strSql = 'SELECT
                         DISTINCT b.*
                     FROM ' . $this->strTableName . ' b
                         JOIN ' . CStudents::getInstance()->strTableName . ' s ON s.batch_id = b.id
                         JOIN ' . $this->strTablePrefix . 'wpsp_subject_instructors si ON si.unit_id = s.current_unit_id
                     WHERE
-                        si.instructor_id = ' . ( int ) $intInstructorId;
+                        si.instructor_id = ' . ( int ) $intInstructorId . '
+					ORDER BY b.id DESC';
+       				
         
         return $this->objDatabase->get_results( $strSql );
         

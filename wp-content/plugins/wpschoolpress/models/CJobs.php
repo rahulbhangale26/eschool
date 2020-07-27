@@ -41,12 +41,27 @@ class CJobs extends CModel {
                         CONCAT( f.file_path, f.file_name ) AS file_url
                     FROM 
                         ' . $this->strTableName . ' j
-                        JOIN ' . CFiles::getInstance()->strTableName . ' f ON f.id = j.file_id';
+                        JOIN ' . CFiles::getInstance()->strTableName . ' f ON f.id = j.file_id
+					ORDER BY j.number';
         
         return $this->objDatabase->get_results( $strSql );
     }
     
-    public function fetchJobsByInstructorId( $intInstructorId ) {
+    public function fetchJobsByUnitId( $intUnitId ) {
+    	$strSql = 'SELECT
+                        j.*,
+                        CONCAT( f.file_path, f.file_name ) AS file_url
+                    FROM
+                        ' . $this->strTableName . ' j
+                        JOIN ' . CFiles::getInstance()->strTableName . ' f ON f.id = j.file_id
+					WHERE
+						j.unit_id = ' . ( int ) $intUnitId;
+    	
+    	return $this->objDatabase->get_results( $strSql );
+    	
+    }
+    
+    public function fetchJobsByInstructorIdByUnitId( $intInstructorId, $intUnitId ) {
         
         $strSql = 'SELECT
                         j.*,
@@ -55,7 +70,9 @@ class CJobs extends CModel {
                         ' . $this->strTableName . ' j
                         JOIN ' . CFiles::getInstance()->strTableName . ' f ON f.id = j.file_id
                     WHERE
-                        j.instructor_id = ' . ( int ) $intInstructorId;
+                        j.instructor_id = ' . ( int ) $intInstructorId . '
+						AND j.unit_id = ' . ( int ) $intUnitId . '
+					ORDER BY j.number';
         
         return $this->objDatabase->get_results( $strSql );
     }

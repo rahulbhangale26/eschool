@@ -102,6 +102,10 @@ function wpsp_plugins_loaded()
 	
 }
 
+function wpsp_logout() {
+	session_destroy();
+}
+add_action( 'wp_logout', 'wpsp_logout' );
 
 add_action('admin_init', 'ajax_actions');
 function ajax_actions()

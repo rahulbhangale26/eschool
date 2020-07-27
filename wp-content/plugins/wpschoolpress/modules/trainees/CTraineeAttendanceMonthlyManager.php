@@ -83,10 +83,6 @@ class CTraineeAttendanceMonthlyManager extends CFactory {
     
     public function displayViewTraineAttendanceMonthly() {
         
-        $this->arrmixTemplateParams['batches']          = CBatches::getInstance()->fetchAllBatches();
-        $this->arrmixTemplateParams['trades']           = $this->arrobjTrades;
-        $this->arrmixTemplateParams['units']			= $this->arrobjUnits;
-        
         $this->renderPage( 'trainees/attendance/view_trainee_attendance_monthly.php' );
         
     }

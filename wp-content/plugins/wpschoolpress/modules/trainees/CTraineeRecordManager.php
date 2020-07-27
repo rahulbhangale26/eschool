@@ -59,8 +59,7 @@ class CTraineeRecordManager extends CFactory {
         $boolIsSuccess = true;
         
         if( true == isset( $arrmixRequestData['submit'] ) ) {
-                       
-            $this->arrobjStudents           = CStudents::getInstance()->fetchStudentsByUnitId( $arrmixRequestData['unit_id'] );
+            $this->arrobjStudents           = CStudents::getInstance()->fetchStudentsByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
             $arrobjTraineeRecordTypes       = CTraineeRecordTypes::getInstance()->fetchAllTraineeRecordTypes();
             $strCheckedOnDate               = date( 'Y-m-d', strtotime( $arrmixRequestData['from_date'] ) );
             
@@ -114,14 +113,6 @@ class CTraineeRecordManager extends CFactory {
     
     public function handleViewMonthlyReport() {
         
-        $this->arrobjBatches = CBatches::getInstance()->fetchAllBatches();
-        
-        if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
-            $this->arrobjTrades = CTrade::getInstance()->fetchAllTrades();
-        } else {
-            $this->arrobjTrades = CTrade::getInstance()->fetchTradesByInstructorId( $this->objUser->getTeacher()->tid );
-        }
-        
         $this->displayViewMonthlyReport();
     }
     
@@ -129,7 +120,7 @@ class CTraineeRecordManager extends CFactory {
         $strCreatedOn = date( 'y-m-d', strtotime( $this->getRequestData( [ 'data', 'checked_on' ] ) ) );
         $this->arrobjTraineeRecords = CTraineeRecords::getInstance()->fetchTraineeRecordsByCheckedOnByInstructorId( $strCreatedOn, $this->objUser->getTeacher()->tid );
 
-        $intUnitId = $this->getRequestData([ 'data', 'unit_id' ] );
+        $intUnitId = $this->getSessionData([ 'filter', 'unit_id' ] );
         
         $this->arrobjStudents = CStudents::getInstance()->fetchStudentsByUnitId( $intUnitId );
         $this->displayTraineeRecordCheckForm();
@@ -137,9 +128,9 @@ class CTraineeRecordManager extends CFactory {
     
     public function handleViewMonthlyReportDetails() {
         
-        $intUnitId      = $this->getRequestData( [ 'data', 'unit_id' ] );
-        $intTradeId     = $this->getRequestData( [ 'data', 'trade_id' ] );
-        $intBatchId     = $this->getRequestData( [ 'data', 'batch_id' ] );
+        $intUnitId      = $this->getSessionData( [ 'filter', 'unit_id' ] );
+        $intTradeId     = $this->getSessionData( [ 'filter', 'trade_id' ] );
+        $intBatchId     = $this->getSessionData( [ 'filter', 'batch_id' ] );
         $strReportMonth = $this->getRequestData( [ 'data', 'report_month' ] );
         list( $intYear, $intMonth )     = explode( '-', $strReportMonth );
         
@@ -166,8 +157,6 @@ class CTraineeRecordManager extends CFactory {
     public function displayViewTraineeDailyDiary() {
         
         $this->arrmixTemplateParams['trainee_records_summary']      = $this->arrobjTraineeRecordSummary;
-        $this->arrmixTemplateParams['units']                        = $this->rekeyObjects( 'id', CUnits::getInstance()->fetchAllUnits() );
-        $this->arrmixTemplateParams['trades']                       = $this->rekeyObjects( 'id', CTrade::getInstance()->fetchAllTrades() );
         $this->arrmixTemplateParams['instructors']                  = $this->rekeyObjects( 'tid', CTeachers::getInstance()->fetchAllTeachers() );
         
         $this->renderPage( 'trainees/records/view_trainee_records.php' );
@@ -177,9 +166,6 @@ class CTraineeRecordManager extends CFactory {
        
         $this->arrmixTemplateParams['edit_trainee_record']           = $this->getRequestData( [] );
         $this->arrmixTemplateParams['trainee_record_types']     = CTraineeRecordTypes::getInstance()->fetchAllTraineeRecordTypes();
-        $this->arrmixTemplateParams['trades']                   = $this->arrobjTrades;
-        $this->arrmixTemplateParams['batches']                  = CBatches::getInstance()->fetchAllBatches();
-        $this->arrmixTemplateParams['units']                    = CUnits::getInstance()->fetchAllUnits();
         
         $this->renderPage( 'trainees/records/add_record.php' );
     }
@@ -195,9 +181,6 @@ class CTraineeRecordManager extends CFactory {
     }
     
     public function displayViewMonthlyReport() {
-        
-        $this->arrmixTemplateParams['batches']          = $this->arrobjBatches;
-        $this->arrmixTemplateParams['trades']           = $this->arrobjTrades;
         
         $this->renderPage( 'trainees/records/view_monthly_report.php' );
     }

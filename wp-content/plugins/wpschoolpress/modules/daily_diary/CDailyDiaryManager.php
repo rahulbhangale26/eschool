@@ -49,7 +49,7 @@ class CDailyDiaryManager extends CFactory {
 
     	$this->arrmixFilter = [
     			'filter'        => 'filter',
-    			'unit_id'		=> NULL,
+    			'unit_id'		=> $this->getSessionData( [ 'filter', 'unit_id' ] ),
     			'start_date'    => date( 'Y-m-01'),
     			'end_date'      => date( 'Y-m-d' )
     	];
@@ -60,12 +60,8 @@ class CDailyDiaryManager extends CFactory {
         
     	if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
     		$this->arrobjNotes	= CNotes::getInstance()->fetchNotesByFilter( $this->arrmixFilter );
-    		$this->arrobjTrades = $this->rekeyObjects( 'id', CTrade::getInstance()->fetchAllTrades() );
-    		$this->arrobjUnits	= $this->rekeyObjects( 'id', CUnits::getInstance()->fetchAllUnits() );
     	} else {
     		$this->arrobjNotes	= CNotes::getInstance()->fetchNotesByInstructorIdByFilter( $this->objUser->getTeacher()->tid, $this->arrmixFilter );
-    		$this->arrobjTrades = $this->rekeyObjects( 'id', CTrade::getInstance()->fetchTradesByInstructorId( $this->objUser->getTeacher()->tid ) );
-    		$this->arrobjUnits	= $this->rekeyObjects( 'id', CUnits::getInstance()->fetchUnitByInstructorUserId( $this->objUser->getTeacher()->tid ) );
     	}
         
         $this->displayViewDailyDiary();
@@ -76,9 +72,8 @@ class CDailyDiaryManager extends CFactory {
         $arrmixRequestData = $this->getRequestData( [] );
         if( true == isset( $arrmixRequestData['add_note'] ) ) {
             switch ( NULL ) {
-                default:
-                	
-                	if( "" == $arrmixRequestData['unit_id'] ) {
+                default:               	
+                	if( "" == $this->getSessionData( [ 'filter', 'unit_id' ] ) ) {
                 		$this->addErrorMessage( 'Unit is required.' );
                 		break;
                 	}
@@ -94,7 +89,7 @@ class CDailyDiaryManager extends CFactory {
                     }
                     
                     $arrmixNote = [
-                    	'unit_id'				=> ( int ) sanitize_text_field( $arrmixRequestData[ 'unit_id' ] ),
+                    	'unit_id'				=> ( int ) $this->getSessionData( [ 'filter', 'unit_id' ] ),
                         'note_type_id'          => ( int ) sanitize_text_field( $arrmixRequestData['note_type_id'] ),
                     	'number'				=> sanitize_text_field( $this->getRequestData( [ 'note_type_number' ] ) ),
                         'created_on'            => date( 'Y-m-d H:i:s', strtotime( $arrmixRequestData['note_date'] ) ),
@@ -110,13 +105,7 @@ class CDailyDiaryManager extends CFactory {
                     $this->addSuccessMessage( 'Note added successfully.' );
             }
         }
-        
-        if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
-        	$this->arrobjTrades = CTrade::getInstance()->fetchAllTrades();
-        } else {
-        	$this->arrobjTrades = CTrade::getInstance()->fetchTradesByInstructorId( $this->objUser->getTeacher()->tid );
-        }
-        
+       
         $this->displayAddNotes();
     }
     
@@ -124,17 +113,9 @@ class CDailyDiaryManager extends CFactory {
     	$intNoteId		= $this->getRequestData( [ 'note_id' ] );
     	$this->objNote	= CNotes::getInstance()->fetchNoteById( $intNoteId );
     	
-    	if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
-    		$this->arrobjTrades = $this->rekeyObjects( 'id', CTrade::getInstance()->fetchAllTrades() );
-    		$this->arrobjUnits	= $this->rekeyObjects( 'id', CUnits::getInstance()->fetchAllUnits() );
-    	} else {
-    		$this->arrobjTrades = $this->rekeyObjects( 'id', CTrade::getInstance()->fetchTradesByInstructorId( $this->objUser->getTeacher()->tid ) );
-    		$this->arrobjUnits	= $this->rekeyObjects( 'id', CUnits::getInstance()->fetchUnitByInstructorUserId( $this->objUser->getTeacher()->tid ) );
-    	}
-    	
     	if( true == is_string( $this->getRequestData( [ 'add_note' ] ) ) ) {
     		$arrstrNote = [
-    			'unit_id'			=> sanitize_text_field( $this->getRequestData( [ 'unit_id' ] ) ),
+   				'unit_id'			=> ( int ) $this->getSessionData( [ 'filter', 'unit_id' ] ),
     			'number'			=> sanitize_text_field( $this->getRequestData( [ 'note_type_number' ] ) ),
     			'note'				=> sanitize_textarea_field( $this->getRequestData( ['note'] ) ),
     			'note_type_id'		=> sanitize_text_field( $this->getRequestData( [ 'note_type_id' ] ) ),
@@ -165,7 +146,7 @@ class CDailyDiaryManager extends CFactory {
     
     public function handlePrintView() {
     	
-    	if( "" == $this->getRequestData( [ 'data', 'unit_id' ] ) ) {
+    	if( "" == $this->getSessionData( [ 'filter', 'unit_id' ] ) ) {
     		echo json_encode( [ 'status' => false, 'message' => 'Unit selection is required to print.' ] );
     		exit;
     	}
@@ -181,7 +162,7 @@ class CDailyDiaryManager extends CFactory {
     	}
     	
     	$this->arrmixFilter = [
-    			'unit_id'		=> ( int ) sanitize_text_field( $this->getRequestData( [ 'data', 'unit_id' ] ) ),
+    			'unit_id'		=> ( int ) sanitize_text_field( $this->getSessionData( [ 'filter', 'unit_id' ] ) ),
     			'start_date'    => sanitize_text_field( $this->getRequestData( [ 'data', 'start_date' ] ) ),
     			'end_date'      => sanitize_text_field( $this->getRequestData( [ 'data', 'end_date' ] ) )
     	];
@@ -205,11 +186,8 @@ class CDailyDiaryManager extends CFactory {
     
     public function displayViewDailyDiary() {
         
-        $this->arrmixTemplateParams['notes']        = $this->arrobjNotes;
-        $this->arrmixTemplateParams['batches']      = CBatches::getInstance()->fetchAllBatches();
-        $this->arrmixTemplateParams['trades']		= $this->arrobjTrades;
-        $this->arrmixTemplateParams['units']		= $this->arrobjUnits;
-        $this->arrmixTemplateParams['filter']		= $this->arrmixFilter;
+        $this->arrmixTemplateParams['notes']        			= $this->arrobjNotes;
+        $this->arrmixTemplateParams['daily_diary_filter']		= $this->arrmixFilter;
         $this->arrmixTemplateParams['note_types']   = $this->rekeyObjects( 'id', CNoteTypes::getInstance()->fetchNoteTypesByIds( [ CNoteTypes::LESSON, CNoteTypes::PRACTICAL ] ) );
         $this->arrmixTemplateParams['instructors']	= $this->rekeyObjects( 'tid', CTeachers::getInstance()->fetchAllTeachers() );
         
@@ -218,10 +196,7 @@ class CDailyDiaryManager extends CFactory {
     
     public function displayAddNotes() {
         
-    	$this->arrmixTemplateParams['batches']          = CBatches::getInstance()->fetchAllBatches();
-    	$this->arrmixTemplateParams['trades']           = $this->arrobjTrades;
     	$this->arrmixTemplateParams['note']				= $this->objNote;
-    	$this->arrmixTemplateParams['units']			= $this->arrobjUnits;
         $this->arrmixTemplateParams['note_types']       = CNoteTypes::getInstance()->fetchNoteTypesByIds( [ CNoteTypes::LESSON, CNoteTypes::PRACTICAL ] );
         
         $this->renderPage( 'daily_diary/add_notes.php' );
@@ -246,4 +221,3 @@ class CDailyDiaryManager extends CFactory {
 }
 
 ( new CDailyDiaryManager() )->run();
-

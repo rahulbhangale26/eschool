@@ -28,6 +28,10 @@ class CJobMarks extends CModel {
         return $this->objDatabase->delete( $this->strTableName, $arrmixWhere );
     }
     
+    public function fetchJobMarksByJobId( $intJobId ) {
+    	return $this->objDatabase->get_results( ' SELECT * FROM ' . $this->strTableName . ' WHERE job_id = ' . ( int ) $intJobId );
+    }
+    
     public function fetchJobMarksByStudentIdByJobId( $intStudentId, $intJobId ) {
         return $this->objDatabase->get_results( ' SELECT * FROM ' . $this->strTableName . ' WHERE student_id = ' . ( int ) $intStudentId . ' AND job_id = ' . ( int ) $intJobId );
     }
@@ -50,6 +54,7 @@ class CJobMarks extends CModel {
     public function fetchProgressDetailsByStudentId( $intStudentId ) {
     	$strSql = 'SELECT
 						jm.job_id,
+						j.number,
 						j.title,
 						SUM(
 							CASE

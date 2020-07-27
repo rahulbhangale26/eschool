@@ -65,8 +65,8 @@ class CTraineeAttendanceManager extends CFactory {
         $arrmixRequestData  = $this->getRequestData([] );
         
         if( true == isset( $arrmixRequestData['submit'] ) ) {
-            $intBatchId             = $arrmixRequestData['batch_id'];
-            $intTradeId             = $arrmixRequestData['trade_id'];
+            $intBatchId             = $this->getSessionData( [ 'filter', 'batch_id' ] );
+            $intTradeId             = $this->getSessionData( [ 'filter', 'trade_id' ] );
             $arrobjAttendanceTypes  = CAttendanceTypes::getInstance()->fetchAllAttendanceTypes();
             $this->arrobjStudents   = CStudents::getInstance()->fetchStudentsByBatchIdByTradeId( $intBatchId, $intTradeId );
             $strAttendanceDate      = date( 'Y-m-d', strtotime( $arrmixRequestData['attendance_date'] ) );
@@ -104,19 +104,13 @@ class CTraineeAttendanceManager extends CFactory {
 
         }
         
-        if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
-            $this->arrobjTrades = CTrade::getInstance()->fetchAllTrades();
-        } else {
-            $this->arrobjTrades = CTrade::getInstance()->fetchTradesByInstructorId( $this->objUser->getTeacher()->tid );
-        }
-        
         $this->displayAddTraineeAttendance();
     }
     
     public function handleTraineeAttendanceForm() {
-        $intBatchId             = $this->getRequestData( [ 'data', 'batch_id' ] );
-        $intTradeId             = $this->getRequestData( [ 'data', 'trade_id' ] );
-        $intUnitId              = $this->getRequestData( [ 'data', 'unit_id' ] );
+        $intBatchId             = $this->getSessionData( [ 'filter', 'batch_id' ] );
+        $intTradeId             = $this->getSessionData( [ 'filter', 'trade_id' ] );
+        $intUnitId              = $this->getSessionData( [ 'filter', 'unit_id' ] );
         $strAttendanceDate      = $this->getRequestData( [ 'data', 'attendance_date' ] );
         
         if( true == isset( $intBatchId ) && true == isset( $intTradeId ) ) {
@@ -149,9 +143,6 @@ class CTraineeAttendanceManager extends CFactory {
     public function displayAddTraineeAttendance() {
         
         $this->arrmixTemplateParams['edit_attendance']          = $this->getRequestData( [] );
-        $this->arrmixTemplateParams['batches']                  = CBatches::getInstance()->fetchAllBatches();
-        $this->arrmixTemplateParams['trades']                   = $this->arrobjTrades;
-        $this->arrmixTemplateParams['units']                    = CUnits::getInstance()->fetchAllUnits();
         
         $this->renderPage( 'trainees/attendance/add_trainee_attendance.php' );
     }

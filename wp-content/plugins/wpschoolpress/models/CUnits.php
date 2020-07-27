@@ -66,6 +66,7 @@ class CUnits extends CModel {
             return $this->fetchAllUnits();
         }
         
+        $strSql .= ' ORDER BY id DESC'; 
         
         return $this->objDatabase->get_results( $strSql );
         

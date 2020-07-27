@@ -51,7 +51,7 @@
 						<div class="wpsp-col-md-12">
 							<div class="wpsp-form-group">
 								<label class="wpsp-labelMain">Start Date<span></span></label>
-								<input type="text" class="wpsp-form-control" id="start_date" placeholder="" name="start_date" value="<?php echo ( true == isset( $job ) ? $job->start_date : '' ); ?>" />
+								<input type="text" class="wpsp-form-control" id="start_date" placeholder="" name="start_date" value="<?php echo ( true == isset( $job ) ? $job->start_date : '' ); ?>" autocomplete="off" />
 							</div>
 						</div>
 					</div>
@@ -59,7 +59,7 @@
 						<div class="wpsp-col-md-12">
 							<div class="wpsp-form-group">
 								<label class="wpsp-labelMain">End Date<span></span></label>
-								<input type="text" class="wpsp-form-control" id="end_date" placeholder="" name="end_date"  value="<?php echo ( true == isset( $job ) ? $job->end_date : '' ); ?>" />
+								<input type="text" class="wpsp-form-control" id="end_date" placeholder="" name="end_date"  value="<?php echo ( true == isset( $job ) ? $job->end_date : '' ); ?>" autocomplete="off" />
 							</div>
 						</div>
 					</div>

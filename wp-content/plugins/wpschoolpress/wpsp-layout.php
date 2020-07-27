@@ -82,7 +82,7 @@ function wpsp_topbar(){
       </div>
     </div>
     <header class='wpsp-header'>
-      <a href='<?php site_url('wp-admin/admin.php?page=sch-dashboard'); ?>' class='wpsp-logo'>
+      <a href='<?php echo site_url(); ?>' class='wpsp-logo'>
         <span class='wpsp-logo-mini'>
           <img src="<?php echo  $imglogo; ?>" class="img wpsp-school-logo" width="45px" height="40px">
         </span>
@@ -90,7 +90,7 @@ function wpsp_topbar(){
       </a>
       <div class="wpsp-head">
       <div class="wpsp-menuIcon"><span></span></div>
-      <h3 class="wpsp-customeMsg">Tomorrow's Future, Digital Schools</h3>
+      <div class="wpsp-customeMsg"></div>
 
       <div class="wpsp-righthead">
         <div class="wpsp-head-action"></div>
@@ -119,6 +119,36 @@ function wpsp_topbar(){
 }
 /* This function used for Left-Sidebar */
 function wpsp_sidebar(){
+	
+	global $objUser;
+	if(  CRole::ADMIN == $objUser->getRole() || ( CRole::TEACHER == $objUser->getRole() && true == in_array( $objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
+		$trades 	= rekeyObjects( 'id', CTrade::getInstance()->fetchAllTrades() );
+		$units		= rekeyObjects( 'id', CUnits::getInstance()->fetchAllUnits() );
+		$batches	= rekeyObjects( 'id', CBatches::getInstance()->fetchAllBatches() );
+	} else {
+		$trades 	= rekeyObjects( 'id', CTrade::getInstance()->fetchTradesByInstructorId( $objUser->getTeacher()->tid ) );
+		$units		= rekeyObjects( 'id', CUnits::getInstance()->fetchUnitByUser( $objUser ) );
+		$batches	= rekeyObjects( 'id', CBatches::getInstance()->fetchBatchesByInstructorId( $objUser->getTeacher()->tid ) );
+	}
+
+	if( false == isset( $_SESSION['filter'] ) || ( false == is_numeric( $_SESSION['filter']['unit_id'] ) ) ) {
+		print_r( current( $units ) );
+		$objCurrentUnit = current( $units );
+	}
+	
+	if(  true == isset( $_REQUEST['filter'] ) || true == isset( $_REQUEST['filter']['unit_id'] ) ) {
+		$objCurrentUnit = $units[$_REQUEST['filter']['unit_id']];
+	}
+	
+	if( true == is_object( $objCurrentUnit ) ) {
+		$_SESSION['filter'] = [
+				'unit_id' 	=> $objCurrentUnit->id,
+				'batch_id'	=> $objCurrentUnit->batch_id,
+				'trade_id'	=> $objCurrentUnit->trade_id ];
+	}
+
+	$filter = $_SESSION['filter'];
+	
     require_once WPSP_PLUGIN_PATH . 'pages/wpsp-header.php';
 }
 /* This function used for Header Breadcrumb */

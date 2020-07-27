@@ -5,6 +5,7 @@ class CJobsManager extends CFactory {
     protected $arrobjJobs;
     protected $arrobjJobOperationalSkills;
     protected $arrobjTrades;
+    protected $arrobjUnits;
     protected $arrobjStudents;
     protected $arrobjSkillJobMarks;
     protected $objGradeJobMarks;
@@ -45,6 +46,10 @@ class CJobsManager extends CFactory {
                 $this->handleAddOrEditJobMarks();
                 break;
                 
+            case 'delete_job':
+            	$this->handleDeleteJob();
+            	break;
+                
             case 'students_job_marks_list':
                 $this->handleStudentJobMarksList();
                 break;
@@ -74,9 +79,9 @@ class CJobsManager extends CFactory {
     public function handleViewJobs() {
         
         if( ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) || CRole::ADMIN == $this->objUser->getRole() ) {
-            $this->arrobjJobs = CJobs::getInstance()->fetchAllJobs();
+            $this->arrobjJobs = CJobs::getInstance()->fetchJobsByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
         } else {
-            $this->arrobjJobs = CJobs::getInstance()->fetchJobsByInstructorId( $this->objUser->getTeacher()->tid );
+            $this->arrobjJobs = CJobs::getInstance()->fetchJobsByInstructorIdByUnitId( $this->objUser->getTeacher()->tid, $this->getSessionData( [ 'filter', 'unit_id' ] ) );
         }
         
         $this->displayViewJobs();
@@ -89,7 +94,7 @@ class CJobsManager extends CFactory {
         if( true == isset( $arrmixRequestData[ 'add_job' ] ) ) {
             
             switch ( NULL ) {
-                default:
+                default:               	
                 	if( false == isset( $arrmixRequestData['number'] ) || "" == $arrmixRequestData['number'] ) {
                 		$this->addErrorMessage( 'Job Number is required.' );
                 		break;
@@ -159,6 +164,7 @@ class CJobsManager extends CFactory {
                         'instructor_id'     => $this->objUser->getTeacher()->tid,
                    		'number'			=> intval( $arrmixRequestData['number'] ),
                         'title'             => $arrmixRequestData['title'],
+                    	'unit_id'			=> $this->getSessionData( [ 'filter', 'unit_id'] ),
                         'description'       => $arrmixRequestData['description'],
                         'start_date'        => date( 'Y-m-d H:i:s', strtotime( $arrmixRequestData['start_date'] ) ),
                         'end_date'          => date( 'Y-m-d H:i:s', strtotime( $arrmixRequestData['end_date'] ) ),
@@ -268,6 +274,7 @@ class CJobsManager extends CFactory {
                     
                     $arrmixJob = [
                    		'number'			=> intval( $arrmixRequestData['number'] ),
+                   		'unit_id'			=> $this->getSessionData( [ 'filter', 'unit_id'] ),
                         'title'             => $arrmixRequestData['title'],
                         'description'       => $arrmixRequestData['description'],
                         'start_date'        => date( 'Y-m-d H:i:s', strtotime( $arrmixRequestData['start_date'] ) ),
@@ -322,9 +329,29 @@ class CJobsManager extends CFactory {
         $this->displayAddOrEditJobMarks();
     }
     
+    public function handleDeleteJob() {
+    	
+    	$intJobId = ( int ) $this->getRequestData( [ 'data', 'job_id' ] );
+    	
+    	$arrobjJobMarks = CJobMarks::getInstance()->fetchJobMarksByJobId( $intJobId );
+    	
+    	if( 0 < count( $arrobjJobMarks ) && false == CJobMarks::getInstance()->delete( [ 'job_id' => $intJobId ] ) ) {
+    		echo 'error';
+    		exit;
+    	}
+    	
+    	if( false == CJobs::getInstance()->delete( [ 'id' => $intJobId ] ) ) {
+    		echo 'error';
+    		exit;
+    	}
+    	
+    	$this->handleViewJobs();  	
+    	
+    }
+    
     public function handleStudentJobMarksList() {
         
-        $intUnitId = $this->getRequestData([ 'data', 'unit_id' ] );
+        $intUnitId = $this->getRequestData([ 'filter', 'unit_id' ] );
         
         $this->arrobjStudents = CStudents::getInstance()->fetchStudentsByUnitId( $intUnitId );
         
@@ -337,7 +364,7 @@ class CJobsManager extends CFactory {
         $this->objJob                       = CJobs::getInstance()->fetchJobById( $this->getRequestData( [ 'data', 'job_id' ] ) );
         $this->objStudent                   = CStudents::getInstance()->fetchStudentById( $this->getRequestData( [ 'data', 'student_id' ] ) );       
         $this->arrobjJobOperationalSkills   = CJobOperationalSkills::getInstance()->fetchJobOperationalSkillsBYJobId( $this->getRequestData( [ 'data', 'job_id' ] ) );
-        $arrobjJobMarks               = CJobMarks::getInstance()->fetchJobMarksByStudentIdByJobId( $this->getRequestData( [ 'data', 'student_id' ] ), $this->getRequestData( [ 'data', 'job_id' ] ) );
+        $arrobjJobMarks               		= CJobMarks::getInstance()->fetchJobMarksByStudentIdByJobId( $this->getRequestData( [ 'data', 'student_id' ] ), $this->getRequestData( [ 'data', 'job_id' ] ) );
 
         foreach ( $arrobjJobMarks AS $objJobMark ) {
             if( $objJobMark->job_evaluation_type_id == CJobEvaluationTypes::SKILLS ) {
@@ -450,12 +477,6 @@ class CJobsManager extends CFactory {
     
     public function handleViewEvaluationSheetSecond() {
         
-        if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
-            $this->arrobjTrades = CTrade::getInstance()->fetchAllTrades();
-        } else {
-            $this->arrobjTrades = CTrade::getInstance()->fetchTradesByInstructorId( $this->objUser->getTeacher()->tid );
-        }
-        
         $this->objJob                       = CJobs::getInstance()->fetchJobById( $this->getRequestData( [ 'job_id'] ) );
         
         $this->displayViewEvaluationSheetSecond();
@@ -465,7 +486,7 @@ class CJobsManager extends CFactory {
         
         $this->objJob                       = CJobs::getInstance()->fetchJobById( $this->getRequestData( ['data', 'job_id'] ) );
         $this->arrobjJobOperationalSkills   = CJobOperationalSkills::getInstance()->fetchJobOperationalSkillsBYJobId( $this->objJob->id );
-        $this->arrobjStudents               = $this->rekeyObjects( 'sid', CStudents::getInstance()->fetchStudentsByUnitId( $this->getRequestData( ['data', 'unit_id' ] ) ) );
+        $this->arrobjStudents               = $this->rekeyObjects( 'sid', CStudents::getInstance()->fetchStudentsByUnitId( $this->getSessionData( ['filter', 'unit_id' ] ) ) );
         $arrobjJobMarks                     = CJobMarks::getInstance()->fetchJobMarksByStudentIdsByJobId( array_keys( $this->arrobjStudents ), $this->getRequestData( [ 'data', 'job_id' ] ) );
 
         foreach( $this->arrobjStudents AS $objStudent ) {
@@ -495,7 +516,7 @@ class CJobsManager extends CFactory {
     }
     
     public function displayViewAddJobForm() {
-        
+           	
         $this->renderPage( 'jobs/view_add_job_form.php' );
     }
     
@@ -545,9 +566,6 @@ class CJobsManager extends CFactory {
     }
     
     public function displayViewEvaluationSheetSecond() {
-        
-        $this->arrmixTemplateParams['batches']      = CBatches::getInstance()->fetchAllBatches();
-        $this->arrmixTemplateParams['trades']       = $this->arrobjTrades;
         $this->arrmixTemplateParams['job']          = $this->objJob;
         
         $this->renderPage( 'jobs/view_evaluation_sheet_second.php' );
@@ -556,9 +574,9 @@ class CJobsManager extends CFactory {
     public function displayViewEvaluationSheetSecondDetails() {
         global $wpsp_settings_data;
         
-        $this->arrmixTemplateParams['batch']        = CBatches::getInstance()->fetchBatchById( $this->getRequestData( [ 'data', 'batch_id' ] ) );
-        $this->arrmixTemplateParams['trade']        = CTrade::getInstance()->fetchTradeById( $this->getRequestData( [ 'data', 'trade_id' ] ) );
-        $this->arrmixTemplateParams['unit']         = CUnits::getInstance()->fetchUnitById( $this->getRequestData( ['data', 'unit_id'] ) );
+        $this->arrmixTemplateParams['batch']        = CBatches::getInstance()->fetchBatchById( $this->getSessionData( [ 'filter', 'batch_id' ] ) );
+        $this->arrmixTemplateParams['trade']        = CTrade::getInstance()->fetchTradeById( $this->getSessionData( [ 'filter', 'trade_id' ] ) );
+        $this->arrmixTemplateParams['unit']         = CUnits::getInstance()->fetchUnitById( $this->getSessionData( ['filter', 'unit_id'] ) );
         $this->arrmixTemplateParams['iti_name']     = isset( $wpsp_settings_data['sch_name'] ) && !empty( $wpsp_settings_data['sch_name'] ) ? $wpsp_settings_data['sch_name'] : __( 'ITIMS','WPSchoolPress' );
         $this->arrmixTemplateParams['job']          = $this->objJob;
         $this->arrmixTemplateParams['instructors']  = $this->rekeyObjects( 'tid', CTeachers::getInstance()->fetchAllTeachers() );

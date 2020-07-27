@@ -41,7 +41,7 @@ function ewpsp_customcss(){
 }
 
     ewpsp_customcss();
-    wpsp_topbar();
+    wpsp_topbar( $batches, $trades, $units, $filter );
     //wpsp_sidebar();
     // wpsp_body_start();
     
@@ -83,7 +83,35 @@ function ewpsp_customcss(){
         	<h1 class="wpsp-pagetitle"><?php echo $arrstrCurrentModule['title'] ?></h1>
         	<div class="wpsp-right">
           		<ol class="wpsp-breadcrumb"> 
-          			<div class=""></div>
+          			<li>
+						<select id="unit_id" class="wpsp-form-control" name="unit_id" style="width: 160px;">
+							<option value="">Select Unit</option>
+								<?php foreach( $batches AS $batch ) { ?>
+									<optgroup class="batch-optgroup" label="<?php echo $batch->name; ?>">
+										<?php foreach( $trades AS $trade ) { ?>								
+											<?php foreach( $units AS $unit ) {
+												if( $batch->id == $unit->batch_id && $trade->id == $unit->trade_id ) {
+													echo '<option ' . ( $filter['unit_id']== $unit->id ? 'selected="selected"' : '' ) . ' value="' . $unit->id . '"> ' . $trade->name . ' - ' . $unit->unit_name . '</option>';
+												}
+											}?>
+										<?php } ?>
+									</optgroup>
+								<?php }?>
+						</select>
+						<script type="text/javascript">
+							$(function(){
+								$('.wpsp-breadcrumb #unit_id').change(function(e){
+									var url = window.location.href;    
+									if (url.indexOf('?') > -1){
+									   url += '&filter[unit_id]=' + $('.wpsp-breadcrumb #unit_id').val()
+									}else{
+									   url += '&filter[unit_id]=' + $('.wpsp-breadcrumb #unit_id').val()
+									}
+									window.location.href = url;
+								});
+							});
+						</script>
+          			</li>
           			<li>
           				<a href="<?php echo site_url( '/wp-admin/admin.php?page=dashboard' ); ?>">Dashboard</a>
           			</li>

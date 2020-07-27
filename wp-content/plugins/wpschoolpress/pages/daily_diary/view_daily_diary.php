@@ -7,44 +7,25 @@
 			<form method="post" name="daily_diary_filter">
 			<div class="wpsp-col-md-12 line_box">
 				<div class="wpsp-row">
-					<div class="wpsp-col-md-4 wpsp-col-md-12">
-						<div class="wpsp-form-group">
-							Select Unit
-							<select id="unit_id" class="wpsp-form-control" name="filter[unit_id]">
-								<option value="">Select Unit</option>
-								<?php foreach( $batches AS $batch ) { ?>
-									<optgroup class="batch-optgroup" label="<?php echo $batch->name; ?>">
-									<?php foreach( $trades AS $trade ) { ?>								
-											<?php foreach( $units AS $unit ) {
-												if( $batch->id == $unit->batch_id && $trade->id == $unit->trade_id ) {
-													echo '<option ' . ( $filter['unit_id'] == $unit->id ? 'selected="selected"' : '' ) . ' value="' . $unit->id . '"> ' . $trade->name . ' - ' . $unit->unit_name . '</option>';
-												}
-											}?>
-									<?php } ?>
-									</optgroup>
-								<?php }?>
-							</select>
-						</div>
-					</div>
-					<div class="wpsp-col-md-4 wpsp-col-xs-12">
+					<div class="wpsp-col-md-6 wpsp-col-xs-12">
 						<div class="wpsp-form-group">
 							Start Date
-							<input type="text" class="wpsp-form-control" id="start_date" placeholder="Start Date " name="filter[start_date]"  autocomplete="off" value="<?php echo $filter['start_date']; ?>" />
+							<input type="text" class="wpsp-form-control" id="start_date" placeholder="Start Date " name="filter[start_date]"  autocomplete="off" value="<?php echo $daily_diary_filter['start_date']; ?>" />
 						</div>
 					</div>
-					<div class="wpsp-col-md-4 wpsp-col-xs-12">
+					<div class="wpsp-col-md-6 wpsp-col-xs-12">
 						<div class="wpsp-form-group">
 							End Date
-							  <input type="text" class="wpsp-form-control" id="end_date" placeholder="End Date" name="filter[end_date]"  autocomplete="off" value="<?php echo $filter['end_date']; ?>"/>
+							  <input type="text" class="wpsp-form-control" id="end_date" placeholder="End Date" name="filter[end_date]"  autocomplete="off" value="<?php echo $daily_diary_filter['end_date']; ?>"/>
 						</div>
 					</div>
 				</div>
 				<div class="wpsp-row">
 					<div class="wpsp-col-md-6 wpsp-col-md-12">
-						<div class="wpsp-col-md-3 wpsp-col-md-12">
+						<div class="wpsp-col-md-6 wpsp-col-md-12">
 							<input type="submit" name="filter[filter]" value="Filter" class="wpsp-btn wpsp-btn-success" />
 						</div>
-						<div class="wpsp-col-md-3 wpsp-col-md-12">
+						<div class="wpsp-col-md-6 wpsp-col-md-12">
 							<input type="button" name="print" value="Print" id="print" class="wpsp-btn wpsp-btn-success" onclick="printDiv();" />
 						</div>
 					</div>

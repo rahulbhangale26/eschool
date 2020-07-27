@@ -31,7 +31,7 @@
          		</tr>
          		<tr style='height:20px;'>
 		            <td class="s0 border-l" dir="ltr">JOB NO</td>
-        		    <td class="s2" dir="ltr"><?php echo $job->id; ?></td>
+        		    <td class="s2" dir="ltr"><?php echo $job->number; ?></td>
             <td class="s3" dir="ltr" rowspan="2">WEEK NO</td>
             <td class="s4" colspan="2" rowspan="2"></td>
          </tr>

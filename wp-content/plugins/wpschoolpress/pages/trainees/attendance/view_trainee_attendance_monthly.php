@@ -8,25 +8,7 @@
 					<div class="wpsp-form-group">
 						<label for="date" class="wpsp-labelMain">Select Month</label>
 						<input type="text" class="wpsp-form-control select_date" id="attendance_date" value="" name="attendance_date" autocomplete="off">
-					</div>
-
-					<div class="wpsp-form-group">
-						<label for="trade" class="wpsp-labelMain">Select Unit</label>
-						<select id="unit_id" class="wpsp-form-control" name="unit_id">
-							<option value="">Select Unit</option>
-								<?php foreach( $batches AS $batch ) { ?>
-									<optgroup class="batch-optgroup" label="<?php echo $batch->name; ?>">
-										<?php foreach( $trades AS $trade ) { ?>								
-											<?php foreach( $units AS $unit ) {
-												if( $batch->id == $unit->batch_id && $trade->id == $unit->trade_id ) {
-													echo '<option value="' . $unit->id . '"> ' . $trade->name . ' - ' . $unit->unit_name . '</option>';
-												}
-											}?>
-										<?php } ?>
-									</optgroup>
-								<?php }?>
-						</select>
-					</div>					
+					</div>			
 				</div>
 			</div>
 	</div>
@@ -61,9 +43,7 @@ function printDiv() {
 
 function loadTraineeAttendanceMonthly() {
 
-	var trade_id = $('#trade_id').val();
-	var batch_id = $('#batch_id').val();
-	var unit_id  = $('#unit_id').val();	
+	var unit_id  = $('.wpsp-breadcrumb #unit_id').val();	
 	var attendance_date = $('#attendance_date').val()
 
 	sch.ajaxRequest({
@@ -90,17 +70,9 @@ $(function(){
 	    changeYear: true
 	});
 	
-	$('#batch_id').prop('disabled', true );
-	$('#trade_id').prop('disabled', true );
-	$('#unit_id').prop('disabled', true );	
-	
     $('#attendance_date').change( function() {
-   	 	$('#unit_id').prop( 'disabled', false );
+    	loadTraineeAttendanceMonthly();
     });
-
-    $('#trainee_attendance_monthly #unit_id').change( function(e) {
-		loadTraineeAttendanceMonthly();
-	});
 
 /*  Code for download as pdf
 	var doc = new jsPDF();

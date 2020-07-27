@@ -12,37 +12,7 @@
 				<div class="line_box">
 					<div class="wpsp-form-group">
 						<label for="date" class="wpsp-labelMain">Select Month</label>
-						<input type="text" class="wpsp-form-control select_date" id="report_month" value="" name="report_month">
-					</div>
-
-					<div class="wpsp-form-group">
-						<label for="trade" class="wpsp-labelMain">Select Batch</label>
-						<select class="wpsp-form-control" name="batch_id" id="batch_id">
-							<option value="" disabled selected>Select Batch</option>
-							<?php foreach( $batches as $batch ) { ?>
-								<option 
-									value="<?php echo $batch->id?>"><?php echo $batch->name; ?></option>
-							<?php } ?>
-						</select>
-					</div>
-
-					<div class="wpsp-form-group">
-						<label for="trade" class="wpsp-labelMain">Select Trade</label>
-						<select class="wpsp-form-control" name="trade_id" id="trade_id">
-							<option value="" disabled selected>Select Trade</option>
-							<?php foreach( $trades as $trade ) { ?>
-								<option value="<?php echo $trade->id?>"><?php echo $trade->name; ?></option>
-							<?php } ?>
-						</select>
-					</div>
-					<div class="wpsp-form-group">
-						<label for="trade" class="wpsp-labelMain">Select Unit</label>
-						<select class="wpsp-form-control" disabled name="unit_id" id="unit_id">
-							<option value="" disabled selected >Select Unit</option>
-							<?php foreach( $units as $unit ) { ?>
-								<option value="<?php echo $unit->id?>"><?php echo $unit->unit_name; ?></option>
-							<?php } ?>
-						</select>
+						<input type="text" class="wpsp-form-control select_date" id="report_month" value="" name="report_month" autocomplete="off" />
 					</div>
 				</div>
 			</div>
@@ -89,27 +59,20 @@ function printDiv() {
 } 
 
 
-function bindUnitEvents() {
-	$('#unit_id').change(function(){
-
-		var unit_id 		= $('#unit_id').val();
-		var trade_id		= $('#trade_id').val();
-		var batch_id		= $('#batch_id').val();
-		var report_month	= $('#report_month').val();
-		
-		sch.ajaxRequest({
-			'page': 'sch-trainee_record',
-			'pageAction': 'view_monthly_report_details',
-			'selector': '#view_monthly_report',
-			data:  { 'unit_id': unit_id, 'trade_id': trade_id, 'batch_id': batch_id, 'report_month': report_month},
-			success: function( res ) {
-				$('#monthly_report').show();
-				$('#trainee_record_report').html(res);
-			}
-		});
-	});
+function loadMonthlyTraineeRecords() {
+	var unit_id 		= $('#unit_id').val();
+	var report_month	= $('#report_month').val();
 	
-
+	sch.ajaxRequest({
+		'page': 'sch-trainee_record',
+		'pageAction': 'view_monthly_report_details',
+		'selector': '#view_monthly_report',
+		data:  { 'unit_id': unit_id, 'report_month': report_month},
+		success: function( res ) {
+			$('#monthly_report').show();
+			$('#trainee_record_report').html(res);
+		}
+	});
 }
 
 $(function(){
@@ -122,46 +85,10 @@ $(function(){
 	    changeMonth: true,
 	    changeYear: true
 	});
-	
-	$('#batch_id').prop('disabled', true );
-	$('#trade_id').prop('disabled', true );
-	$('#unit_id').prop('disabled', true );
 
 	$('#report_month').change(function(){
-		$('#batch_id').prop('disabled', false );
+		loadMonthlyTraineeRecords();
 	});
 
-	$('#batch_id').change(function(){
-		$('#trade_id').prop('disabled', false );
-	});
-
-	$('#trade_id').change(function(){
-		var trade_id = $("#trade_id").val();
-		var batch_id = $("#batch_id").val();
-
-		sch.ajaxRequest({
-			'page': 'sch-trades',
-			'pageAction': 'get_trade_unit_lists',
-			'selector': '#view_monthly_report',
-			data:  { 'TradeId': trade_id, 'BatchId': batch_id },
-			success: function( res ) {
-				
-				if( '' != res ) {
-					var units = $.parseJSON( res );
-					strOption = '';
-					$(units).each( function( index, unit ){
-						strOption += '<option value="' + unit.id + '">' + unit.unit_name+ '</option>';
-					});
-					strHTML = '<select name="unit_id" id = "unit_id" class="wpsp-form-control">' +
-								'<option value="" disabled selected>Select Unit</option>' +
-								strOption +
-							'</select>';
-
-					$('#view_monthly_report #unit_id').replaceWith( strHTML );
-					bindUnitEvents();
-				}	
-			}
-		});
-	});
 });
 </script>

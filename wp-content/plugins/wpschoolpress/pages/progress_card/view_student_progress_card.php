@@ -10,6 +10,7 @@
 	font-weight: bolder !important;
 }
 .main-heading {
+	color: #54667a;
 	font-size: 36px !important;
 	font-weight: bolder !important;
 }
@@ -52,10 +53,17 @@ text-align: left !important;
 .no-right-border {
 	border-right: none !important;
 }
+
+@media print {
+  td {page-break-after: avoid;}
+}
 </style>
 <div class="ritz grid-container" dir="ltr">
    <table class="waffle main-container" cellspacing="0" cellpadding="0">
       <tbody>
+      	 <tr style="height: 20px;">
+      	 	<td class="main-heading text-center" colspan="15"><?php echo $iti_name; ?></td>
+      	 </tr>
          <tr style='height:20px;'>
             <td class="s0 appendex no-border" colspan="15">APPENDIX "A"</td>
          </tr>
@@ -63,11 +71,8 @@ text-align: left !important;
             <td class="s0 short-heading no-border" colspan="15">CRAFTSMEN TRAINING SCHEME</td>
          </tr>
          <tr style='height:20px;'>
-            <td class="s1 main-heading no-border" dir="ltr" colspan="15">PROGRESS CARD</td>
+            <td class="s1 sub-main-heading no-border" dir="ltr" colspan="15">PROGRESS CARD</td>
          </tr>
-         <tr style="height: 20px;">
-      	 	<td class="sub-main-heading text-center" colspan="15"><?php echo $iti_name; ?></td>
-      	 </tr>
          <tr style='height:20px;'>
             <td class="s1 text-left no-border" dir="ltr" colspan="15">Trainee Name : <?php echo $student->s_fname . ' ' . $student->s_lname; ?></td>
          </tr>
@@ -85,59 +90,57 @@ text-align: left !important;
             <td class="s1 text-left no-border" dir="ltr" colspan="8">Date Of Leaving: </td>
          </tr>
          <tr style="height: 20px">
-         	<td class="s3 no-left-border" style="max-width: 60px;" colspan="1">Week No</td>
+         	<td class="s3 no-left-border" style="max-width: 60px;" colspan="1">Sr No</td>
          	<td class="s3" style="min-width: 500px;" colspan="6">Exercises Done During the Week</td>
-         	<td class="s3" style="max-width: 70px;" colspan="2">Grading</td>
-         	<td class="s3" style="max-width: 60px;" colspan="2">I. Initials </td>
-         	<td class="s3" style="max-width: 60px;" colspan="2">G. I. Initials </td>
-         	<td class="s3 no-right-border" colspan="2">Remarks</td>
+         	<td class="s3" style="min-width: 110px;" colspan="2">Within Date</td>
+         	<td class="s3" style="max-width: 60px;" colspan="2">Grades</td>
+         	<td class="s3" style="max-width: 60px;" colspan="2">I. Initial</td>
+         	<td class="s3 no-right-border" colspan="2">G. I Initials</td>
          </tr>
          <?php for( $intIndex=1; $intIndex<=52; $intIndex++) { ?>
          <tr style="height: 20px">
          	<td class="s3 no-left-border" colspan="1"><?php echo $intIndex; ?></td>
          	<td class="s3" colspan="6">
          		<?php 
-         		if( true == isset( $job_progress[$intIndex] ) ) {
-         			foreach( $job_progress[$intIndex] AS $job ) {
-         				echo $job->title . ' <br> ';
+         			if( true == isset( $jobs[$intIndex] ) ) {
+         				echo $jobs[$intIndex]->title;
          			}
-         		}
          		?>
          	</td>
          	<td class="s3" colspan="2">
          		<?php 
-         		if( true == isset( $job_progress[$intIndex] ) ) {
-         			foreach( $job_progress[$intIndex] AS $job ) {
-         				
-         				if( 80 <= $job->total_marks ) {
+         			if( true == isset( $jobs[$intIndex] ) ) {
+         				echo date( 'd M', strtotime( $jobs[$intIndex]->start_date )  ) . ' - ' . date( 'd M', strtotime( $jobs[$intIndex]->end_date )  );
+         			}
+         		?>
+         	</td>
+         	<td class="s3" colspan="2">
+         	<?php      		
+	         	if( true == isset( $jobs[$intIndex] ) && true == isset( $job_progress[$jobs[$intIndex]->id] ) ) {
+	         		if( 80 <= $job_progress[$jobs[$intIndex]->id]->total_marks ) {
          					echo 'A <br> ';
-         				} else if( 70 <= $job->total_marks ) {
+	         		} else if( 70 <= $job_progress[$jobs[$intIndex]->id]->total_marks ) {
          					echo 'B <br> ';
-         				} else if( 60 <= $job->total_marks ) {
+	         		} else if( 60 <= $job_progress[$jobs[$intIndex]->id]->total_marks ) {
          					echo 'C <br> ';
-         				} else {
-         					echo 'D <br> ';
-         				}
+         			} else {
+         				echo 'D <br> ';
          			}
          		}
          		?>
          	</td>
-         	<td class="s3" colspan="2"></td>
-         	<td class="s3" colspan="2"></td>
+         	<td class="s3" style="padding: 0;" colspan="2">
+         		
+         	</td>
          	<td class="s3 no-right-border" colspan="2">
-         	<?php 
-         		if( true == isset( $job_progress[$intIndex] ) ) {
-         			foreach( $job_progress[$intIndex] AS $job ) {
-         				echo $job->remark . ' <br> ';
-         			}
-         		}
-         		?>
          	</td>
          </tr>
+         <tr></tr>
          <?php } ?>
          <tr style="height: 20px; padding:10px;">
          	<td colspan="15" > <span style="float: right;">A = 79% Above<br>8 = 70 To 79%<br>C = 60 To 69%<br>D = 59% Below</span></td>
          <tr>
+         
       </tbody>
    </table>
 </div>

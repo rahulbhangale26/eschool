@@ -1,21 +1,9 @@
 <?php
 if (!defined( 'ABSPATH' ) )exit('No Such File');
-
 global $objUser;
 
-if( true == isset( $_POST['BatchId'] ) ) {
-	$intBatchId = ( int ) sanitize_text_field( $_POST['BatchId'] );
-	$_SESSION['trainee_filter']['BatchId'] = $intBatchId;
-} else if( true == isset( $_SESSION['trainee_filter']['BatchId'] ) ) {
-	$intBatchId = $_SESSION['trainee_filter']['BatchId'];
-}
-
-if( true == isset( $_POST['TradeId'] ) ) {
-	$intTradeId = $_POST['TradeId'];
-	$_SESSION['trainee_filter']['TradeId'] = $intTradeId;
-} else if( true == isset( $_SESSION['trainee_filter']['TradeId'] ) ) {
-	$intTradeId = $_SESSION['trainee_filter']['TradeId'];
-}
+$intBatchId = $_SESSION['filter']['batch_id'];
+$intTradeId = $_SESSION['filter']['trade_id'];
 
  $proversion	=	wpsp_check_pro_version();
 	  $proclass		=	!$proversion['status'] && isset( $proversion['class'] )? $proversion['class'] : '';
@@ -68,27 +56,6 @@ if( true == isset( $_POST['TradeId'] ) ) {
 
 		?>
 		<div class="subject-inner wpsp-left wpsp-class-filter">
-			<form name="StudentClass" id="StudentClass" method="post" action="">
-			
-				<label class="wpsp-labelMain">Batch</label>
-				<select name="BatchId" id = "BatchId" class="wpsp-form-control">
-					<option value="">Select Batch</option>
-					<?php 
-					foreach ( $arrobjBatches AS $objBatch ) {
-					    echo '<option  value="' . $objBatch->id . '" ' . ( $objBatch->id == $intBatchId ? 'selected="selected"' : '' ) . '>' . $objBatch->name . '</option>';
-					}
-					?>
-				</select>
-			
-				<label class="wpsp-labelMain">Trade</label>
-				<select name="TradeId" id="TradeId" class="wpsp-form-control">
-					<option value="all" >Select Trade</option>
-					<?php 
-						  foreach ( $arrobjTrades AS $objTrade ) { ?>
-								<option <?php echo ( $intTradeId == $objTrade->id ) ? 'selected="selected"' : ''; ?>value="<?php echo $objTrade->id; ?>"><?php echo $objTrade->name ?></option>
-					<?php } ?>
-				</select>
-			</form>
 		</div>
 		<div class="wpsp-right wpsp-import-export">
 			<div class="wpsp-btn-lists" title="">

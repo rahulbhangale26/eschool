@@ -655,7 +655,6 @@ function wpsp_UpdateStudent(){
 		$studenttable = array(
 		's_fname' => isset($_POST['s_fname']) ? sanitize_text_field($_POST['s_fname']) : '',
     	'class_id' => isset($_POST['Class']) ? serialize($_POST['Class']) : '0',
-		's_rollno' => isset($_POST['s_rollno']) ? sanitize_text_field($_POST['s_rollno']) : '',
 		'class_date' => isset($_POST['Classdata']) ? serialize($_POST['Classdata']) : '0',
 		's_mname' => isset($_POST['s_mname']) ? sanitize_text_field($_POST['s_mname']) : '',
 		's_lname' => isset($_POST['s_lname']) ? sanitize_text_field($_POST['s_lname']) : '',
@@ -667,11 +666,6 @@ function wpsp_UpdateStudent(){
 		's_dob' => isset($_POST['s_dob']) && !empty($_POST['s_dob']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_dob'])) : '',
 		's_city' => isset($_POST['s_city']) ? sanitize_text_field($_POST['s_city']) : '',
 		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
-		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
-		'current_unit_id'     => isset( $_POST['current_unit_id'] ) ? sanitize_text_field( $_POST['current_unit_id'] ) : '',
-		'trade_id'				=> is_object( $objUnit ) ? $objUnit->trade_id : 0,
-		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
-		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
 	);
 
 		$stu_upd = $wpdb->update($wpsp_student_table, $studenttable, array(

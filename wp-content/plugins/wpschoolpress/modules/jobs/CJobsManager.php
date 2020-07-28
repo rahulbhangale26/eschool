@@ -351,7 +351,7 @@ class CJobsManager extends CFactory {
     
     public function handleStudentJobMarksList() {
         
-        $intUnitId = $this->getRequestData([ 'filter', 'unit_id' ] );
+        $intUnitId = $this->getSessionData( [ 'filter', 'unit_id' ] );
         
         $this->arrobjStudents = CStudents::getInstance()->fetchStudentsByUnitId( $intUnitId );
         
@@ -529,9 +529,6 @@ class CJobsManager extends CFactory {
     }
     
     public function displayAddOrEditJobMarks() {
-        
-        $this->arrmixTemplateParams['batches']      = CBatches::getInstance()->fetchAllBatches();
-        $this->arrmixTemplateParams['trades']       = $this->arrobjTrades;
         $this->arrmixTemplateParams['job']          = $this->objJob;
         
         $this->renderPage( 'jobs/add_or_edit_job_marks.php' );

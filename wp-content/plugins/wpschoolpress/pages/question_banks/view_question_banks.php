@@ -12,8 +12,7 @@
 					<tr role="row">
 						<th>Id.</th>
 						<th>Question Bank Name</th>
-						<th>Trade Name</th>
-						
+						<th>Subject Name</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -22,7 +21,7 @@
 						<tr>
 							<td><?php echo $question_bank->id; ?></td>
 							<td><?php echo $question_bank->name; ?></td>
-							<td><?php echo ( isset( $trades[$question_bank->trade_id] ) ? $trades[$question_bank->trade_id]->name : '-' ); ?></td>
+							<td><?php echo ( isset( $subjects[$question_bank->subject_id] ) ? $subjects[$question_bank->subject_id]->sub_name : '-' ); ?></td>
 							<td>
 								<a target="_blank" href="<?php echo WP_CONTENT_URL . $question_bank->file_url; ?>"><span class="dashicons dashicons-welcome-view-site"></span></a>
 								<?php if( $user->getRole() == CRole::TEACHER ) { ?>

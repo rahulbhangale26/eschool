@@ -130,9 +130,16 @@ function wpsp_sidebar(){
 		$units		= rekeyObjects( 'id', CUnits::getInstance()->fetchUnitByUser( $objUser ) );
 		$batches	= rekeyObjects( 'id', CBatches::getInstance()->fetchBatchesByInstructorId( $objUser->getTeacher()->tid ) );
 	}
+	
+	if( CRole::STUDENT == $objUser->getRole() ) {
+		$objTrade 	= CTrade::getInstance()->fetchTradeById( $objUser->getStudent()->trade_id );
+		$objBatch	= CBatches::getInstance()->fetchBatchById( $objUser->getStudent()->batch_id );
+		$trades 	= [ $objTrade->id => $objTrade ];
+		$units		= rekeyObjects( 'id', CUnits::getInstance()->fetchUnitByUser( $objUser ) );
+		$batches 	= [$objBatch->id => $objBatch ];
+	}
 
 	if( false == isset( $_SESSION['filter'] ) || ( false == is_numeric( $_SESSION['filter']['unit_id'] ) ) ) {
-		print_r( current( $units ) );
 		$objCurrentUnit = current( $units );
 	}
 	

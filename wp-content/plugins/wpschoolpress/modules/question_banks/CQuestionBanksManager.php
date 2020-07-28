@@ -2,10 +2,9 @@
 
 class CQuestionBanksManager extends CFactory {
     
-    protected $arrobjTrades;
+    protected $arrobjSubjects;
     protected $arrobjQuestionBanks;
-    
-    
+
     public function __construct() {
         
     }
@@ -33,11 +32,11 @@ class CQuestionBanksManager extends CFactory {
     
     public function handleViewQuestionBanks() {
     	if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
-	    	$this->arrobjQuestionBanks = CQuestionBanks::getInstance()->fetchAllQuestionBanks();
+    		$this->arrobjQuestionBanks = CQuestionBanks::getInstance()->fetchQuestionBanksByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
     	} else if( CRole::TEACHER == $this->objUser->getRole() )  {
     		$this->arrobjQuestionBanks = CQuestionBanks::getInstance()->fetchQuestionBanksByInstructorId( $this->objUser->getTeacher()->tid );
     	} else if( CRole::STUDENT == $this->objUser->getRole() ) {
-    		$this->arrobjQuestionBanks = CQuestionBanks::getInstance()->fetchQuestionBanksByTradeId( $this->objUser->getStudent()->trade_id );
+    		$this->arrobjQuestionBanks = CQuestionBanks::getInstance()->fetchQuestionBanksByUnitId( $this->objUser->getStudent()->current_unit_id );
     	}
     	
         $this->displayViewQuestionBanks();
@@ -50,14 +49,13 @@ class CQuestionBanksManager extends CFactory {
         if( true == isset( $arrmixRequestData[ 'upload_question_bank' ] ) ) {
             switch( NULL ) {
                 default:
-                    
-                    if( false == isset( $arrmixRequestData['question_bank_name'] ) ) {
+                	if( false == isset( $arrmixRequestData['question_bank_name'] ) && "" == $arrmixRequestData['question_bank_name']  ) {
                         $this->addErrorMessage( 'Please provide Question Bank name.' );
                         break;
                     }
 
-                    if( false == isset( $arrmixRequestData['trade_id'] ) || "" == $arrmixRequestData['trade_id'] ) {
-                        $this->addErrorMessage( 'Please trade for Question Bank.' );
+                    if( false == isset( $arrmixRequestData['subject_id'] ) || "" == $arrmixRequestData['subject_id'] ) {
+                        $this->addErrorMessage( 'Please select subject for Question Bank.' );
                         break;
                     }
                     
@@ -97,7 +95,7 @@ class CQuestionBanksManager extends CFactory {
                     
                     $arrmixQuestionBank = [
                         'file_id'           => $intFileId,
-                        'trade_id'          => $arrmixRequestData['trade_id'],
+                        'subject_id'        => $arrmixRequestData['subject_id'],
                         'instructor_id'     => $this->objUser->getTeacher()->tid,
                         'name'              => $arrmixRequestData['question_bank_name']
                     ];
@@ -109,6 +107,12 @@ class CQuestionBanksManager extends CFactory {
                     
                     $this->addSuccessMessage( 'Question Bank Uploaded Successfully.' );
             }
+        }
+        
+        if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
+	        $this->arrobjSubjects = CSubjects::getInstance()->fetchSubjectsByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ), $this->objUser->getTeacher()->tid );
+        } else {
+        	$this->arrobjSubjects = CSubjects::getInstance()->fetchSubjectsByUnitIdByInstructorId( $this->getSessionData( [ 'filter', 'unit_id' ] ), $this->objUser->getTeacher()->tid );
         }
         
         $this->displayAddQuestionBank();
@@ -131,13 +135,14 @@ class CQuestionBanksManager extends CFactory {
     public function displayViewQuestionBanks() {
         
         $this->arrmixTemplateParams['question_banks']       = $this->arrobjQuestionBanks;
-        $this->arrmixTemplateParams['trades']               = $this->rekeyObjects( 'id', CTrade::getInstance()->fetchAllTrades() );
+        $this->arrmixTemplateParams['subjects']             = $this->rekeyObjects( 'id', CSubjects::getInstance()->fetchSubjectsByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ) ) );
         $this->renderPage( 'question_banks/view_question_banks.php' );
     }
     
     public function displayAddQuestionBank() {
         
-        $this->arrmixTemplateParams['trades']   = CTrade::getInstance()->fetchAllTrades();
+    	$this->arrmixTemplateParams['subjects']   = $this->arrobjSubjects;
+
         $this->renderPage( 'question_banks/add_question_bank.php' );
     }
 }

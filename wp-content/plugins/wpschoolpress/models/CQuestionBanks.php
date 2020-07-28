@@ -51,15 +51,16 @@ class CQuestionBanks extends CModel {
     	return $this->objDatabase->get_results( $strSql );    	
     }
     
-    public function fetchQuestionBanksByTradeId( $intTradeId ) {
+    public function fetchQuestionBanksByUnitId( $intUnitId ) {
     	$strSql = 'SELECT
                         qb.*,
                         CONCAT( f.file_path, f.file_name )  AS file_url
                     FROM
                         ' . $this->strTableName . ' qb
                         JOIN ' . CFiles::getInstance()->strTableName . ' f ON f.id = qb.file_id
+						JOIN ' . CSubjectInstructors::getInstance()->strTableName . ' si ON si.subject_id = qb.subject_id
 					WHERE
-						qb.trade_id = ' . ( $intTradeId );
+						si.unit_id = ' . ( $intUnitId );
     	
     	return $this->objDatabase->get_results( $strSql );
     }

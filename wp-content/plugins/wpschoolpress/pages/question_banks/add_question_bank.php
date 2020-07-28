@@ -25,13 +25,12 @@
 					<div class="wpsp-row">
 						<div class="wpsp-col-lg-3 wpsp-col-md-12 wpsp-col-sm-12 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
-								<label class="wpsp-labelMain">Trade</label>
-								<select name="trade_id" id="trade_id" class="wpsp-form-control">
-									<option value="">Select Trade</option>
-									<?php foreach ( $trades as $trade ) { ?>
-										<option value="<?php echo $trade->id; ?>" ><?php echo $trade->name; ?></option>
+								<label class="wpsp-labelMain">Subject</label>
+								<select name="subject_id" id="subject_id" class="wpsp-form-control">
+									<option value="">Select Subject</option>
+									<?php foreach ( $subjects as $subject ) { ?>
+										<option value="<?php echo $subject->id; ?>" ><?php echo $subject->sub_name; ?></option>
 									<?php } ?>
-									<option value="0" >Other</option>
 								</select>
 							</div>
 						</div>

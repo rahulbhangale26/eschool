@@ -4,6 +4,8 @@ class CSubjectInstructors extends CModel {
     
     public $strTableName;
     
+    protected static $_INSTANCE;
+    
     public function __construct( ) {
         parent::__construct();
         $this->strTableName = $this->strTablePrefix . 'wpsp_subject_instructors';

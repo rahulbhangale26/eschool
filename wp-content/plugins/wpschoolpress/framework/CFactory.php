@@ -100,11 +100,19 @@ class CFactory {
         	$this->arrobjBatches	= $this->rekeyObjects( 'id', CBatches::getInstance()->fetchBatchesByInstructorId( $this->objUser->getTeacher()->tid ) );
         }
         
+        if( CRole::STUDENT == $this->objUser->getRole() ) {
+        	$objTrade 				= CTrade::getInstance()->fetchTradeById( $this->objUser->getStudent()->trade_id );
+        	$objBatch				= CBatches::getInstance()->fetchBatchById( $this->objUser->getStudent()->batch_id );
+        	$this->arrobjTrades 	= [ $objTrade->id => $objTrade ];
+        	$this->arrobjUnits		= $this->rekeyObjects( 'id', CUnits::getInstance()->fetchUnitByUser( $this->objUser ) );
+        	$this->arrobjBatches 	= [$objBatch->id => $objBatch ];
+        }
+        
         /** Setting default filters */
         if( false == $this->getSessionData( [ 'filter', 'unit_id' ] ) ) {
         	$objCurrentUnit = current( $this->arrobjUnits );
         }
-        
+             
         /** Setting filter if passed in request */
         if( false == is_null( $this->getRequestData( ['filter', 'unit_id'] ) ) || false == is_null( $this->getRequestData( [ 'data', 'filter', 'unit_id' ] ) ) ) {
         	

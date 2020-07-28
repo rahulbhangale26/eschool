@@ -3,6 +3,8 @@
 class CSubjects extends CModel {
     public $strTableName;
     
+    protected static $_INSTANCE;
+    
     public function __construct( ) {
         parent::__construct();
         $this->strTableName = $this->strTablePrefix . 'wpsp_subject';
@@ -36,6 +38,32 @@ class CSubjects extends CModel {
        
         return $this->objDatabase->get_results( $strSql );
         
+    }
+    
+    public function fetchSubjectsByUnitId( $intUnitId ) {
+    	
+    	$strSql = 'SELECT 
+						s.* 
+					FROM 
+						' . $this->getInstance()->strTableName . ' s
+						JOIN ' . CSubjectInstructors::getInstance()->strTableName . ' si ON si.subject_id = s.id  
+					WHERE
+						si.unit_id = ' . ( int ) $intUnitId ;
+
+    	return $this->objDatabase->get_results( $strSql );
+    }
+    
+    public function fetchSubjectsByUnitIdByInstructorId( $intUnitId, $intInstructorId ) {
+    	$strSql = 'SELECT
+						s.*
+					FROM
+						' . $this->getInstance()->strTableName . ' s
+						JOIN ' . CSubjectInstructors::getInstance()->strTableName . ' si ON si.subject_id = s.id
+					WHERE
+						si.unit_id = ' . ( int ) $intUnitId . '
+						AND si.instructor_id = ' . ( int ) $intInstructorId;
+    	
+    	return $this->objDatabase->get_results( $strSql );
     }
     
 }

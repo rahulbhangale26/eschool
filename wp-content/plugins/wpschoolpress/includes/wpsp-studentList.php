@@ -191,7 +191,7 @@ $intTradeId = $_SESSION['filter']['trade_id'];
 									             echo $stinfo->s_fname .' '. $mname .' '.  $lname . '';
 									       ?>
 										</td>
-										<td><?php echo $units[$stinfo->current_unit_id]->unit_name; ?></td>
+										<td><?php echo $units[$_SESSION['filter']['unit_id']]->unit_name; ?></td>
 										<td><?php echo $stinfo->qualification; ?></td>
 										<td><?php echo $stinfo->category; ?></td>
 										<td>

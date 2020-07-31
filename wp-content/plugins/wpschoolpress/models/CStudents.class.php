@@ -85,8 +85,9 @@ class CStudents extends CModel {
         $strSql = 'SELECT
                         s.*
                     FROM ' . $this->strTableName . ' s
+						JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = s.sid
                     WHERE
-                        s.current_unit_id = ' . ( int ) $intUnitId . '
+                        su.unit_id = ' . ( int ) $intUnitId . '
                     ORDER BY s.s_rollno ASC';
         
         return $this->objDatabase->get_results( $strSql );

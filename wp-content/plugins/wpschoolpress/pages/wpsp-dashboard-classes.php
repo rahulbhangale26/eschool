@@ -1,6 +1,6 @@
 <?php 
     global $objUser;
-    $arrobjUnits        = CUnits::getInstance()->fetchUnitByUser( $objUser );
+    $arrobjUnits        = CUnits::getInstance()->fetchUnitByUser( $objUser, false );
     $arrobjTempTrades   = CTrade::getInstance()->fetchAllTrades();
     
     $arrobjTrades = [];

@@ -46,9 +46,12 @@ class CTraineeAttendanceManager extends CFactory {
             $this->arrstrFilter = [
                 'filter'        => 'filter',
                 'start_date'    => date( 'Y-m-01'),
-                'end_date'      => date( 'Y-m-d' )
+                'end_date'      => date( 'Y-m-d' ),
+            	'unit_id'		=> $this->getSessionData( [ 'filter', 'unit_id' ] )
             ];
         }
+        
+        $this->arrstrFilter['unit_id'] = $this->getSessionData( [ 'filter', 'unit_id' ] );
         
         if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
             $this->arrobjTraineeAttendances = CTraineeAttendances::getInstance()->fetchGroupedTraineeAttendance( $this->arrstrFilter );
@@ -129,9 +132,6 @@ class CTraineeAttendanceManager extends CFactory {
         
         
         $this->arrmixTemplateParams['trainee_attendances']          = $this->arrobjTraineeAttendances;
-        $this->arrmixTemplateParams['units']                        = $this->rekeyObjects( 'id', CUnits::getInstance()->fetchAllUnits() );
-        $this->arrmixTemplateParams['trades']                       = $this->rekeyObjects( 'id', CTrade::getInstance()->fetchAllTrades() );
-        $this->arrmixTemplateParams['batches']                      = $this->rekeyObjects( 'id', CBatches::getInstance()->fetchAllBatches() );
         $this->arrmixTemplateParams['instructors']                  = $this->rekeyObjects( 'tid', CTeachers::getInstance()->fetchAllTeachers() );
         $this->arrmixTemplateParams['start_date']                   = $this->arrstrFilter['start_date'];
         $this->arrmixTemplateParams['end_date']                     = $this->arrstrFilter['end_date'];

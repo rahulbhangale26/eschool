@@ -21,9 +21,10 @@ class CAttendance extends CModel {
                         END ) ORDER BY a.date ) AS attendances_by_dates,
                         GROUP_CONCAT( DAY(a.date) ORDER BY a.date ) AS dates
                     FROM iti_wpsp_student s
-                        LEFT JOIN iti_wpsp_attendance a ON s.current_unit_id = a.unit_id
+						JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = s.sid
+                        LEFT JOIN iti_wpsp_attendance a ON su.unit_id = a.unit_id
                     WHERE
-                        s.current_unit_id = ' . ( int ) $intUnitId . '
+                       	su.unit_id = ' . ( int ) $intUnitId . '
                         AND MONTH( a.date ) = ' .  $intMonthNumber . '
                         AND YEAR( a.date ) = ' .  $intYear . '
                     GROUP BY s.s_rollno';

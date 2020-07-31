@@ -1221,7 +1221,9 @@ function wpsp_getStudentsList() {
 	}
 
 	$stl = [];
-	$st_array  = $wpdb->get_results("select sid, current_unit_id from $student_table WHERE current_unit_id = " . $intUnitId );
+	$st_array  = $wpdb->get_results("select s.sid, su.unit_id from $student_table s
+										JOIN " . CStudentUnits::getInstance()->strTableName . " su ON s.sid = su.student_id
+									 WHERE su.unit_id = " . $intUnitId );
     $unit      = CUnits::getInstance()->fetchUnitById( $intUnitId );
 	$content = '		<h3 class="wpsp-card-title">' . $title . '</h3>
 					<div class="wpsp-row">

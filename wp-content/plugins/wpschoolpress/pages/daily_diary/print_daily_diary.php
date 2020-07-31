@@ -14,6 +14,8 @@ if( 7 < ( int ) date( 'm', strtotime( $start_date ) ) ) {
 
 $start_week_no 		= round( ( strtotime( $start_date ) - strtotime( $year_start_date ) ) / ( 60 * 60 * 24 * 7 ) );
 $end_week_no		= round( ( strtotime( $filter['end_date'] ) - strtotime( $year_start_date ) ) / ( 60 * 60 * 24 * 7 ) );
+
+if( 0 == $start_week_no ) $start_week_no++;
 $current_week_no	= $start_week_no;
 ?>
 

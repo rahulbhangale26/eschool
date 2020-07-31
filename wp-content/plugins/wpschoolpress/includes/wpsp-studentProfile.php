@@ -10,7 +10,10 @@ if( isset($_GET['edit']) && sanitize_text_field($_GET['edit'])=='true' && ($curr
     ob_start();
     wpsp_UpdateStudent();
 }
-$stinfo  =  $wpdb->get_row("select * from $student_table where wp_usr_id='$sid'");
+$stinfo  	= $wpdb->get_row("select * from $student_table where wp_usr_id='$sid'");
+$stunits 	= $wpdb->get_results( 'SELECT * FROM ' . CStudentUnits::getInstance()->strTableName . ' WHERE student_id = ' . $stinfo->sid );
+$stUnitIds 	= ( array ) array_keys( ( array ) rekeyObjects( 'unit_id', $stunits ) );
+
 // print_r($stinfo);
 if( !empty( $stinfo ) ) {
   $student_index = $stinfo->sid;
@@ -858,21 +861,26 @@ if( !empty( $stinfo ) ) {
                               	$arrobjUnits	= rekeyObjects( 'id', CUnits::getInstance()->fetchUnitByInstructorUserId( $objUser->getTeacher()->tid ) );
                             }  
                             ?>
-                            
-                            <select id="unit_id" class="wpsp-form-control" name="current_unit_id">
+                            <select id="student_unit_id" class="wpsp-form-control" name="unit_ids[]" multiple="multiple" style="height: 120px;">
 								<option value="">Select Unit</option>
 									<?php foreach( $arrobjBatches AS $batch ) { ?>
 										<optgroup class="batch-optgroup" label="<?php echo $batch->name; ?>">
 											<?php foreach( $arrobjTrades AS $trade ) { ?>								
 												<?php foreach( $arrobjUnits AS $unit ) {
 													if( $batch->id == $unit->batch_id && $trade->id == $unit->trade_id ) {
-														echo '<option ' . ( $stinfo->current_unit_id == $unit->id ? 'selected="selected"' : '' ) . ' value="' . $unit->id . '"> ' . $trade->name . ' - ' . $unit->unit_name . '</option>';
+														echo '<option ' . ( true == in_array( $unit->id, $stUnitIds ) ? 'selected="selected"' : '' ) . ' value="' . $unit->id . '"> ' . $trade->name . ' - ' . $unit->unit_name . '</option>';
 													}
 												}?>
 											<?php } ?>
 										</optgroup>
 									<?php }?>
 							</select>
+							                            <!-- This needs to be make multi select. -->
+                            <script type="text/javascript">
+                            	$(function(){
+                            		$('#student_unit_id').multiselect();
+                            	});
+                            </script>
                         </div>
                         <div class="wpsp-col-md-3 wpsp-col-sm-3 wpsp-col-xs-12">
                         	<div class="date-input-block">

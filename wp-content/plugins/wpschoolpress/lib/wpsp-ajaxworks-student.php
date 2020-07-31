@@ -266,7 +266,6 @@ function wpsp_AddStudent(){
 			'class_date' 			=> isset($_POST['Classdata']) ? serialize($_POST['Classdata']) : '0',
 			's_rollno' 				=> isset($_POST['s_rollno']) ? intval($_POST['s_rollno']) : '',
 		    'batch_id' 				=> sanitize_text_field( $_POST['batch_id'] ),
-		    'current_unit_id'     	=>  intval( $_POST['CurrentUnitId'] ),
 			'trade_id'				=> ( true == is_object( $objUnit ) ? $objUnit->trade_id : 0 ),
 			's_fname' 				=> $firstname,
 			's_mname' 				=> isset($_POST['s_mname']) ? sanitize_text_field($_POST['s_mname']) : '',
@@ -330,6 +329,20 @@ function wpsp_AddStudent(){
 
 		$sp_stu_ins = $wpdb->insert($wpsp_student_table, $studenttable);
 		$lastid = $wpdb->insert_id;
+		
+		if( true == isset( $_POST['CurrentUnitId'] ) ) {
+			$arrmixStudentUnit = [
+					'student_id' 	=> $lastid,
+					'unit_id'		=> ( int ) $_POST['CurrentUnitId']
+			];
+			
+			if( false == CStudentUnits::getInstance()->insert( $arrmixStudentUnit ) ) {
+				echo '<strong>Error occurred when setting unit.</strong>';
+				exit;
+			}
+		}
+		
+		
 		 do_action('wpsp_student_data_field',$lastid);
 		foreach($c as $key => $value){
 			$wpdb->insert( $classmapping, array("sid" => $lastid, "cid" => $key,"date" => wpsp_StoreDate($value)));
@@ -647,7 +660,7 @@ function wpsp_UpdateStudent(){
 	$studenteditprofile = sanitize_text_field($_POST['studenteditprofile']);
 	$studentprofileparentnew = sanitize_text_field($_POST['studentprofileparentnew']);
 
-	$objUnit = CUnits::getInstance()->fetchUnitById( intval( sanitize_text_field( $_POST[ 'current_unit_id' ] ) ) );
+	$objUnit = CUnits::getInstance()->fetchUnitById( intval( sanitize_text_field( current( $_POST[ 'unit_ids' ] ) ) ) );
 	
 	
 	if ($studenteditprofile == 'studenteditprofile'){
@@ -714,6 +727,24 @@ function wpsp_UpdateStudent(){
   $stu_upd = $wpdb->update($wpsp_student_table, $studenttable, array(
     'wp_usr_id' => $user_id
   ));
+  
+  if( true == isset( $_POST['unit_ids'] ) && 0 < count( $_POST['unit_ids'] ) ) {
+  	$objStudent = CStudents::getInstance()->fetchStudentByUserId( $user_id );
+  	
+  	CStudentUnits::getInstance()->delete( [ 'student_id' => $objStudent->sid ] );
+  	
+  	foreach( $_POST['unit_ids'] AS $intUnitId ) {
+  		$arrmixStudentUnit = [
+  				'student_id' 	=> $objStudent->sid,
+  				'unit_id'		=> ( int )$intUnitId
+  		];
+  		
+  		if( false == CStudentUnits::getInstance()->insert( $arrmixStudentUnit ) ) {
+  			echo '<strong>Error occurred when setting unit.</strong>';
+  			exit;
+  		}
+  	}
+  }
 
   $pusername = sanitize_user($_POST['pUsername']);
 
@@ -851,11 +882,27 @@ function wpsp_UpdateStudent(){
 		's_pzipcode' => isset($_POST['s_pzipcode']) ? intval($_POST['s_pzipcode']) : '',
 		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
 		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
-		'current_unit_id'     => isset( $_POST['current_unit_id'] ) ? sanitize_text_field( $_POST['current_unit_id'] ) : '',
 		'trade_id'				=> is_object( $objUnit ) ? $objUnit->trade_id : 0,
 		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
 		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
 	);
+		
+		if( true == isset( $_POST['unit_ids'] ) && 0 < count( $_POST['unit_ids'] ) ) {
+			$objStudent = CStudents::getInstance()->fetchStudentByUserId( $user_id );
+			$arrobjStudentUnits = rekeyObjects( 'unit_id', CStudentUnits::getInstance()->fetchStudentUnitsByStudentId( $objStudent->sid ) );
+			
+			foreach( $_POST['unit_ids'] AS $intUnitId ) {
+				$arrmixStudentUnit = [
+						'student_id' 	=> $objStudent->sid,
+						'unit_id'		=> ( int )$intUnitId
+				];
+				
+				if( false == CStudentUnits::getInstance()->insert( $arrmixStudentUnit ) ) {
+					echo '<strong>Error occurred when setting unit.</strong>';
+					exit;
+				}
+			}
+		}
 
 		$parenttable = array(
 		'parent_wp_usr_id' => $parent_id,

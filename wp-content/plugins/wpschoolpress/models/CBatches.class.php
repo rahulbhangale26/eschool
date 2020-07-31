@@ -31,7 +31,8 @@ class CBatches extends CModel {
                         DISTINCT b.*
                     FROM ' . $this->strTableName . ' b
                         JOIN ' . CStudents::getInstance()->strTableName . ' s ON s.batch_id = b.id
-                        JOIN ' . $this->strTablePrefix . 'wpsp_subject_instructors si ON si.unit_id = s.current_unit_id
+						JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = s.sid
+                        JOIN ' . $this->strTablePrefix . 'wpsp_subject_instructors si ON si.unit_id = su.unit_id
                     WHERE
                         si.instructor_id = ' . ( int ) $intInstructorId . '
 					ORDER BY b.id DESC';

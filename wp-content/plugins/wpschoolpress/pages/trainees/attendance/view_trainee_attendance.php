@@ -23,12 +23,12 @@
 					<?php foreach( $trainee_attendances as $trainee_attendance) { ?>
 						<tr>
 							<td><?php echo date( 'Y-m-d', strtotime( $trainee_attendance->attendance_date ) ); ?></td>
-							<td><?php echo $units[$trainee_attendance->current_unit_id]->unit_name; ?></td>
+							<td><?php echo $units[$filter['unit_id']]->unit_name; ?></td>
 							<td><?php echo $trades[$trainee_attendance->trade_id]->name; ?></td>
 							<td><?php echo $batches[$trainee_attendance->batch_id]->name; ?></td>
 							<td><?php echo $instructors[$trainee_attendance->instructor_id]->first_name . ' ' . $instructors[$trainee_attendance->instructor_id]->last_name; ?></td>
 							<td>
-								<a href="admin.php?page=sch-trainee_attendance&page_action=add_trainee_attendance&batch_id=<?php echo $trainee_attendance->batch_id; ?>&attendance_date=<?php echo date( 'Y-m-d', strtotime( $trainee_attendance->attendance_date ) ); ?>&unit_id=<?php echo $trainee_attendance->current_unit_id; ?>&trade_id=<?php echo $trainee_attendance->trade_id;?>">
+								<a href="admin.php?page=sch-trainee_attendance&page_action=add_trainee_attendance&batch_id=<?php echo $trainee_attendance->batch_id; ?>&attendance_date=<?php echo date( 'Y-m-d', strtotime( $trainee_attendance->attendance_date ) ); ?>&unit_id=<?php echo $trainee_attendance->unit_id; ?>&trade_id=<?php echo $trainee_attendance->trade_id;?>">
 									<span class="dashicons dashicons-edit"></span>
 								</a>
 							</td>

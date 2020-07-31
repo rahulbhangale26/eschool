@@ -36,7 +36,7 @@ class CQuestionBanksManager extends CFactory {
     	} else if( CRole::TEACHER == $this->objUser->getRole() )  {
     		$this->arrobjQuestionBanks = CQuestionBanks::getInstance()->fetchQuestionBanksByInstructorId( $this->objUser->getTeacher()->tid );
     	} else if( CRole::STUDENT == $this->objUser->getRole() ) {
-    		$this->arrobjQuestionBanks = CQuestionBanks::getInstance()->fetchQuestionBanksByUnitId( $this->objUser->getStudent()->current_unit_id );
+    		$this->arrobjQuestionBanks = CQuestionBanks::getInstance()->fetchQuestionBanksByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
     	}
     	
         $this->displayViewQuestionBanks();

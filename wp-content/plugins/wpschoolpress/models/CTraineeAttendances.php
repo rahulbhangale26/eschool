@@ -61,21 +61,24 @@ class CTraineeAttendances extends CModel {
         
         if( false == isset( $arrstrFilter['start_date'] ) ) return [];
         if( false == isset( $arrstrFilter['end_date'] ) ) return [];
+        if( false == isset( $arrstrFilter['unit_id'] ) ) return [];
         
         $strSql = 'SELECT
                         ta.attendance_date,
                         ta.instructor_id,
                         s.trade_id,
                         s.batch_id,
-                        s.current_unit_id
+                        su.unit_id
                     FROM 
                         ' . $this->strTableName . ' ta
+						JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = ta.student_id
                         JOIN  ' . CStudents::getInstance()->strTableName . ' s ON s.sid = ta.student_id 
                     WHERE
                         ta.instructor_id = ' . ( int ) $intInstructorId . '
                         AND CAST( ta.attendance_date AS date ) BETWEEN \'' . $arrstrFilter['start_date'] . '\' AND \'' . $arrstrFilter['end_date'] . '\'
+						AND su.unit_id = ' . ( int ) $arrstrFilter['unit_id'] . '
                     GROUP By
-                        ta.attendance_date, s.batch_id, s.trade_id, s.current_unit_id
+                        ta.attendance_date, s.batch_id, s.trade_id, su.unit_id
                     ORDER BY ta.attendance_date DESC';
         
         return $this->objDatabase->get_results( $strSql );
@@ -85,20 +88,23 @@ class CTraineeAttendances extends CModel {
         
         if( false == isset( $arrstrFilter['start_date'] ) ) return [];
         if( false == isset( $arrstrFilter['end_date'] ) ) return [];
+        if( false == isset( $arrstrFilter['unit_id'] ) ) return [];
         
         $strSql = 'SELECT
                         ta.attendance_date,
                         ta.instructor_id,
                         s.trade_id,
                         s.batch_id,
-                        s.current_unit_id
+                        su.unit_id
                     FROM
                         ' . $this->strTableName . ' ta
+						JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = ta.student_id
                         JOIN  ' . CStudents::getInstance()->strTableName . ' s ON s.sid = ta.student_id
                     WHERE
                         CAST( ta.attendance_date AS date ) BETWEEN \'' . $arrstrFilter['start_date'] . '\' AND \'' . $arrstrFilter['end_date'] . '\'
+						AND su.unit_id = ' . ( int ) $arrstrFilter['unit_id'] . '
                     GROUP By
-                        ta.attendance_date, s.batch_id, s.trade_id, s.current_unit_id
+                        ta.attendance_date, s.batch_id, s.trade_id, su.unit_id
                     ORDER BY ta.attendance_date DESC';
         
         return $this->objDatabase->get_results( $strSql );
@@ -110,15 +116,16 @@ class CTraineeAttendances extends CModel {
                         DAY( ta.attendance_date ) AS attendance_day,
                         s.trade_id,
                         s.batch_id,
-                        s.current_unit_id
+                        su.unit_id
                     FROM
                         ' . $this->strTableName . ' ta
+						JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = ta.student_id
                         JOIN  ' . CStudents::getInstance()->strTableName . ' s ON s.sid = ta.student_id
                         JOIN ' . CAttendanceTypes::getInstance()->strTableName . ' at ON at.id = ta.attendance_type_id 
                     WHERE
                         s.batch_id = ' . ( int ) $intBatchId . '
                         AND s.trade_id = ' . ( int ) $intTradeId . '
-                        AND s.current_unit_id = ' . ( int ) $intUnitId . '
+                        AND su.unit_id = ' . ( int ) $intUnitId . '
                         AND MONTH( ta.attendance_date )  = ' . ( int ) $intMonth . '
                         AND YEAR( ta.attendance_date ) = ' . ( int ) $intYear;
         
@@ -155,12 +162,13 @@ class CTraineeAttendances extends CModel {
                         COUNT( ta.id ) AS total_working_day_count
                     FROM
                         ' . $this->strTableName . ' ta
+						JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = ta.student_id
                         JOIN  ' . CStudents::getInstance()->strTableName . ' s ON s.sid = ta.student_id
                         JOIN ' . CAttendanceTypes::getInstance()->strTableName . ' ats ON ats.id = ta.attendance_type_id
                     WHERE
                         s.batch_id = ' . ( int ) $intBatchId . '
                         AND s.trade_id = ' . ( int ) $intTradeId . '
-                        AND s.current_unit_id = ' . ( int ) $intUnitId . '
+                        AND su.unit_id = ' . ( int ) $intUnitId . '
                         AND MONTH( ta.attendance_date )  = ' . ( int ) $intMonth . '
                         AND YEAR( ta.attendance_date ) = ' . ( int ) $intYear . '
                     GROUP BY
@@ -205,12 +213,13 @@ class CTraineeAttendances extends CModel {
                         COUNT( ta.id ) AS total_working_day_count
                     FROM
                         ' . $this->strTableName . ' ta
+						JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = ta.student_id
                         JOIN  ' . CStudents::getInstance()->strTableName . ' s ON s.sid = ta.student_id
                         JOIN ' . CAttendanceTypes::getInstance()->strTableName . ' ats ON ats.id = ta.attendance_type_id
                     WHERE
                         s.batch_id = ' . ( int ) $intBatchId . '
                         AND s.trade_id = ' . ( int ) $intTradeId . '
-                        AND s.current_unit_id = ' . ( int ) $intUnitId . '
+                        AND su.unit_id = ' . ( int ) $intUnitId . '
                         AND CAST( ta.attendance_date AS DATE ) BETWEEN \'' . $intStartYear . '-08-01\' AND \'' . $intYear . '-' . ( $intMonth - 1 ). '-31\'
                     GROUP BY
                         ta.student_id';
@@ -246,12 +255,13 @@ class CTraineeAttendances extends CModel {
                         ) AS daily_spl_count
                     FROM
                         ' . $this->strTableName . ' ta
+						JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = ta.student_id
                         JOIN  ' . CStudents::getInstance()->strTableName . ' s ON s.sid = ta.student_id
                         JOIN ' . CAttendanceTypes::getInstance()->strTableName . ' ats ON ats.id = ta.attendance_type_id
                     WHERE
                         s.batch_id = ' . ( int ) $intBatchId . '
                         AND s.trade_id = ' . ( int ) $intTradeId . '
-                        AND s.current_unit_id = ' . ( int ) $intUnitId . '
+                        AND su.unit_id = ' . ( int ) $intUnitId . '
                         AND MONTH( ta.attendance_date )  = ' . ( int ) $intMonth . '
                         AND YEAR( ta.attendance_date ) = ' . ( int ) $intYear . '
                     GROUP BY

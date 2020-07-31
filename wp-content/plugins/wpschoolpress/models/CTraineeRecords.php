@@ -40,10 +40,11 @@ class CTraineeRecords extends CModel {
                         ' . $this->strTableName . ' tr 
                         JOIN ' . CTraineeRecordTypes::getInstance()->strTableName . ' trt ON trt.id = tr.trainee_record_type_id 
                         JOIN ' . CStudents::getInstance()->strTableName . ' s ON s.sid = tr.student_id 
+						JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = s.sid
                     WHERE
                         MONTH( tr.checked_on ) = ' . ( int ) $intMonth . '
                         AND YEAR( tr.checked_on ) = ' . ( int ) $intYear . '
-                        AND s.current_unit_id = ' . ( int ) $intUnitId . '    
+                        AND su.unit_id = ' . ( int ) $intUnitId . '    
                     ORDER BY s.sid ASC';
         
         return $this->objDatabase->get_results( $strSql );
@@ -51,18 +52,19 @@ class CTraineeRecords extends CModel {
     }
     
     public function fetchDailyGroupedTraineeRecords() {
-        $strSql = 'SELECT 
+      $strSql = 'SELECT 
 	                   tr.checked_on, 
                        tr.instructor_id,
                        s.trade_id ,
-                       s.current_unit_id AS unit_id,
+                       su.unit_id,
                        s.batch_id
                     FROM
 	                   iti_wpsp_trainee_records tr
                         JOIN iti_wpsp_trainee_record_type trt ON trt.id = tr.trainee_record_type_id
                         JOIN iti_wpsp_student s ON s.sid = tr.student_id
+						JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = s.sid
                     GROUP BY
-	                    tr.checked_on, tr.instructor_id, s.trade_id, s.current_unit_id
+	                    tr.checked_on, tr.instructor_id, s.trade_id, su.unit_id
                     ORDER BY
 	                    tr.checked_on DESC';
         
@@ -74,16 +76,17 @@ class CTraineeRecords extends CModel {
 	                   tr.checked_on,
                        tr.instructor_id,
                        s.trade_id ,
-                       s.current_unit_id AS unit_id,
+                       su.unit_id,
                        s.batch_id
                     FROM
 	                   iti_wpsp_trainee_records tr
                         JOIN iti_wpsp_trainee_record_type trt ON trt.id = tr.trainee_record_type_id
                         JOIN iti_wpsp_student s ON s.sid = tr.student_id
+						JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = s.sid
                     WHERE
                         tr.instructor_id = ' . ( int ) $intInstructorId . '
                     GROUP BY
-	                    tr.checked_on, tr.instructor_id, s.trade_id, s.current_unit_id
+	                    tr.checked_on, tr.instructor_id, s.trade_id, su.unit_id
                     ORDER BY
                         tr.checked_on DESC';
         

@@ -78,7 +78,7 @@ text-align: left !important;
          </tr>
          <tr style='height:20px;'>
             <td class="s1 text-left no-border" dir="ltr" colspan="7">Roll No : <?php echo $student->s_rollno; ?></td>
-            <td class="s1 text-left no-border" colspan="8">Unit: <?php echo ( true == isset( $units[$student->current_unit_id] ) ? $units[$student->current_unit_id]->unit_name : '-' ) ?></td>
+            <td class="s1 text-left no-border" colspan="8">Unit: <?php echo ( true == isset( $units[$filter['unit_id']] ) ? $units[$filter['unit_id']]->unit_name : '-' ) ?></td>
             
          </tr>
          <tr style='height:20px;'>

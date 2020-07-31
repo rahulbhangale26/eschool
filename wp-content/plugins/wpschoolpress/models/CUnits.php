@@ -39,17 +39,18 @@ class CUnits extends CModel {
         return array_pop( $this->objDatabase->get_results( 'SELECT * FROM ' . $this->strTableName . ' WHERE id=' . ( int ) $intUnitId ) );
     }
     
-    public function fetchUnitByUser( $objUser ) {
+    public function fetchUnitByUser( $objUser, $boolIsPassed = NULL ) {
 
         if( CRole::STUDENT == $objUser->getRole() ) {
             $strSql = 'SELECT 
                             u.* 
                         FROM 
                             ' . CStudents::getInstance()->strTableName . ' s
-                            JOIN ' . $this->strTableName . ' u ON u.id = s.current_unit_id 
+							JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = s.sid
+                            JOIN ' . $this->strTableName . ' u ON u.id = su.unit_id
                         WHERE
                             s.wp_usr_id = ' . ( int ) $objUser->getUserId();
-        }
+         }
         
         if( CRole::TEACHER == $objUser->getRole() ) {
              $strSql = 'SELECT
@@ -60,13 +61,19 @@ class CUnits extends CModel {
                             JOIN ' . $this->strTableName . ' u ON u.id = si.unit_id
                         WHERE
                             t.wp_usr_id = ' .( int ) $objUser->getUserId();
+             
+           
         }
         
         if( CRole::ADMIN == $objUser->getRole() || ( CRole::TEACHER == $objUser->getRole() && ( CDesignations::PRINCIPAL == $objUser->getTeacher()->designation_id ) ) ) {
-            return $this->fetchAllUnits();
+        	$strSql = 'SELECT * FROM ' . $this->strTableName . ' u WHERE 1 = 1 ';
         }
         
-        $strSql .= ' ORDER BY id DESC'; 
+        if( false === $boolIsPassed ) {
+        	$strSql .= ' AND u.is_passed = false';
+        }
+        
+        $strSql .= ' ORDER BY u.unit_name DESC'; 
         
         return $this->objDatabase->get_results( $strSql );
         
@@ -80,7 +87,8 @@ class CUnits extends CModel {
                             u.*
                         FROM
                             ' . CStudents::getInstance()->strTableName . ' s
-                            JOIN ' . $this->strTableName . ' u ON u.id = s.current_unit_id
+							JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = s.sid
+                            JOIN ' . $this->strTableName . ' u ON u.id = su.unit_id
                         WHERE
                             s.wp_usr_id = ' . ( int ) $objUser->getUserId() . '
                             AND u.trade_id = ' . ( int ) $intTradeId;

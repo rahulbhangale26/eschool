@@ -980,7 +980,7 @@ $arrobjBatches = ( new CBatches() )->fetchAllBatches();
 											<?php foreach( $arrobjTrades AS $trade ) { ?>								
 												<?php foreach( $arrobjUnits AS $unit ) {
 													if( $batch->id == $unit->batch_id && $trade->id == $unit->trade_id ) {
-														echo '<option ' . ( $filter['unit_id'] == $unit->id ? 'selected="selected"' : '' ) . ' value="' . $unit->id . '"> ' . $trade->name . ' - ' . $unit->unit_name . '</option>';
+														echo '<option  value="' . $unit->id . '"> ' . $trade->name . ' - ' . $unit->unit_name . '</option>';
 													}
 												}?>
 											<?php } ?>

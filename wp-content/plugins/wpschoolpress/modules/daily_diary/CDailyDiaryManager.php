@@ -55,7 +55,8 @@ class CDailyDiaryManager extends CFactory {
     	];
     	
     	if( true == is_string( $this->getRequestData( [ 'filter', 'filter' ] ) ) ) {
-    		$this->arrmixFilter = $this->getRequestData( [ 'filter' ] );
+    		$this->arrmixFilter 			= $this->getRequestData( [ 'filter' ] );
+    		$this->arrmixFilter['unit_id']	= $this->getSessionData( [ 'filter', 'unit_id' ] );
     	}
         
     	if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {

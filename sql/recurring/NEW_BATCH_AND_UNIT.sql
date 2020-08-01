@@ -24,6 +24,7 @@ SELECT subject_id, instructor_id, 10 AS unit_id ,trade_id, 2 AS year_or_semester
 INSERT INTO iti_wpsp_subject_instructors( subject_id, instructor_id, unit_id, trade_id, year_or_semester_no ) 
 SELECT subject_id, instructor_id, 11 AS unit_id ,trade_id, 2 AS year_or_semester_no FROM iti_wpsp_subject_instructors WHERE trade_id = 2 AND year_or_semester_no = 1;
 
+/** These SQL addes duplicate records, We manually deleted those. */
 INSERT INTO iti_wpsp_subject_instructors( subject_id, instructor_id, unit_id, trade_id, year_or_semester_no ) 
 SELECT subject_id, instructor_id, 8 AS unit_id ,trade_id, 1 AS year_or_semester_no FROM iti_wpsp_subject_instructors WHERE trade_id = 1 AND year_or_semester_no = 2;
 

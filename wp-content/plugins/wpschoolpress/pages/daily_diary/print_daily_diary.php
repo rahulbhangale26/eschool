@@ -6,16 +6,15 @@ if( 'Monday' == date( 'l', strtotime( $filter['start_date'] ) ) ) {
 	$start_date = date( 'Y-m-d', strtotime( 'last monday', strtotime( $filter['start_date'] ) ) );
 }
 
-if( 7 < ( int ) date( 'm', strtotime( $start_date ) ) ) {
-	$year_start_date = date( 'Y', strtotime( $start_date ) ) . '-08-01';
-} else {
-	$year_start_date = ( date( 'Y', strtotime( $start_date ) ) - 1 ) . '-08-01';
+$year_start_date = date( 'Y-m-d', strtotime( $units[$filter['unit_id']]->start_date ) );
+
+if( $start_date < $year_start_date ) {
+	$start_date = $year_start_date;
 }
 
-$start_week_no 		= round( ( strtotime( $start_date ) - strtotime( $year_start_date ) ) / ( 60 * 60 * 24 * 7 ) );
-$end_week_no		= round( ( strtotime( $filter['end_date'] ) - strtotime( $year_start_date ) ) / ( 60 * 60 * 24 * 7 ) );
+$start_week_no 		= round( ( strtotime( $start_date ) - strtotime( $year_start_date ) ) / ( 60 * 60 * 24 * 7 ) ) + 1;
+$end_week_no		= round( ( strtotime( $filter['end_date'] ) - strtotime( $year_start_date ) ) / ( 60 * 60 * 24 * 7 ) ) + 1;
 
-if( 0 == $start_week_no ) $start_week_no++;
 $current_week_no	= $start_week_no;
 ?>
 
@@ -57,6 +56,12 @@ $current_week_no	= $start_week_no;
 	@media print {
  		.bage-break {page-break-after: always;}
 	}
+	
+	.note-content {
+    max-width: 450px;
+    text-indent: unset;
+    white-space: normal;
+}
 .ritz .waffle a { color: inherit; }.ritz .waffle .s6{border-right: none;background-color:#ffffff;}.ritz .waffle .s0{border-bottom:1px SOLID #000000;border-right:1px SOLID #000000;background-color:#ffffff;text-align:center;font-weight:bold;color:#000000;font-family:'docs-Calibri',Arial;font-size:12pt;vertical-align:bottom;white-space:normal;overflow:hidden;word-wrap:break-word;direction:ltr;padding:2px 3px 2px 3px;}.ritz .waffle .s7{border-bottom:1px SOLID #000000;border-right:1px SOLID #000000;background-color:#ffffff;text-align:left;color:#000000;font-family:'Arial';font-size:10pt;vertical-align:bottom;white-space:nowrap;direction:ltr;padding:2px 3px 2px 3px;}.ritz .waffle .s1{border-right:1px SOLID #000000;background-color:#ffffff;}.ritz .waffle .s4{border-left: none;border-bottom:1px SOLID #000000;background-color:#ffffff;text-align:center;font-weight:bold;color:#000000;font-family:'docs-Calibri',Arial;font-size:12pt;vertical-align:bottom;white-space:nowrap;direction:ltr;padding:2px 3px 2px 3px;}.ritz .waffle .s3{border-right: none;border-bottom:1px SOLID #000000;background-color:#ffffff;text-align:center;font-weight:bold;color:#000000;font-family:'docs-Calibri',Arial;font-size:12pt;vertical-align:bottom;white-space:nowrap;direction:ltr;padding:2px 3px 2px 3px;}.ritz .waffle .s5{border-bottom:1px SOLID #000000;border-right:1px SOLID #000000;background-color:#ffffff;text-align:center;font-weight:bold;color:#000000;font-family:'docs-Calibri',Arial;font-size:12pt;vertical-align:bottom;white-space:nowrap;direction:ltr;padding:2px 3px 2px 3px;}.ritz .waffle .s2{border-bottom:1px SOLID #000000;border-right:1px SOLID #000000;background-color:#ffffff;text-align:center;font-weight:bold;color:#000000;font-family:'docs-docs-Calibri',Arial;font-size:12pt;vertical-align:bottom;white-space:nowrap;direction:ltr;padding:2px 3px 2px 3px;}</style>
 
 <?php 
@@ -99,14 +104,14 @@ while( $current_week_no <= $end_week_no ) {
             	<?php echo ( true == isset( $lesson_notes[$start_date] ) ? $lesson_notes[$start_date]->number : '' ); ?>
             </td>
             <td class="s7 note" colspan="4">
-            	<?php echo ( true == isset( $lesson_notes[$start_date] ) ? $lesson_notes[$start_date]->note : '' ); ?>
+            	<div class="note-content" ><?php echo ( true == isset( $lesson_notes[$start_date] ) ? $lesson_notes[$start_date]->note : '' ); ?></div>
             </td>
             <td style="width: 200px" class="border-no" colspan="3"></td>
             <td class="s7 number">
             	<?php echo ( true == isset( $practical_notes[$start_date] ) ? $practical_notes[$start_date]->number : '' ); ?>
             </td>
             <td class="s7 note-right" colspan="4">
-            	<?php echo ( true == isset( $practical_notes[$start_date] ) ? $practical_notes[$start_date]->note : '' ); ?>
+            	<div class="note-content" ><?php echo ( true == isset( $practical_notes[$start_date] ) ? $practical_notes[$start_date]->note : '' ); ?></div>
             </td>
          </tr>
          <?php $start_date = date( 'Y-m-d', strtotime( 'tomorrow', strtotime( $start_date ) ) ); } ?>

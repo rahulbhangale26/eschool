@@ -3,6 +3,7 @@
 class CFactory {
     
     protected $objUser;
+    protected $objValidation;
     
     protected $arrobjUnits;
     protected $arrobjTrades;
@@ -84,7 +85,8 @@ class CFactory {
     
     public function initalize() {
         global $objUser;
-        $this->objUser = $objUser;
+        $this->objValidation	= new CValidations();
+        $this->objUser			= $objUser;
 
         if( true == defined('DOING_AJAX') && DOING_AJAX) { 
             $this->boolIsAjaxRequest = true;

@@ -1,7 +1,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <style type="text/css">
 
-.ritz .waffle a { color: inherit; }.ritz .waffle .s1{border-bottom:1px SOLID #000000;border-right:1px SOLID #000000;background-color:#ffffff;text-align:center;font-weight:bold;color:#54667a;font-family:'Arial';font-size:12pt;vertical-align:bottom;white-space:normal;overflow:hidden;word-wrap:break-word;direction:ltr;padding:2px 3px 2px 3px;}.ritz .waffle .s0{border-bottom:1px SOLID #000000;background-color:#ffffff;text-align:center;font-weight:bold;color:#54667a;font-family:'Arial';font-size:12pt;vertical-align:bottom;white-space:normal;overflow:hidden;word-wrap:break-word;direction:ltr;padding:2px 3px 2px 3px;}
+.ritz .waffle a { color: inherit; }.ritz .waffle .s1{border-bottom:1px SOLID #CCC;border-right:1px SOLID ##CCC;background-color:#ffffff;text-align:center;font-weight:bold;color:#000;font-family:'Arial';font-size:12pt;vertical-align:bottom;white-space:normal;overflow:hidden;word-wrap:break-word;direction:ltr;padding:2px 3px 2px 3px;}.ritz .waffle .s0{border-bottom:1px SOLID #CCC;background-color:#ffffff;text-align:center;font-weight:bold;color:#000;font-family:'Arial';font-size:12pt;vertical-align:bottom;white-space:normal;overflow:hidden;word-wrap:break-word;direction:ltr;padding:2px 3px 2px 3px;}
 .appendex {
 	font-size: 18px !important;
 }
@@ -10,14 +10,14 @@
 	font-weight: bolder !important;
 }
 .main-heading {
-	color: #54667a;
+	color: #000;
 	font-size: 36px !important;
 	font-weight: bolder !important;
 }
 .sub-main-heading {
 		font-size: 24px !important;
 	font-weight: bolder !important;
-    color: #54667a;
+    color: #000;
 }
 .no-border {
 	border: none !important;
@@ -34,16 +34,15 @@ text-align: left !important;
 }
 
 .s3 {
-    border: thin SOLID #000;
+    border: thin SOLID #CCC;
     padding: 10px 5px;
-    text-align: center;
     font-weight: 500;
-    color: #54667a;
+    color: #000;
 }
 .main-container {
 	padding: 20px;
 	margin: 0 auto;
-    border: 3px dotted #000;
+    border: 3px dotted #CCC;
 }
 
 .no-left-border {
@@ -97,31 +96,21 @@ text-align: left !important;
          	<td class="s3" style="max-width: 60px;" colspan="2">I. Initial</td>
          	<td class="s3 no-right-border" colspan="2">G. I Initials</td>
          </tr>
-         <?php for( $intIndex=1; $intIndex<=52; $intIndex++) { ?>
+         <?php 
+         	$index = 1;
+         foreach( $jobs AS $job ) { ?>
          <tr style="height: 20px">
-         	<td class="s3 no-left-border" colspan="1"><?php echo $intIndex; ?></td>
-         	<td class="s3" colspan="6">
-         		<?php 
-         			if( true == isset( $jobs[$intIndex] ) ) {
-         				echo $jobs[$intIndex]->title;
-         			}
-         		?>
-         	</td>
-         	<td class="s3" colspan="2">
-         		<?php 
-         			if( true == isset( $jobs[$intIndex] ) ) {
-         				echo date( 'd M', strtotime( $jobs[$intIndex]->start_date )  ) . ' - ' . date( 'd M', strtotime( $jobs[$intIndex]->end_date )  );
-         			}
-         		?>
-         	</td>
+         	<td class="s3 no-left-border" colspan="1"><?php echo $index; $index++; ?></td>
+         	<td class="s3" colspan="6"><?php echo $job->title; ?></td>
+         	<td class="s3" colspan="2"><?php echo date( 'd M', strtotime( $job->start_date )  ) . ' - ' . date( 'd M', strtotime( $job->end_date )  ); ?></td>
          	<td class="s3" colspan="2">
          	<?php      		
-	         	if( true == isset( $jobs[$intIndex] ) && true == isset( $job_progress[$jobs[$intIndex]->id] ) ) {
-	         		if( 80 <= $job_progress[$jobs[$intIndex]->id]->total_marks ) {
+         		if( true == isset( $job_progress[$job->id] ) ) {
+         			if( 80 <= $job_progress[$job->id]->total_marks ) {
          					echo 'A <br> ';
-	         		} else if( 70 <= $job_progress[$jobs[$intIndex]->id]->total_marks ) {
+         			} else if( 70 <= $job_progress[$job->id]->total_marks ) {
          					echo 'B <br> ';
-	         		} else if( 60 <= $job_progress[$jobs[$intIndex]->id]->total_marks ) {
+         			} else if( 60 <= $job_progress[$job->id]->total_marks ) {
          					echo 'C <br> ';
          			} else {
          				echo 'D <br> ';
@@ -129,11 +118,8 @@ text-align: left !important;
          		}
          		?>
          	</td>
-         	<td class="s3" style="padding: 0;" colspan="2">
-         		
-         	</td>
-         	<td class="s3 no-right-border" colspan="2">
-         	</td>
+         	<td class="s3" style="padding: 0;" colspan="2"></td>
+         	<td class="s3 no-right-border" colspan="2"></td>
          </tr>
          <tr></tr>
          <?php } ?>

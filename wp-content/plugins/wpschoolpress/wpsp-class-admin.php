@@ -468,6 +468,10 @@ function wpsp_admin_menu() {
 		/** MVC based arch **/
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		wp_enqueue_script( 'jquery-ui-jquery-ui112' , WPSP_PLUGIN_URL . 'plugins/jquery-ui/jquery-ui.min.js' );
+		/** TimePicker **/
+		wp_enqueue_script( 'jquery-ui-datetimepicker-full' , WPSP_PLUGIN_URL . 'plugins/jquery-ui/jquery.datetimepicker.full.min.js' );
+		wp_register_style( 'jquery-ui-datetimepicker-css', WPSP_PLUGIN_URL . 'plugins/jquery-ui/jquery.datetimepicker.min.css', false, '1.0.0' );
+		wp_enqueue_style( 'jquery-ui-datetimepicker-css' );
 		
 		wp_enqueue_script( 'jquery-ui-jspdf' , WPSP_PLUGIN_URL . 'plugins/jquery-ui/jsPdf.js' );
 		

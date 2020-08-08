@@ -267,10 +267,13 @@ class CModules extends CModel {
     const A_V_AIDS  = [
         'id'                => 23,
         'title'             => 'Audio Visual Aids Training',
-        'slug'              => 'sch-underconstruction',
+        'slug'              => 'sch-avaids',
         'icon_class'        => '',
         'parent_module_id'  => 12,
         'has_sub_modules'   => 0,
+   		'create_new'        => 'add_a_v_aid',
+   		'create_new_title'  => 'Add A/V Aid',
+   		'hide_from'         => [ CDesignations::OTHER ]
     ];
     
     const PARENTS  = [
@@ -478,6 +481,7 @@ class CModules extends CModel {
             'sch-question_bank'                 => self::QUESTION_BANK,
             'sch-daily_diary'                   => self::INSTRUCTOR_DAILY_DIARY,
         	'sch-exam'							=> self::EXAMS,
+        	'sch-avaids'						=> self::A_V_AIDS
         ];
     
     }

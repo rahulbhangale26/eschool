@@ -253,7 +253,7 @@ if( !empty( $stinfo ) ) {
 
                                         ?>
                                         <span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span></label>
-                                        <input type="text" data-is_required="<?php echo $is_required; ?>" class="wpsp-form-control" id="s_p_phone" name="s_p_phone" value="<?php echo $stinfo->p_phone;?>" placeholder="<?php echo $pl; ?>" onkeypress='return event.keyCode == 8 || event.keyCode == 46
+                                        <input type="text" data-is_required="<?php echo $is_required; ?>" class="wpsp-form-control" id="s_p_phone" name="s_p_phone" value="<?php echo $stinfo->s_phone;?>" placeholder="<?php echo $pl; ?>" onkeypress='return event.keyCode == 8 || event.keyCode == 46
  || event.keyCode == 37 || event.keyCode == 39 || event.charCode >= 48 && event.charCode <= 57'>
                                         <small>(Please enter country code with mobile number)</small>
                                         <input type="hidden" name="parentid" id="parentid" value="<?php echo $stinfo->parent_wp_usr_id;?>"/>
@@ -763,7 +763,7 @@ if( !empty( $stinfo ) ) {
                               }
                               ?>
                               <span class="wpsp-required"><?php echo ($is_required)?"*":""; ?></span></label>
-                            <input type="text" data-is_required="<?php echo $is_required; ?>" class="wpsp-form-control" id="phone" value="<?php echo $stinfo->s_phone; ?>" name="s_phone" placeholder="<?php echo $pl; ?>" >
+                            <input type="text" data-is_required="<?php echo $is_required; ?>" class="wpsp-form-control" id="phone" value="<?php echo $stinfo->p_phone; ?>" name="s_phone" placeholder="<?php echo $pl; ?>" >
                         </div>
                     </div>
 

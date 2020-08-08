@@ -69,14 +69,17 @@ class CStudents extends CModel {
     
     public function fetchStudentsByBatchIdByTradeId( $intBatchId, $intTradeId ) {
        $strSql = 'SELECT 
-	                       s.*,
-                           u.user_email 
+	                    	s.*,
+                     	    u.user_email,
+							(@cnt := @cnt + 1) AS sr_no
                         FROM 
 	                       iti_wpsp_student s 
                         JOIN iti_users u ON u.id = s.wp_usr_id 
                         WHERE 
                             s.trade_id = ' . ( int ) $intTradeId .'
-                            AND s.batch_id = ' . ( int ) $intBatchId;
+                            AND s.batch_id = ' . ( int ) $intBatchId . '
+						ORDER BY s.s_rollno ASC';
+       $this->objDatabase->get_results( 'SET @cnt = 0;' );
         return $this->objDatabase->get_results( $strSql );
         
     }

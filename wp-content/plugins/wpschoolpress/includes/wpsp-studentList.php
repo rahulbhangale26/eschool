@@ -47,6 +47,13 @@ $intTradeId = $_SESSION['filter']['trade_id'];
             $arrobjTrades = CTrade::getInstance()->fetchAllTrades();
         }
        ?>
+       
+<style>
+.wpsp-table tr td {
+    padding: 5px 10px;
+    font-size: 14px;
+}
+</style>
 <div class="wpsp-card">
 		<div class="wpsp-card-head">
 	<?php /*<h3 class="wpsp-card-title">Student List by class </h3>
@@ -141,20 +148,20 @@ $intTradeId = $_SESSION['filter']['trade_id'];
 								</th>
 								<?php } ?>
 
-								<th><?php echo apply_filters( 'wpsp_student_table_rollno_heading',esc_html__('Roll No.','WPSchoolPress'));?></th>
-								<th><?php echo apply_filters( 'wpsp_student_table_fullname_heading',esc_html__('Full Name','WPSchoolPress'));?></th>
-								<th>Unit</th>
-								<th>Qualification</th>
-								<th>Category</th>
-								<th>Address</th>
+								<th><?php echo apply_filters( 'wpsp_student_table_rollno_heading',esc_html__('Sr No.','WPSchoolPress'));?></th>
+								<th class="nosort"><?php echo apply_filters( 'wpsp_student_table_fullname_heading',esc_html__('Full Name','WPSchoolPress'));?></th>
+								<th class="nosort">Unit</th>
+								<th class="nosort">Qualification</th>
+								<th class="nosort">Category</th>
+								<th class="nosort">Address</th>
 								<?php  if($propayment =='installed'){?>
-								<th><?php echo apply_filters( 'wpsp_student_table_paymentstatus_heading',esc_html__('Payment Status','WPSchoolPress'));?></th>
+								<th class="nosort"><?php echo apply_filters( 'wpsp_student_table_paymentstatus_heading',esc_html__('Payment Status','WPSchoolPress'));?></th>
 							<?php } ?>
 								<?php  if($proversion1['status']){?>
 										 <th><?php echo apply_filters( 'wpsp_student_table_class_status_heading',esc_html__('Class Status','WPSchoolPress'));?></th>
 									<?php } ?>
-								<th><?php echo apply_filters( 'wpsp_student_table_phone_heading',esc_html__('Phone','WPSchoolPress'));?></th>
-								<th>Email</th>
+								<th class="nosort"><?php echo apply_filters( 'wpsp_student_table_phone_heading',esc_html__('Phone','WPSchoolPress'));?></th>
+								<th class="nosort">Email</th>
 								<th align="center" class="nosort"><?php echo apply_filters( 'wpsp_student_table_action_heading',esc_html__('Action','WPSchoolPress'));?></th>
 							</tr>
 						</thead>
@@ -180,7 +187,7 @@ $intTradeId = $_SESSION['filter']['trade_id'];
 												<input type="checkbox" class="ccheckbox strowselect" name="UID[]" value="<?php echo $stinfo->wp_usr_id;?>">						
 											</td>
 										<?php } ?>
-										<td><?php echo $stinfo->s_rollno;?></td>
+										<td><?php echo $stinfo->sr_no;?></td>
 										<td>
 											<?php
 		  							             $loc_avatar = get_user_meta($stinfo->wp_usr_id, 'simple_local_avatar', true);
@@ -188,10 +195,10 @@ $intTradeId = $_SESSION['filter']['trade_id'];
 									             echo "<img src='$img_url' height='50px' width='50px' class='wpsp-userPic'/>";
 										         $mname = $stinfo->s_mname;
 							                     $lname = $stinfo->s_lname;
-									             echo $stinfo->s_fname .' '. $mname .' '.  $lname . '';
+									             echo '<strong>' . $stinfo->s_fname .' '. $mname .' '.  $lname . '</strong>';
 									       ?>
 										</td>
-										<td><?php echo $units[$_SESSION['filter']['unit_id']]->unit_name; ?></td>
+										<td><?php echo $units[$_SESSION['filter']['unit_id']]->unit_name; ?><br><?php echo $stinfo->s_rollno;?> </td>
 										<td><?php echo $stinfo->qualification; ?></td>
 										<td><?php echo $stinfo->category; ?></td>
 										<td>
@@ -219,8 +226,11 @@ $intTradeId = $_SESSION['filter']['trade_id'];
 											<a href="<?php echo "?id=".$stinfo->wp_usr_id;?>javascript:;" data-id="<?php echo $stinfo->wp_usr_id;?>"  data-pop="ViewModal" class="viewAttendance wpsp-popclick" title="Attendance">
 												<i class="icon dashicons dashicons-admin-users wpsp-attendance-icon"></i>
 											</a>
-												<a href="<?php echo wpsp_admin_url();?>sch-student&id=<?php echo $stinfo->wp_usr_id.'&edit=true';?>" title="Edit"><i class="icon dashicons dashicons-edit wpsp-edit-icon"></i>
-												</a>
+												<?php
+													global $objUser;
+													if(  CRole::ADMIN == $objUser->getRole() || ( CRole::TEACHER == $objUser->getRole() && true == in_array( $objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) { ?>
+														<a href="<?php echo wpsp_admin_url();?>sch-student&id=<?php echo $stinfo->wp_usr_id.'&edit=true';?>" title="Edit"><i class="icon dashicons dashicons-edit wpsp-edit-icon"></i></a>
+													<?php } ?>									
 												<?php if ( in_array( 'administrator', $role ) || ( !empty( $teacherId ) && $teacherId==$cuserId ) ) { ?>
 											<a href="javascript:;" id="d_teacher" class="wpsp-popclick" data-pop="DeleteModal" title="Delete" data-id="<?php echo $stinfo->sid;?>" >
 	                                				<i class="icon dashicons dashicons-trash wpsp-delete-icon" data-id="<?php echo $stinfo->sid;?>"></i>

@@ -134,7 +134,13 @@ class CExamsManager extends CFactory {
 	
 	public function handleViewManageExam() {
 		$this->objExam 				= CExams::getInstance()->fetchExamById( sanitize_text_field( $this->getRequestData( ['exam_id' ] ) ) );
-		$this->arrobjSubjects		= CSubjects::getInstance()->getInstance()->fetchSubjectsByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
+		
+		if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
+			$this->arrobjSubjects		= CSubjects::getInstance()->getInstance()->fetchSubjectsByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
+		} else {
+			$this->arrobjSubjects		= CSubjects::getInstance()->getInstance()->fetchSubjectsByUnitIdByInstructorId( $this->getSessionData( [ 'filter', 'unit_id' ] ), $this->objUser->getTeacher()->tid );
+		}
+		
 		$this->arrobjTrainees		= CStudents::getInstance()->fetchStudentsByUnitId( $this->getSessionData( ['filter', 'unit_id'] ) );
 		$this->arrobjExamSubjects	= $this->rekeyObjects( 'subject_id', CExamSubjects::getInstance()->fetchExamSubjectsByExamId( $this->objExam->id ) );
 		$this->arrobjExamResults 	= CExamResults::getInstance()->fetchExamResultsByExamId( $this->objExam->id );

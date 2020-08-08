@@ -62,8 +62,12 @@ function wpsp_plugins_loaded()
 	require_once WPSP_PLUGIN_PATH . 'includes/commonFunctions.php';
 	require_once WPSP_PLUGIN_PATH . 'models/base/CAbstractModel.php';
 	require_once WPSP_PLUGIN_PATH . 'models/base/CModel.class.php';
-
+	
 	foreach (glob(WPSP_PLUGIN_PATH . "models/*.php") AS $strFile) {
+		require_once $strFile;
+	}
+
+	foreach (glob(WPSP_PLUGIN_PATH . "libraries/scrapers/*.php") AS $strFile) {
 	    require_once $strFile;
 	}
 

@@ -17,6 +17,7 @@ $arrstrModules = [
     'sch-question_bank'                 => WPSP_PLUGIN_PATH . 'modules/question_banks/CQuestionBanksManager.php',
     'sch-daily_diary'                   => WPSP_PLUGIN_PATH . 'modules/daily_diary/CDailyDiaryManager.php',
 	CModules::PROGRESS_CARD['slug']		=> WPSP_PLUGIN_PATH . 'modules/progress_card/CProgressCardManager.php',
-	CModules::EXAMS['slug']				=> WPSP_PLUGIN_PATH . 'modules/exams/CExamsManager.php'
+	CModules::EXAMS['slug']				=> WPSP_PLUGIN_PATH . 'modules/exams/CExamsManager.php',
+	CModules::A_V_AIDS['slug']			=> WPSP_PLUGIN_PATH . 'modules/avaids/CAvAidsManager.php'
 		
 ];

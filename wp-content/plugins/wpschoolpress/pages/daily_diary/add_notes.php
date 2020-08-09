@@ -66,6 +66,7 @@
 		</div>
 	</div>
 </div>
+
 <script>
 $(function() {
 
@@ -90,6 +91,7 @@ $(function() {
 	
 	$( "#note_date" ).datepicker({
 		dateFormat: 'yy-mm-dd',
+		minDate: '<?php echo date('Y-m-d', strtotime( $units[$filter['unit_id']]->start_date ) ); ?>',
 		showOtherMonths: true,
 	    selectOtherMonths: true,
 	    showButtonPanel: true,

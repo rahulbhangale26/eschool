@@ -560,6 +560,7 @@ function wpsp_UpdateStudent(){
 		return false;
 	}
 
+	$wpsp_user_table = $wpdb->prefix . "users";
   $wpsp_student_table = $wpdb->prefix . "wpsp_student";
   $wpsp_class_table = $wpdb->prefix . "wpsp_class";
   $wpsp_class_mapping_table = $wpdb->prefix . "wpsp_class_mapping";
@@ -678,7 +679,7 @@ function wpsp_UpdateStudent(){
 		's_bloodgrp' => isset($_POST['s_bloodgrp']) ? sanitize_text_field($_POST['s_bloodgrp']) : '',
 		's_dob' => isset($_POST['s_dob']) && !empty($_POST['s_dob']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_dob'])) : '',
 		's_city' => isset($_POST['s_city']) ? sanitize_text_field($_POST['s_city']) : '',
-		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
+		's_phone'  =>  isset($_POST['s_phone']) ? sanitize_text_field($_POST['s_phone']) : '',
 	);
 
 		$stu_upd = $wpdb->update($wpsp_student_table, $studenttable, array(
@@ -710,23 +711,36 @@ function wpsp_UpdateStudent(){
 		's_pcountry' => isset($_POST['s_pcountry']) ? sanitize_text_field($_POST['s_pcountry']) : '',
 		's_pcity' => isset($_POST['s_pcity']) ? sanitize_text_field($_POST['s_pcity']) : '',
 		's_pzipcode' => isset($_POST['s_pzipcode']) ? intval($_POST['s_pzipcode']) : '',
-		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
+		's_phone'  =>  isset($_POST['s_phone']) ? sanitize_text_field($_POST['s_phone']) : '',
 		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
         'current_unit_id'     => isset( $_POST['current_unit_id'] ) ? sanitize_text_field( $_POST['current_unit_id'] ) : '',
 		'trade_id'				=> is_object( $objUnit ) ? $objUnit->trade_id : 0,
 		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
-		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
+		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : '',
+		's_adhar_card'		=> isset( $_POST['s_adhar_card'] ) ? sanitize_textarea_field( $_POST['s_adhar_card'] ) : '',
+		'p_phone'  =>  isset($_POST['p_phone']) ? sanitize_text_field($_POST['p_phone']) : '',
 
 	);
 
   // Update date Details onclass mapping table
   updateStudentClassDate($user_id);
 
-  //End Update date Details onclass mapping table
-
   $stu_upd = $wpdb->update($wpsp_student_table, $studenttable, array(
     'wp_usr_id' => $user_id
   ));
+  
+  if( true == isset( $_POST['user_email'] ) ) {
+  	if ( false === email_exists( sanitize_email( $_POST['user_email'] ) ) ) {
+  		 $arrstrUser = [
+	 		'user_email'	=> sanitize_email( $_POST['user_email'] )
+  		 ];
+  		 
+  		 $wpdb->update( $wpsp_user_table , $arrstrUser, [ 'id' => $user_id ] );
+  	} else if( $user_id != email_exists(sanitize_email($_POST['user_email'] ) ) ) {
+  		echo "Student Email ID Already Exists!";
+  		exit;
+  	}
+  }
   
   if( true == isset( $_POST['unit_ids'] ) && 0 < count( $_POST['unit_ids'] ) ) {
   	$objStudent = CStudents::getInstance()->fetchStudentByUserId( $user_id );
@@ -833,7 +847,7 @@ function wpsp_UpdateStudent(){
 				'p_edu' => $pedu,
 				'p_profession' => $pprofession,
 				'p_bloodgrp' => $pbloodgroup,
-				's_phone' => $phone
+				'p_phone'		=> isset( $_POST['p_phone'] ) ? sanitize_textarea_field( $_POST['p_phone']) : ''
 				);
 
 
@@ -867,12 +881,12 @@ function wpsp_UpdateStudent(){
 		's_bloodgrp' => isset($_POST['s_bloodgrp']) ? sanitize_text_field($_POST['s_bloodgrp']) : '',
 		's_dob' => isset($_POST['s_dob']) && !empty($_POST['s_dob']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_dob'])) : '',
 		's_doj' => isset($_POST['s_doj']) && !empty($_POST['s_doj']) ? wpsp_StoreDate(sanitize_text_field($_POST['s_doj'])) : '',
-		's_phone' => $phone,
 		'p_fname' => $pfirstname,
 		'p_mname' => $pmiddlename,
 		'p_lname' => $plastname,
 		'p_gender' => $pgender,
 		'p_edu' => $pedu,
+		'p_phone'  =>  isset($_POST['p_phone']) ? sanitize_text_field($_POST['p_phone']) : '',
 		'p_profession' => $pprofession,
 		's_paddress' => isset($_POST['s_paddress']) ? sanitize_text_field($_POST['s_paddress']) : '',
 		'p_bloodgrp' => $pbloodgroup,
@@ -880,12 +894,25 @@ function wpsp_UpdateStudent(){
 		's_pcountry' => isset($_POST['s_pcountry']) ? sanitize_text_field($_POST['s_pcountry']) : '',
 		's_pcity' => isset($_POST['s_pcity']) ? sanitize_text_field($_POST['s_pcity']) : '',
 		's_pzipcode' => isset($_POST['s_pzipcode']) ? intval($_POST['s_pzipcode']) : '',
-		's_phone'  =>  isset($_POST['s_p_phone']) ? sanitize_text_field($_POST['s_p_phone']) : '',
+		's_phone'  =>  isset($_POST['s_phone']) ? sanitize_text_field($_POST['s_phone']) : '',
 		'batch_id'  =>  isset($_POST['batch_id']) ? sanitize_text_field($_POST['batch_id']) : '',
 		'trade_id'				=> is_object( $objUnit ) ? $objUnit->trade_id : 0,
 		'category'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '',
-		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : ''
+		'qualification'  =>  isset($_POST['category']) ? sanitize_text_field($_POST['qualification']) : '',
+		's_adhar_card'		=> isset( $_POST['s_adhar_card'] ) ? sanitize_textarea_field( $_POST['s_adhar_card'] ) : '',
 	);
+		if( true == isset( $_POST['user_email'] ) ) {
+			if ( false === email_exists( sanitize_email( $_POST['user_email'] ) ) ) {
+				$arrstrUser = [
+						'user_email'	=> sanitize_email( $_POST['user_email'] )
+				];
+				
+				$wpdb->update( $wpsp_user_table , $arrstrUser, [ 'id' => $user_id ] );
+			} else if( $user_id != email_exists(sanitize_email($_POST['user_email'] ) ) ) {
+				echo "Student Email ID Already Exists!";
+				exit;
+			}
+		} 
 		
 		if( true == isset( $_POST['unit_ids'] ) && 0 < count( $_POST['unit_ids'] ) ) {
 			$objStudent = CStudents::getInstance()->fetchStudentByUserId( $user_id );
@@ -905,15 +932,15 @@ function wpsp_UpdateStudent(){
 		}
 
 		$parenttable = array(
-		'parent_wp_usr_id' => $parent_id,
-		'p_fname' => $pfirstname,
-		'p_mname' => $pmiddlename,
-		'p_lname' => $plastname,
-		'p_gender' => $pgender,
-		'p_edu' => $pedu,
-		'p_profession' => $pprofession,
-		'p_bloodgrp' => $pbloodgroup,
-		's_phone' => $phone
+			'parent_wp_usr_id' => $parent_id,
+			'p_fname' => $pfirstname,
+			'p_mname' => $pmiddlename,
+			'p_lname' => $plastname,
+			'p_gender' => $pgender,
+			'p_edu' => $pedu,
+			'p_profession' => $pprofession,
+			'p_bloodgrp' => $pbloodgroup,
+			'p_phone'		=> isset( $_POST['p_phone'] ) ? sanitize_textarea_field( $_POST['p_phone']) : ''
 		);
 
     // Update date Details onclass mapping table

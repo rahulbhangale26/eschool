@@ -1,6 +1,10 @@
 <?php
 class CAvAidsManager extends CFactory {
 	
+	protected $objAvaid;
+	
+	protected $arrobjAvaids;
+	
 	public function __construct() {
 		
 	}
@@ -19,6 +23,18 @@ class CAvAidsManager extends CFactory {
 				$this->handleAddAVAid();
 				break;
 				
+			case 'edit_aid':
+				$this->handleEditAid();
+				break;
+				
+			case 'delete_aid':
+				$this->handleDeleteAid();
+				break;
+				
+			case 'view_aid':
+				$this->handleViewAid();
+				break;
+				
 			case 'get_link_details':
 				$this->handleGetLinkDetails();
 				break;
@@ -27,12 +43,83 @@ class CAvAidsManager extends CFactory {
 	
 	public function handleViewAvAids() {
 		
+		$this->arrobjAvaids = CAvaids::getInstance()->fetchAvaidsByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
 		$this->displayViewAvAids();
 	}
 	
 	public function handleAddAVAid() {
 		
+		if( "" != $this->getRequestData( ['add_av_aid'] ) ) {
+			switch( NULL ) {
+				default:
+					if( '' == $this->getRequestData( ['title'] ) ) {
+						$this->addErrorMessage( 'Title is required.' );
+						break;
+					}
+					
+					if( '' == $this->getRequestData( ['link'] ) ) {
+						$this->addErrorMessage( 'Title is required.' );
+						break;
+					}
+					
+					$arrmixAvaids = [
+						'unit_id'		=> $this->getSessionData( [ 'filter', 'unit_id' ] ),
+						'title'			=> sanitize_text_field( $this->getRequestData( [ 'title' ] ) ),
+						'description'	=> sanitize_textarea_field( $this->getRequestData( [ 'description' ] ) ),
+						'link'			=> sanitize_url( $this->getRequestData( [ 'link' ] ) ),
+						'embed_url'		=> sanitize_url( $this->getRequestData( [ 'embed_url' ] ) ),
+						'preview_url'	=> sanitize_url( $this->getRequestData( [ 'preview_url' ] ) )
+					];
+					
+					if( false == CAvaids::getInstance()->insert( $arrmixAvaids ) ) {
+						$this->addErrorMessage( 'Unable to insert the data.' );
+						break;
+					}
+					
+					$this->addSuccessMessage( 'Aid added successfully.' );
+			}
+			
+		}
+		
 		$this->displayAddAVAid();
+	}
+	
+	public function handleEditAid() {
+		
+		if(  "" != $this->getRequestData( [ 'update_av_aid' ] ) ) {
+			switch( NULL ) {
+				default:
+					if( '' == $this->getRequestData( ['title'] ) ) {
+						$this->addErrorMessage( 'Title is required.' );
+						break;
+					}
+					
+					if( '' == $this->getRequestData( ['link'] ) ) {
+						$this->addErrorMessage( 'Title is required.' );
+						break;
+					}
+					
+					$arrmixAvaids = [
+							'unit_id'		=> $this->getSessionData( [ 'filter', 'unit_id' ] ),
+							'title'			=> sanitize_text_field( $this->getRequestData( [ 'title' ] ) ),
+							'description'	=> sanitize_textarea_field( $this->getRequestData( [ 'description' ] ) ),
+							'link'			=> sanitize_url( $this->getRequestData( [ 'link' ] ) ),
+							'embed_url'		=> sanitize_url( $this->getRequestData( [ 'embed_url' ] ) ),
+							'preview_url'	=> sanitize_url( $this->getRequestData( [ 'preview_url' ] ) )
+					];
+					
+					if( false == CAvaids::getInstance()->update( $arrmixAvaids, [ 'id' => sanitize_text_field( $this->getRequestData( [ 'avaid_id' ] ) ) ] ) ) {
+						$this->addErrorMessage( 'Unable to update the data.' );
+					}
+					
+					$this->addSuccessMessage( 'Aid updated successfully.' );
+				
+			}
+		}
+		
+		$this->objAvaid = CAvaids::getInstance()->fetchAvaidById( sanitize_key( $this->getRequestData( [ 'avaid_id' ] ) ) );
+		
+		$this->displayEditAid();
 	}
 	
 	public function handleGetLinkDetails() {
@@ -40,7 +127,7 @@ class CAvAidsManager extends CFactory {
 		
 		switch ( NULL ) {
 			default:
-				if( false === strpos( $strLink, 'youtube' ) ) {
+				if( false === strpos( $strLink, 'youtube' ) && false === strpos( $strLink, 'youtu.be' ) ) {
 					$this->arrstrJsonRespose = [ 'status' => false, 'message' => 'Invalid Youtube link' ];
 					break;
 				}
@@ -66,7 +153,36 @@ class CAvAidsManager extends CFactory {
 		$this->displayJson();
 	}
 	
+	public function handleDeleteAid() {
+		
+		if( "" == $this->getRequestData( [ 'data', 'avaid_id' ] ) ) {
+			echo 'error';
+			exit;
+		}
+		 
+		if( false == CAvaids::getInstance()->delete( [ 'id' => sanitize_text_field( $this->getRequestData( [ 'data', 'avaid_id' ] ) ) ] ) ) {
+			echo 'error';
+			exit;
+		}
+		
+		$this->handleViewAvAids();
+		
+	}
+
+	public function handleViewAid() {
+		
+		$this->objAvaid = CAvaids::getInstance()->fetchAvaidById( sanitize_key( $this->getRequestData( [ 'avaid_id' ] ) ) );
+		
+		if( "" == $this->objAvaid->embed_url ) {
+			header( 'Location: ' . $this->objAvaid->link );
+		}
+		
+		$this->displayViewAid();
+	}
+	
 	public function displayViewAvAids() {
+		
+		$this->arrmixTemplateParams['avaids']		= $this->arrobjAvaids;
 		
 		$this->renderPage( 'avaids/view_av_aids.php' );
 	}
@@ -74,6 +190,20 @@ class CAvAidsManager extends CFactory {
 	public function displayAddAVAid() {
 		
 		$this->renderPage( 'avaids/add_a_v_aid.php' );
+	}
+	
+	public function displayEditAid() {
+		
+		$this->arrmixTemplateParams['avaid'] = $this->objAvaid;
+		
+		$this->renderPage( 'avaids/add_a_v_aid.php' );
+	}
+	
+	public function displayViewAid() {
+		$this->arrmixTemplateParams['avaid'] = $this->objAvaid;
+		
+		$this->renderPage( 'avaids/view_aid.php' );
+		
 	}
 	
 }

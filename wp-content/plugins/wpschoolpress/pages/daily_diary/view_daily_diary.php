@@ -136,6 +136,7 @@ $(function () {
 
 	$('.ClassDeleteBt').unbind();
 	$('.ClassDeleteBt').click( function(e) {
+		$("body").removeClass("wpsp-bodyFixed"); 
 		$("#DeleteModal").css("display", "none");
 		sch.ajaxRequest({
 			'page': 'sch-daily_diary',

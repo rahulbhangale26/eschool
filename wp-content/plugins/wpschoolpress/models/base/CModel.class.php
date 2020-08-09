@@ -16,6 +16,21 @@ class CModel extends CAbstractModel {
         
     }
     
+    public function insert( $arrmixAvaids ) {
+    	if( false != $this->objDatabase->insert( $this->strTableName, $arrmixAvaids ) ) {
+    		return $this->objDatabase->insert_id;
+    	}
+    	return false;
+    }
+    
+    public function update( $arrstrUpdatedFields, $arrstrWhereFields ) {
+    	return $this->objDatabase->update( $this->strTableName, $arrstrUpdatedFields, $arrstrWhereFields );
+    }
+    
+    public function delete( $arrstrWhere ) {
+    	return $this->objDatabase->delete( $this->strTableName, $arrstrWhere );
+    }
+    
     
 }
 

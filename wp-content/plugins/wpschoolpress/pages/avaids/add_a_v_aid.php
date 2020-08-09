@@ -18,7 +18,7 @@
 						<div class="wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
 								<label class="wpsp-labelMain">Link <span></span></label>
-								<input type="text" class="wpsp-form-control" id="link" placeholder="Enter Youtube link." name="link" autocomplete="off" value="" />
+								<input type="text" class="wpsp-form-control" id="link" placeholder="Enter Youtube link." name="link" autocomplete="off" value="<?php echo ( true == is_object( $avaid ) ? $avaid->link : '' ); ?>" />
 							</div>
 						</div>
 					</div>
@@ -26,7 +26,7 @@
 						<div class="wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
 								<label class="wpsp-labelMain">Title <span></span></label>
-								<input type="text" class="wpsp-form-control" id="title" placeholder="Title." name="title" autocomplete="off" value="" />
+								<input type="text" class="wpsp-form-control" id="title" placeholder="Title." name="title" autocomplete="off" value="<?php echo ( true == is_object( $avaid ) ? $avaid->title : '' ); ?>" />
 							</div>
 						</div>
 					</div>
@@ -34,23 +34,28 @@
 						<div class="wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
 								<label class="wpsp-labelMain">Description <span></span></label>
-								<textarea rows="4" cols="3" class="wpsp-form-control" id="description" placeholder="Description." name="description"></textarea>
+								<textarea rows="4" cols="3" class="wpsp-form-control" id="description" placeholder="Description." name="description"><?php echo ( true == is_object( $avaid ) ? $avaid->description : '' ); ?></textarea>
 							</div>
 						</div>
 					</div>
 					<div class="wpsp-row">
 						<div class="wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
-								<img alt="" src="" id="preive_url_img" width="120" height="90" />
+								<img alt="" src="<?php echo ( true == is_object( $avaid ) ? $avaid->preview_url : '' ); ?>" id="preive_url_img" width="120" height="90" />
 							</div>
 						</div>
 					</div>	
 					<div class="wpsp-row">
 						<div class="wpsp-col-md-12 wpsp-col-sm-12 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
-								<input type="hidden" id="embed_url" name="embed_url" value="" />
-								<input type="hidden" id="preview_url" name="preview_url" value="" />
-								<input type="submit" name="add_av_aid" value="Add Aid" class="wpsp-btn wpsp-btn-success" />
+								<input type="hidden" id="embed_url" name="embed_url" value="<?php echo ( true == is_object( $avaid ) ? $avaid->embed_url : '' ); ?>" />
+								<input type="hidden" id="preview_url" name="preview_url" value="<?php echo ( true == is_object( $avaid ) ? $avaid->preview_url : '' ); ?>" />
+								<?php if( true == is_object( $avaid ) ) { ?>
+									<input type="hidden" name="avaid_id" value="<?php echo ( true == is_object( $avaid ) ? $avaid->id : '' )?>">
+									<input type="submit" name="update_av_aid" value="Update Aid" class="wpsp-btn wpsp-btn-success" />
+								<?php } else { ?>
+									<input type="submit" name="add_av_aid" value="Add Aid" class="wpsp-btn wpsp-btn-success" />
+								<?php } ?>
 							</div>
 						</div>
 					</div>
@@ -61,6 +66,8 @@
 </div>
 <script>
 	$('#link').change(function(e) {
+		$('#message').html('');
+		
 		sch.ajaxRequest({
 			'page': 'sch-avaids',
 			'pageAction': 'get_link_details',

@@ -59,7 +59,7 @@ if( !empty( $stinfo ) ) {
                                 <div class="wpsp-profileUp">
                                     <img src="<?php echo $img_url;?>" id="img_preview" onchange="imagePreview(this);" height="150px" width="150px" class="wpsp-upAvatar" />
                                     <div class="wpsp-upload-button"><i class="fa fa-camera"></i>
-                                        <input name="displaypicture" class="wpsp-file-upload upload" id="displaypicture" type="file" accept="image/jpg, image/jpeg" />
+                                        <input name="displaypicture" class="wpsp-file-upload upload" id="displaypicture" type="file" accept="image/JPG, image/jpg, image/jpeg" />
                                     </div>
                                 </div>
                                 <p class="wpsp-form-notes">* Only JPEG and JPG supported, * Max 3 MB Upload </p>

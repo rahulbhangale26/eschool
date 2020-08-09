@@ -104,7 +104,7 @@ $(document).ready(function() {
       $(this).val('');
     }
     var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
-    if ($.inArray(fileExtension, ['jpg', 'jpeg']) == -1) {
+    if ($.inArray(fileExtension, ['jpg', 'jpeg', 'JPG', 'JPEG', 'png', 'PNG' ]) == -1) {
       $('.validation-error-' + id).html('Please select either jpg or jpeg file');
       $(this).val('');
     }

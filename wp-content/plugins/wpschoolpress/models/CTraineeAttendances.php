@@ -78,7 +78,7 @@ class CTraineeAttendances extends CModel {
                         AND CAST( ta.attendance_date AS date ) BETWEEN \'' . $arrstrFilter['start_date'] . '\' AND \'' . $arrstrFilter['end_date'] . '\'
 						AND su.unit_id = ' . ( int ) $arrstrFilter['unit_id'] . '
                     GROUP By
-                        ta.attendance_date, s.batch_id, s.trade_id, su.unit_id
+                        ta.attendance_date, su.unit_id
                     ORDER BY ta.attendance_date DESC';
         
         return $this->objDatabase->get_results( $strSql );
@@ -104,7 +104,7 @@ class CTraineeAttendances extends CModel {
                         CAST( ta.attendance_date AS date ) BETWEEN \'' . $arrstrFilter['start_date'] . '\' AND \'' . $arrstrFilter['end_date'] . '\'
 						AND su.unit_id = ' . ( int ) $arrstrFilter['unit_id'] . '
                     GROUP By
-                        ta.attendance_date, s.batch_id, s.trade_id, su.unit_id
+                        ta.attendance_date, su.unit_id
                     ORDER BY ta.attendance_date DESC';
         
         return $this->objDatabase->get_results( $strSql );

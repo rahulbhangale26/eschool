@@ -32,6 +32,10 @@ class CTraineeAttendanceManager extends CFactory {
                 $this->handleAddTraineeAttendance();
                 break;
                 
+            case 'delete_trainee_attendance':
+            	$this->handleDeleteTraineeAttendance();
+            	break;
+                
             case 'trainee_attendance_form':
                 $this->handleTraineeAttendanceForm();
                 break;
@@ -43,6 +47,10 @@ class CTraineeAttendanceManager extends CFactory {
         $this->arrstrFilter = $this->getRequestData( [ 'filter' ] );
         
         if( false == isset( $this->arrstrFilter[ 'filter' ] ) ) {
+        	$this->arrstrFilter = $this->getSessionData( [ 'trainee_attendance_filter' ] );
+        }
+        
+        if( false == isset( $this->arrstrFilter['filter'] ) ) {
             $this->arrstrFilter = [
                 'filter'        => 'filter',
                 'start_date'    => date( 'Y-m-01'),
@@ -52,6 +60,8 @@ class CTraineeAttendanceManager extends CFactory {
         }
         
         $this->arrstrFilter['unit_id'] = $this->getSessionData( [ 'filter', 'unit_id' ] );
+        
+        $this->setSessionData( 'trainee_attendance_filter', $this->arrstrFilter );
         
         if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
             $this->arrobjTraineeAttendances = CTraineeAttendances::getInstance()->fetchGroupedTraineeAttendance( $this->arrstrFilter );
@@ -108,6 +118,26 @@ class CTraineeAttendanceManager extends CFactory {
         }
         
         $this->displayAddTraineeAttendance();
+    }
+
+    public function handleDeleteTraineeAttendance() {
+    	
+    	if( "" == $this->getRequestData( [ 'data', 'attendance_date' ] ) ) {
+    		echo 'error';
+    		exit;
+    	}
+    	
+    	$intTradeId			= $this->getSessionData( [ 'filter', 'trade_id' ] );
+    	$intBatchId			= $this->getSessionData( [ 'filter', 'batch_id' ] );
+    	$strAttandaceDate 	= date( 'Y-m-d', strtotime( $this->getRequestData( [ 'data', 'attendance_date' ] ) ) );
+    	
+    	if( false == CTraineeAttendances::getInstance()->deleteAttendancesBYTradeIdByBatchIdByInstructorIdByAttendanceDate( $intTradeId, $intBatchId, $this->objUser->getTeacher()->tid, $strAttandaceDate ) ) {
+    		echo 'error';
+    		exit;
+    	}
+    	
+    	$this->handleTraineAttendance();
+    	exit;
     }
     
     public function handleTraineeAttendanceForm() {

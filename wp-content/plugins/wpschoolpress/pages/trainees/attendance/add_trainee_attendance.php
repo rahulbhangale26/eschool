@@ -64,6 +64,10 @@ $( function() {
 	
 	$('#TraineeAttendanceSubmit').hide();
 	
+	$('#TraineeAttendanceSubmit').click( function( e ){
+		$('#add_trainee_attendance').append( '<div class="loaderOverlay"></div><div class="loader"></div>');
+	});
+	
     $('#attendance_date').change( function() {
     	loadAttendance();
      });

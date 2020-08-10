@@ -65,18 +65,19 @@ class CTraineeAttendanceMonthlyManager extends CFactory {
         $this->objBatch         = CBatches::getInstance()->fetchBatchById( $intBatchId );
         $this->objTeacher       = CTeachers::getInstance()->fetchTeacherByUnitIdByBatchId( $intUnitId, $intBatchId );
         $this->arrobjStudents   =  CStudents::getInstance()->fetchStudentsByUnitId( $intUnitId );
+        $intInstructorId		= $this->objTeacher->tid;
         list( $intYear, $intMonth ) = explode( '-', $strAttendanceDate );
         
-        $this->arrobjTraineeAttendances         = CTraineeAttendances::getInstance()->fetchAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId,  $strAttendanceDate, $intMonth, $intYear );
-        $this->arrobjTraineeAttendancesSummary  = CTraineeAttendances::getInstance()->fetchSummaryAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId,  $strAttendanceDate, $intMonth, $intYear );       
-        $this->arrobjDailyTraineeAttendanceStat = CTraineeAttendances::getInstance()->fetchDailyAttendanceStatByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId,  $strAttendanceDate, $intMonth, $intYear );
+        $this->arrobjTraineeAttendances         = CTraineeAttendances::getInstance()->fetchAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId, $intInstructorId, $strAttendanceDate, $intMonth, $intYear );
+        $this->arrobjTraineeAttendancesSummary  = CTraineeAttendances::getInstance()->fetchSummaryAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId, $intInstructorId, $strAttendanceDate, $intMonth, $intYear );       
+        $this->arrobjDailyTraineeAttendanceStat = CTraineeAttendances::getInstance()->fetchDailyAttendanceStatByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId, $intInstructorId, $strAttendanceDate, $intMonth, $intYear );
         
         $intLastMonth = $intMonth - 1;
         if( $intLastMonth == 0 ) {
             $intLastMonth = 12;
         }
         
-        $this->arrobjLastMonthTraineeAttendancesSummary  = CTraineeAttendances::getInstance()->fetchTotalSummaryAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId,  $strAttendanceDate, $intMonth, $intYear );
+        $this->arrobjLastMonthTraineeAttendancesSummary  = CTraineeAttendances::getInstance()->fetchTotalSummaryAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId, $intInstructorId, $strAttendanceDate, $intMonth, $intYear );
                 
         $this->displayViewMusterReport();
     }

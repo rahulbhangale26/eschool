@@ -110,7 +110,7 @@ class CTraineeAttendances extends CModel {
         return $this->objDatabase->get_results( $strSql );
     }
     
-    public function fetchAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId, $strAttendanceDate, $intMonth, $intYear ) {
+    public function fetchAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId, $intInstructorId, $strAttendanceDate, $intMonth, $intYear ) {
         $strSql = 'SELECT
                         ta.*,
                         DAY( ta.attendance_date ) AS attendance_day,
@@ -126,13 +126,14 @@ class CTraineeAttendances extends CModel {
                         s.batch_id = ' . ( int ) $intBatchId . '
                         AND s.trade_id = ' . ( int ) $intTradeId . '
                         AND su.unit_id = ' . ( int ) $intUnitId . '
+						AND ta.instructor_id = ' . ( int ) $intInstructorId . '
                         AND MONTH( ta.attendance_date )  = ' . ( int ) $intMonth . '
                         AND YEAR( ta.attendance_date ) = ' . ( int ) $intYear;
         
         return $this->objDatabase->get_results( $strSql );
     }
     
-    public function fetchSummaryAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId, $strAttendanceDate, $intMonth, $intYear ) {
+    public function fetchSummaryAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId, $intInstructorId, $strAttendanceDate, $intMonth, $intYear ) {
         $strSql = 'SELECT
                         DAY( ta.attendance_date ),
                         ta.student_id,
@@ -169,6 +170,7 @@ class CTraineeAttendances extends CModel {
                         s.batch_id = ' . ( int ) $intBatchId . '
                         AND s.trade_id = ' . ( int ) $intTradeId . '
                         AND su.unit_id = ' . ( int ) $intUnitId . '
+						AND ta.instructor_id = ' . ( int ) $intInstructorId . '
                         AND MONTH( ta.attendance_date )  = ' . ( int ) $intMonth . '
                         AND YEAR( ta.attendance_date ) = ' . ( int ) $intYear . '
                     GROUP BY
@@ -177,7 +179,7 @@ class CTraineeAttendances extends CModel {
         return $this->objDatabase->get_results( $strSql );
     }
     
-    public function fetchTotalSummaryAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId, $strAttendanceDate, $intMonth, $intYear ) {
+    public function fetchTotalSummaryAttendancesByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId, $intInstructorId, $strAttendanceDate, $intMonth, $intYear ) {
         if( 7 < $intMonth ) {
             $intStartYear = $intYear;
         } else {
@@ -220,6 +222,7 @@ class CTraineeAttendances extends CModel {
                         s.batch_id = ' . ( int ) $intBatchId . '
                         AND s.trade_id = ' . ( int ) $intTradeId . '
                         AND su.unit_id = ' . ( int ) $intUnitId . '
+						AND ta.instructor_id = ' . ( int ) $intInstructorId . '
                         AND CAST( ta.attendance_date AS DATE ) BETWEEN \'' . $intStartYear . '-08-01\' AND \'' . $intYear . '-' . ( $intMonth - 1 ). '-31\'
                     GROUP BY
                         ta.student_id';
@@ -227,7 +230,7 @@ class CTraineeAttendances extends CModel {
         return $this->objDatabase->get_results( $strSql );
     }
     
-    public function fetchDailyAttendanceStatByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId, $strAttendanceDate, $intMonth, $intYear ) {
+    public function fetchDailyAttendanceStatByBatchIdByTradeIdByUnitIdByMonthByYear( $intBatchId, $intTradeId, $intUnitId, $intInstructorId, $strAttendanceDate, $intMonth, $intYear ) {
         $strSql = 'SELECT
                         DAY( ta.attendance_date ) AS attendance_date,
                         SUM( CASE
@@ -262,6 +265,7 @@ class CTraineeAttendances extends CModel {
                         s.batch_id = ' . ( int ) $intBatchId . '
                         AND s.trade_id = ' . ( int ) $intTradeId . '
                         AND su.unit_id = ' . ( int ) $intUnitId . '
+						AND ta.instructor_id = ' . ( int ) $intInstructorId . '
                         AND MONTH( ta.attendance_date )  = ' . ( int ) $intMonth . '
                         AND YEAR( ta.attendance_date ) = ' . ( int ) $intYear . '
                     GROUP BY

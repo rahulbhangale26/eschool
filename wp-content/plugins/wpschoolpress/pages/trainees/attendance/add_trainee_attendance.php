@@ -12,7 +12,7 @@
 				<div class="line_box">
 					<div class="wpsp-form-group">
 						<label for="date" class="wpsp-labelMain">Select Date</label>
-						<input type="text" class="wpsp-form-control select_date" id="attendance_date" value="<?php echo ( isset( $edit_attendance['attendance_date'] ) ? $edit_attendance['attendance_date'] : '' )?>" name="attendance_date">
+						<input type="text" class="wpsp-form-control select_date" id="attendance_date" value="<?php echo ( isset( $edit_attendance['attendance_date'] ) ? $edit_attendance['attendance_date'] : '' )?>" name="attendance_date" autocomplete="off">
 					</div>
 				
 				</div>

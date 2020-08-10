@@ -80,12 +80,13 @@ class CTraineeAttendanceManager extends CFactory {
         if( true == isset( $arrmixRequestData['submit'] ) ) {
             $intBatchId             = $this->getSessionData( [ 'filter', 'batch_id' ] );
             $intTradeId             = $this->getSessionData( [ 'filter', 'trade_id' ] );
+            $objUnit				= CUnits::getInstance()->fetchUnitById( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
             $arrobjAttendanceTypes  = CAttendanceTypes::getInstance()->fetchAllAttendanceTypes();
             $this->arrobjStudents   = CStudents::getInstance()->fetchStudentsByBatchIdByTradeId( $intBatchId, $intTradeId );
             $strAttendanceDate      = date( 'Y-m-d', strtotime( $arrmixRequestData['attendance_date'] ) );
             
             if( true == isset( $arrmixRequestData['is_edit'] ) && true == $arrmixRequestData['is_edit'] ) {
-                CTraineeAttendances::getInstance()->deleteAttendancesBYTradeIdByBatchIdByInstructorIdByAttendanceDate( $intTradeId, $intBatchId, $this->objUser->getTeacher()->tid, $strAttendanceDate );
+            	CTraineeAttendances::getInstance()->deleteAttendancesBYTradeIdByBatchIdByInstructorIdByAttendanceDate( $intTradeId, $intBatchId, $objUnit->instructor_id, $strAttendanceDate );
             }
             
             foreach ( $this->arrobjStudents as $objStudent ) {
@@ -97,7 +98,7 @@ class CTraineeAttendanceManager extends CFactory {
                         $arrmixAttendance = [
                             'attendance_type_id'    => $objAttendanceType->id,
                             'student_id'            => $objStudent->sid,
-                            'instructor_id'         => $this->objUser->getTeacher()->tid,
+                       		'instructor_id'         => $objUnit->instructor_id,
                             'attendance_date'       => date( 'Y-m-d', strtotime( $arrmixRequestData['attendance_date'] ) ),
                             'reason'                => $arrmixRequestData['attendance']['reason'][$objStudent->sid]
                         ];
@@ -129,9 +130,10 @@ class CTraineeAttendanceManager extends CFactory {
     	
     	$intTradeId			= $this->getSessionData( [ 'filter', 'trade_id' ] );
     	$intBatchId			= $this->getSessionData( [ 'filter', 'batch_id' ] );
+    	$objUnit			= CUnits::getInstance()->fetchUnitById( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
     	$strAttandaceDate 	= date( 'Y-m-d', strtotime( $this->getRequestData( [ 'data', 'attendance_date' ] ) ) );
     	
-    	if( false == CTraineeAttendances::getInstance()->deleteAttendancesBYTradeIdByBatchIdByInstructorIdByAttendanceDate( $intTradeId, $intBatchId, $this->objUser->getTeacher()->tid, $strAttandaceDate ) ) {
+    	if( false == CTraineeAttendances::getInstance()->deleteAttendancesBYTradeIdByBatchIdByInstructorIdByAttendanceDate( $intTradeId, $intBatchId, $objUnit->instructor_id, $strAttandaceDate ) ) {
     		echo 'error';
     		exit;
     	}

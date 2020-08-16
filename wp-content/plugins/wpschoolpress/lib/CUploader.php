@@ -56,14 +56,11 @@ class Uploader {
                 $this->setMessage("File already exists. !");
             else if(!is_writable($this->destinationPath.'/'))
                 $this->setMessage("Destination is not writable !");
-            else
-            {
-                if(move_uploaded_file($_FILES[$fileBrowse]["tmp_name"],$this->destinationPath.'/'.$this->uploadName))
-                {
+            else {
+                if( move_uploaded_file( $_FILES[$fileBrowse]["tmp_name"],$this->destinationPath.'/'.$this->uploadName ) ) {
                     $result =   true;
                 }
-                else
-                {
+                else {
                     $this->setMessage("Upload failed , try later !");
                 }
             }

@@ -31,6 +31,10 @@ class CProgressCardManager extends CFactory {
 			case 'view_student_progress_card':
 				$this->handleViewStudentProgressCard();
 				break;
+				
+			case 'view_exam_progress_card':
+				$this->handleViewExamProgressCard();
+				break;
 		}
 	}
 
@@ -73,6 +77,11 @@ class CProgressCardManager extends CFactory {
 		
 		$this->displayViewStudentProgressCard();
 	}
+	
+	public function handleViewExamProgressCard() {
+		
+		$this->displayViewExamProgressCard();
+	}
 
 	public function displayViewProgressCard() {
 		
@@ -105,6 +114,11 @@ class CProgressCardManager extends CFactory {
 		
 		
 		$this->renderPage( 'progress_card/view_student_progress_card.php' );
+	}
+	
+	public function displayViewExamProgressCard() {
+		
+		$this->renderPage( 'progress_card/view_exam_progress_card.php' );
 	}
 	
 }

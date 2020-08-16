@@ -325,15 +325,35 @@ class CModules extends CModel {
     const EXAMS  = [
         'id'                => 29,
         'title'             => 'Exams Management',
-        'slug'              => 'sch-exam',
+        'slug'              => '',
         'icon_class'        => 'dashicons dashicons-clipboard',
-        'parent_module_id'  => 25,
-        'has_sub_modules'   => 0,
-   		'create_new'        => 'add_exam',
-   		'create_new_title'  => 'Add Exam',
-   		'hide_from'         => [ CDesignations::OTHER ]
+        'parent_module_id'  => 0,
+        'has_sub_modules'   => true,
     ];
     
+    const EXAM_MANAGEMENT = [
+    	'id'                => 46,
+    	'title'             => 'Exams Management',
+    	'slug'              => 'sch-exam',
+    	'icon_class'        => 'dashicons dashicons-clipboard',
+    	'parent_module_id'  => 29,
+    	'has_sub_modules'   => false,
+    	'create_new'        => 'add_exam',
+    	'create_new_title'  => 'Add Exam',
+    	'hide_from'         => [ CDesignations::OTHER ]
+    ];
+    
+    const SKILL_ASSESSMENT = [
+   		'id'                => 47,
+   		'title'             => 'Skill Assessment',
+    	'slug'              => 'sch-skill_assessment',
+   		'icon_class'        => 'dashicons dashicons-clipboard',
+   		'parent_module_id'  => 29,
+   		'has_sub_modules'   => false,
+   		'create_new'        => 'add_skill_assessment',
+   		'create_new_title'  => 'Add Skill Assessment',
+   		'hide_from'         => [ CDesignations::OTHER ]
+    ];
 /*     const TIMETABLE  = [
         'id'                => 30,
         'title'             => 'Time Table',
@@ -480,7 +500,8 @@ class CModules extends CModel {
        		'sch-progress_card'					=> self::PROGRESS_CARD,
             'sch-question_bank'                 => self::QUESTION_BANK,
             'sch-daily_diary'                   => self::INSTRUCTOR_DAILY_DIARY,
-        	'sch-exam'							=> self::EXAMS,
+        	'sch-exam'							=> self::EXAM_MANAGEMENT,
+        	self::SKILL_ASSESSMENT['slug']		=> self::SKILL_ASSESSMENT,
         	'sch-avaids'						=> self::A_V_AIDS
         ];
     
@@ -567,6 +588,11 @@ class CModules extends CModel {
                  $arrmixModule[self::WORKING_HOURS['id']]      = self::WORKING_HOURS;
                  $arrmixModule[self::LEAVE_CALENDAR['id']]      = self::LEAVE_CALENDAR;
                  break;
+                 
+             case self::EXAMS['id']:
+             	$arrmixModule[self::EXAM_MANAGEMENT['id']]		= self::EXAM_MANAGEMENT;
+             	$arrmixModule[self::SKILL_ASSESSMENT['id']]	= self::SKILL_ASSESSMENT;
+             	break;
                 
         }
         
@@ -607,6 +633,11 @@ class CModules extends CModel {
                 $arrmixModule[self::WORKING_HOURS['id']]      = self::WORKING_HOURS;
                 $arrmixModule[self::LEAVE_CALENDAR['id']]      = self::LEAVE_CALENDAR;
                 break;
+                
+            case self::EXAMS['id']:
+            	$arrmixModule[self::EXAM_MANAGEMENT['id']]		= self::EXAM_MANAGEMENT;
+            	$arrmixModule[self::SKILL_ASSESSMENT['id']]	= self::SKILL_ASSESSMENT;
+				break;
                     
         }
         

@@ -16,8 +16,8 @@ class CModel extends CAbstractModel {
         
     }
     
-    public function insert( $arrmixAvaids ) {
-    	if( false != $this->objDatabase->insert( $this->strTableName, $arrmixAvaids ) ) {
+    public function insert( $arrmixInsertFields ) {
+    	if( false != $this->objDatabase->insert( $this->strTableName, $arrmixInsertFields ) ) {
     		return $this->objDatabase->insert_id;
     	}
     	return false;
@@ -29,6 +29,10 @@ class CModel extends CAbstractModel {
     
     public function delete( $arrstrWhere ) {
     	return $this->objDatabase->delete( $this->strTableName, $arrstrWhere );
+    }
+    
+    public function getResults( $strSql ) {
+    	return $this->objDatabase->get_results( $strSql );
     }
     
     

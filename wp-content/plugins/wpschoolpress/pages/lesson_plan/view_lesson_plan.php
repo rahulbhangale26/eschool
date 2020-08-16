@@ -40,10 +40,10 @@
 $(function () {
 	handleDatatables();
 
-	$(document).on('click', '#trash-lesson-plan', function(e) {
+	$(document).on('click', '.wpsp-popclick', function(e) {
 		$("#DeleteModal").css("display", "block");
 		$("#DeleteModal").attr('data-single-delete', true);
-		$("#DeleteModal").attr( 'data-id', $( '#trash-lesson-plan' ).attr( 'data-id') );
+		$("#DeleteModal").attr( 'data-id', $( this ).attr( 'data-id') );
 	});
 
 	$('.ClassDeleteBt').unbind();

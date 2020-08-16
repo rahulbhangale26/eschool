@@ -158,7 +158,12 @@ function wpsp_admin_menu() {
 				'wpsp_callback'
 		));
 		
-		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Exam Management', 'edit_posts', CModules::EXAMS['slug'], array(
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Exam Management', 'edit_posts', CModules::EXAM_MANAGEMENT['slug'], array(
+				$this,
+				'wpsp_callback'
+		));
+		
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Skill Assessment', 'edit_posts', CModules::SKILL_ASSESSMENT['slug'], array(
 				$this,
 				'wpsp_callback'
 		));

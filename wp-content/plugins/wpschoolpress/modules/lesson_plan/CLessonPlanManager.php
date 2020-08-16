@@ -61,7 +61,7 @@ class CLessonPlanManager extends CFactory {
                     $strSubPath     = '/uploads/files/' . CFileTypes::LESSON_PLAN . '/';
                     $strFilePath    = WP_CONTENT_DIR . $strSubPath;
                     $objUploader    =   new Uploader();
-                    $objUploader->setExtensions( [ 'pdf' ] );
+                    $objUploader->setExtensions( [ 'pdf', 'png', 'jpg', 'jpeg' ] );
                     $objUploader->setMaxSize( 2 ); // size in mb.
                     $objUploader->setDir( $strFilePath );
                     

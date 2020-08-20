@@ -63,6 +63,9 @@ class CTraineeRecords extends CModel {
                         JOIN iti_wpsp_trainee_record_type trt ON trt.id = tr.trainee_record_type_id
                         JOIN iti_wpsp_student s ON s.sid = tr.student_id
 						JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = s.sid
+                        JOIN ' . CUnits::getInstance()->strTableName . ' u ON su.unit_id = u.id 
+                    WHERE
+                        tr.checked_on BETWEEN u.start_date and u.end_date 
                     GROUP BY
 	                    tr.checked_on, tr.instructor_id, s.trade_id, su.unit_id
                     ORDER BY
@@ -83,8 +86,10 @@ class CTraineeRecords extends CModel {
                         JOIN iti_wpsp_trainee_record_type trt ON trt.id = tr.trainee_record_type_id
                         JOIN iti_wpsp_student s ON s.sid = tr.student_id
 						JOIN ' . CStudentUnits::getInstance()->strTableName . ' su ON su.student_id = s.sid
+                        JOIN ' . CUnits::getInstance()->strTableName . ' u ON su.unit_id = u.id 
                     WHERE
                         tr.instructor_id = ' . ( int ) $intInstructorId . '
+                        AND tr.checked_on BETWEEN u.start_date and u.end_date 
                     GROUP BY
 	                    tr.checked_on, tr.instructor_id, s.trade_id, su.unit_id
                     ORDER BY

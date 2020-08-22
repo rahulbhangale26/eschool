@@ -153,24 +153,19 @@ class CSkillAssessmentManager extends CFactory {
 		$this->arrobjAssessments	= CAssessments::getInstance()->fetchAllAssessments();
 
 		if("" != $this->getRequestData( [ 'save' ] ) ) {
-			$arrobjStudentAssessments = CStudentAssessments::getInstance()->fetchStudentIdsByStudentIds( array_keys( $this->arrobjTrainees ) );
+		    $objUpdatableTrainee      = $this->arrobjTrainees[$this->getRequestData( [ 'trainee_id' ] )];
+		    $arrobjStudentAssessments = CStudentAssessments::getInstance()->fetchStudentIdsByStudentIds( [ $objUpdatableTrainee->sid ] );
 			
-			if( 0 < count( $arrobjStudentAssessments ) ) {
-				foreach( $arrobjStudentAssessments AS $objStudentAssessment ) {
-					CStudentAssessments::getInstance()->delete( [ 'student_id' => $objStudentAssessment->student_id ] );
-				}
-			}
+		    CStudentAssessments::getInstance()->delete( [ 'student_id' => $objUpdatableTrainee->sid ] );
 			
-			foreach( $this->arrobjTrainees AS $objTrainee ) {
-				foreach ( $this->arrobjAssessments AS $objAssessment ) {
-					$arrmixStudentAssessment = [
-						'student_id'		=> $objTrainee->sid,
-						'assessment_id'		=> $objAssessment->id,
-						'obtained_marks'	=> sanitize_text_field( $this->getRequestData( ['marks_' . $objTrainee->sid . '_' . $objAssessment->id ] ) )
-					];
+			foreach ( $this->arrobjAssessments AS $objAssessment ) {
+				$arrmixStudentAssessment = [
+				    'student_id'		=> $objUpdatableTrainee->sid,
+					'assessment_id'		=> $objAssessment->id,
+				    'obtained_marks'	=> sanitize_text_field( $this->getRequestData( ['marks_' . $objUpdatableTrainee->sid . '_' . $objAssessment->id ] ) )
+				];
 					
-					CStudentAssessments::getInstance()->insert( $arrmixStudentAssessment );
-				}
+				CStudentAssessments::getInstance()->insert( $arrmixStudentAssessment );
 			}
 		}
 		

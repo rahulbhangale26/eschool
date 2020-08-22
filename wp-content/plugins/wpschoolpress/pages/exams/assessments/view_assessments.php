@@ -15,7 +15,7 @@
 				<thead>
 					<tr role="row">
 						<th>Id.</th>
-						<th>Assessment Name</th>
+						<th>Assessment Parameters</th>
 						<th>Component Name</th>
 						<th>Maximum Marks</th>
 						<th class="">Action</th>
@@ -25,7 +25,7 @@
 					<?php foreach( $assessments AS $assessment ) {?>
 						<tr>
 							<td><?php echo $assessment->id; ?></td>
-							<td><?php echo ( true == isset( $parent_assessments[$assessment->assessment_id] ) ? $parent_assessments[$assessment->assessment_id]->name : $assessment->name ); ?></td>
+							<td><?php echo ( true == isset( $parent_assessments[$assessment->assessment_id] ) ? $parent_assessments[$assessment->assessment_id]->name : '-' ); ?></td>
 							<td><?php echo $assessment->name ?></td>
 							<td><?php echo $assessment->maximum_marks; ?></td>
 							<td class="">

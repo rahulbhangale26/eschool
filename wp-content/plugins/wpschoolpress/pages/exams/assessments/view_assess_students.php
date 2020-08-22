@@ -11,10 +11,22 @@
 .float-right {
 	float: right;
 }
+
+.min-height {
+min-height: 150px;
+}
+
+@media screen and (max-width: 782px) {
+    .min-height {
+        min-height: auto;
+    }
+}
+
+
 </style>
 <div class="wpsp-card" id='assess_students'>
 	<div class="wpsp-card-head">
-		<h3 class="wpsp-card-title">Assess Students.</h3>
+		<h3 class="wpsp-card-title">Submit Formative marks of trainees.</h3>
 	</div>
 	
 	<div class="wpsp-card-head">
@@ -26,39 +38,44 @@
 	
 	<div class="wpsp-card-body">
 		<div class="wpsp-row">
-			<form method="post" id="result-frm">
 				<div class="wpsp-col-md-12 line_box">
-					<?php foreach ( $trainees AS $trainee ) { ?>
-						<div class="wpsp-row trainee_assess_blocks">
- 							<div class="wpsp-col-md-2 wpsp-col-sm-3 wpsp-col-xs-12">
-  								<div class="wpsp-form-group">
-									<strong><?php echo $trainee->s_fname . ' ' . $trainee->s_lname; ?></strong>
-								</div>
-  							</div>
-  							<?php foreach( $assessments AS $assessment ) { ?>		
-  							<?php if( $assessment->assessment_id == 0 ) continue; ?>			
-  								<div class="wpsp-col-md-2 wpsp-col-sm-2 wpsp-col-xs-12">
-  									<div class="wpsp-form-group">
-										<label class="wpsp-labelMain"><?php echo $assessment->name; ?>: </label>
-	   									<input type="number" name="marks_<?php echo $trainee->sid?>_<?php echo $assessment->id; ?>" class="wpsp-form-control" value="<?php echo ( true == isset( $student_assessments['marks_' . $trainee->sid . '_' . $assessment->id] ) ? $student_assessments['marks_' . $trainee->sid . '_' . $assessment->id] : '' ); ?>" placeholder="" />
-	   									<span class="out_of">Out of <?php echo $assessment->maximum_marks; ?></span>
-									</div>
-  								</div>
-  							<?php } ?>
-  							<input type="submit" id="save_result" name="save" value="Save" class="wpsp-btn wpsp-btn-success float-right" />
-  						</div>
-					<?php }?>
+					<div id="accordion">
+						<?php foreach ( $trainees AS $trainee ) { ?>
+							<h3 data-StudentId="<?php echo $trainee->sid;?>" ><?php echo $trainee->s_fname . ' ' . $trainee->s_lname; ?></h3>
+							<div id="">
+								<form method="post" id="result-frm_<?php echo $trainee->sid; ?>">
+									<?php foreach( $assessments AS $assessment ) { ?>		
+  										<?php if( $assessment->assessment_id == 0 ) continue; ?>			
+  										<div class="wpsp-col-md-2 wpsp-col-sm-2 wpsp-col-xs-12">
+  											<div class="wpsp-form-group min-height">
+												<label class="wpsp-labelMain"><?php echo $assessment->name; ?>: </label>
+	   											<input type="number" name="marks_<?php echo $trainee->sid?>_<?php echo $assessment->id; ?>" class="wpsp-form-control" value="<?php echo ( true == isset( $student_assessments['marks_' . $trainee->sid . '_' . $assessment->id] ) ? $student_assessments['marks_' . $trainee->sid . '_' . $assessment->id] : '' ); ?>" placeholder="" />
+	   											<span class="out_of">Out of <?php echo $assessment->maximum_marks; ?></span>
+											</div>
+  										</div>
+  									<?php } ?>
+  									<input type="hidden" name="trainee_id" value="<?php echo $trainee->sid; ?>" />
+  									<input type="submit" id="save_result" name="save" value="Save Formative Marks" class="wpsp-btn wpsp-btn-success float-right save_result" />
+  								</form>
+							</div>
+						<?php } ?>
+					</div>
 				</div>
-			</form>
 		</div>
 	</div>
 </div>
 <script>
 $(function() {
 
-	$( '#save_result').click( function(){
+	$( '.save_result').click( function(){
 		$('#assess_students').append( '<div class="loaderOverlay"></div><div class="loader"></div>');
 	});
-
+	
+	$( "#accordion" ).accordion({
+		heightStyle: 'content',
+		collapsible: true,
+		active: false
+	});
 });
+
 </script>

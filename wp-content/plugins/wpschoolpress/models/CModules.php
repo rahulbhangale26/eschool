@@ -345,13 +345,13 @@ class CModules extends CModel {
     
     const SKILL_ASSESSMENT = [
    		'id'                => 47,
-   		'title'             => 'Skill Assessment',
+   		'title'             => 'Skill Formative',
     	'slug'              => 'sch-skill_assessment',
    		'icon_class'        => 'dashicons dashicons-clipboard',
    		'parent_module_id'  => 29,
    		'has_sub_modules'   => false,
    		'create_new'        => 'add_skill_assessment',
-   		'create_new_title'  => 'Add Skill Assessment',
+   		'create_new_title'  => 'Add Skill Formative',
    		'hide_from'         => [ CDesignations::OTHER ]
     ];
 /*     const TIMETABLE  = [

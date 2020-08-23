@@ -1,6 +1,11 @@
-<div class="wpsp-col-lg-12 line_box filter-container">
+<style>
+.inline {
+    display: inline-block;
+}
+</style>
+<div class="wpsp-col-md-12 line_box filter-container">
 	<div class="wpsp-row">
-		<div class="wpsp-col-md-2 wpsp-col-md-12">
+		<div class="inline">
 			<div class="wpsp-form-group">
 				<select id="student_id" class="wpsp-form-control" name="student_id">
 					<option value="">Select Student</option>
@@ -10,17 +15,17 @@
 				</select>
 			</div>
 		</div>
-		<div class="wpsp-col-md-2 wpsp-col-md-12">
+		<div class="inline">
 			<div class="wpsp-form-group">
 				<input type="button" name="show" value="Job Progress Card" id="show_progress_card" class="wpsp-btn wpsp-btn-success" />
 			</div>
 		</div>
-		<div class="wpsp-col-md-2 wpsp-col-md-12">
+		<div class="inline">
 			<div class="wpsp-form-group">
 				<input type="button" name="show" value="Exam Progress Card" id="exam_progress_card" class="wpsp-btn wpsp-btn-success" />
 			</div>
 		</div>
-		<div class="wpsp-col-md-2 wpsp-col-md-12">
+		<div class="inline">
 			<div class="wpsp-form-group">
 				<input type="button" name="print" value="Print" id="print_btn" onclick="printDiv();" class="wpsp-btn wpsp-btn-success" style="width: 160px;"/>
 			</div>

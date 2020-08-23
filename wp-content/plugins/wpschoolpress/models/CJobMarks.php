@@ -1,4 +1,3 @@
-
 <?php
 
 class CJobMarks extends CModel {

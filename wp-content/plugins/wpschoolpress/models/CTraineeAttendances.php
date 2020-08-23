@@ -273,5 +273,34 @@ class CTraineeAttendances extends CModel {
         
         return $this->objDatabase->get_results( $strSql );
     }
+    
+    public function fetchQuarterlyAttendanceReport( $strStartDate, $strEndDate, $intStudentId ) {
+       $strSql = 'SELECT
+                        COUNT( ta.id ) AS possible_days,
+                        SUM( CASE
+                                    WHEN ta.attendance_type_id = 1 THEN 1 ELSE 0 
+                                END
+                        ) AS present_counts,
+                        CASE 
+                            WHEN MONTH( ta.attendance_date ) IN( 08, 09, 10 ) THEN 1
+                            WHEN MONTH( ta.attendance_date ) IN( 11, 12, 01 ) THEN 2
+                            WHEN MONTH( ta.attendance_date ) IN( 02, 03, 04 ) THEN 3
+                            ELSE 4 
+                        END AS quarter
+                    FROM 
+                        ' . $this->strTableName . ' ta
+                    WHERE
+                        ta.attendance_date BETWEEN \'' . $strStartDate . '\' AND \'' . $strEndDate . '\'
+                        AND ta.student_id = ' . ( int ) $intStudentId . '
+                    GROUP BY
+                        CASE 
+                            WHEN MONTH( ta.attendance_date ) IN( 08, 09, 10 ) THEN 1
+                            WHEN MONTH( ta.attendance_date ) IN( 11, 12, 01 ) THEN 2
+                            WHEN MONTH( ta.attendance_date ) IN( 02, 03, 04 ) THEN 3
+                            ELSE 4 
+                        END';
+       
+        return $this->getResults( $strSql );
+    }
 }
 

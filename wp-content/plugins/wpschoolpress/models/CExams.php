@@ -40,7 +40,7 @@ class CExams extends CModel {
 	}
 	
 	public function fetchExamsByUnitId( $intUnitId ) {
-		$strSql = 'SELECT * FROM ' . $this->strTableName . ' WHERE unit_id = ' . $intUnitId;
+		$strSql = 'SELECT * FROM ' . $this->strTableName . ' WHERE unit_id = ' . $intUnitId . ' ORDER BY start_date ASC';
 		
 		return $this->objDatabase->get_results( $strSql );
 	}

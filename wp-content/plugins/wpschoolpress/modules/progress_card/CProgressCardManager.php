@@ -6,6 +6,13 @@ class CProgressCardManager extends CFactory {
 	protected $arrobjStudents;
 	protected $arrobjJobProgress;
 	protected $arrobjJobs;
+	protected $arrobjSubjects;
+	protected $arrobjExams;
+	protected $arrobjExamResults;
+	
+	protected $arrmixQuarterlyAttendance;
+	protected $arrmixQuarterlyExamResults;
+	protected $arrmixExamResults;
 	
 	protected $objStudent;
 	
@@ -80,7 +87,24 @@ class CProgressCardManager extends CFactory {
 	
 	public function handleViewExamProgressCard() {
 		
-		$this->displayViewExamProgressCard();
+	    $intStudentId          = sanitize_text_field( $this->getRequestData( [ 'data', 'student_id' ] ) ); 
+	    $this->arrobjSubjects  = CSubjects::getInstance()->fetchSubjectsByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
+	    $this->arrobjExams     = CExams::getInstance()->fetchExamsByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
+	    $arrobjExamResults     = CExamResults::getInstance()->fetchExamResultsByUnitIdByStudentId( $this->getSessionData( [ 'filter', 'unit_id' ] ), $intStudentId );
+	    $objUnit               = CUnits::getInstance()->fetchUnitById( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
+	    
+	    foreach ( $arrobjExamResults AS $objExamResult ) {
+	        $this->arrmixExamResults[$objExamResult->exam_id][$objExamResult->subject_id]  = $objExamResult->obtained_marks;
+	    }
+	    
+	    $arrobjQuarterlyExamResults    = CExamResults::getInstance()->fetchQuarterlyAvgExamResultsByUnitIdByStudentId( $this->getSessionData( [ 'filter', 'unit_id' ] ), $intStudentId );
+	    
+	    foreach( $arrobjQuarterlyExamResults AS $objQuartelyResult ) {
+	        $this->arrmixQuarterlyExamResults[$objQuartelyResult->quarter][$objQuartelyResult->subject_id] = $objQuartelyResult->obtained_marks;
+	    }
+
+	    $this->arrmixQuarterlyAttendance    = $this->rekeyObjects( 'quarter', CTraineeAttendances::getInstance()->fetchQuarterlyAttendanceReport( $objUnit->start_date, $objUnit->end_date, $intStudentId ) );
+	    $this->displayViewExamProgressCard();
 	}
 
 	public function displayViewProgressCard() {
@@ -93,8 +117,6 @@ class CProgressCardManager extends CFactory {
 		
 		$this->arrmixTemplateParams['students']			= $this->arrobjStudents;
 		$this->arrmixTemplateParams['filter']			= $this->getRequestData( [ 'data' ] );
-		
-		
 		
 		$this->renderPage( 'progress_card/view_progress_card_filter.php' );
 		
@@ -117,6 +139,12 @@ class CProgressCardManager extends CFactory {
 	}
 	
 	public function displayViewExamProgressCard() {
+	    
+	    $this->arrmixTemplateParams['subjects']        = $this->arrobjSubjects;
+	    $this->arrmixTemplateParams['exams']           = $this->arrobjExams;
+	    $this->arrmixTemplateParams['exam_results']    = $this->arrmixExamResults;
+	    $this->arrmixTemplateParams['attendance']      = $this->arrmixQuarterlyAttendance;
+	    $this->arrmixTemplateParams['qaurterly_results']   = $this->arrmixQuarterlyExamResults;
 		
 		$this->renderPage( 'progress_card/view_exam_progress_card.php' );
 	}

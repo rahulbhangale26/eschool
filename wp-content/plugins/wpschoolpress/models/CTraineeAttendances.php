@@ -27,6 +27,20 @@ class CTraineeAttendances extends CModel {
         return false;
     }
     
+    public function fetchAttendanceByBatchIdByInstructorIdByAttendanceDate( $intBatchId, $intInstructorId, $strAttendanceDate ) {
+        $strSql = 'SELECT
+                        ta.*
+                    FROM
+                        ' . $this->strTableName . ' ta
+                        JOIN ' . CStudents::getInstance()->strTableName . ' s ON s.sid = ta.student_id
+                    WHERE
+                        s.batch_id = ' . ( int ) $intBatchId . '
+                        AND ta.instructor_id = ' . ( int ) $intInstructorId . '
+                        AND CAST( ta.attendance_date AS DATE ) = \'' . $strAttendanceDate . '\'';
+        
+        return $this->objDatabase->get_results( $strSql );
+    }
+    
     public function fetchAttendancesByBatchIdByAttendanceDate( $intBatchId, $strAttendanceDate ) {
         $strSql = 'SELECT
                         ta.*

@@ -32,7 +32,7 @@ class CExamResults extends CModel {
 	}
 	
 	public function fetchExamResultsByExamId( $intExamId ) {
-		$strSql = 'SELECT *, CONCAT( student_id, \'_\', subject_id ) AS student_subject FROM ' . $this->strTableName . ' WHERE exam_id = ' . ( int ) $intExamId;
+		$strSql = 'SELECT *, CONCAT( student_id, \'_\', subject_id ) AS trainee_subject FROM ' . $this->strTableName . ' WHERE exam_id = ' . ( int ) $intExamId;
 		return $this->objDatabase->get_results( $strSql );
 	}
 	

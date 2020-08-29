@@ -67,7 +67,7 @@
   												<div class="wpsp-col-md-2 wpsp-col-sm-3 wpsp-col-xs-12">
   													<div class="wpsp-form-group">
 														<label class="wpsp-labelMain"><?php echo $subject->sub_name; ?> Marks:</label>
-   														<input type="number" name="marks_<?php echo $subject->id; ?>_<?php echo $trainee->sid?>" class="wpsp-form-control" value="<?php echo ( true == isset( $exam_results[$trainee->sid . '_' . $subject->id] ) ? $exam_results[$trainee->sid . '_' . $subject->id]->obtained_marks : '' )?>" placeholder="Out of <?php echo true == isset( $exam_subjects[$subject->id] ) ? $exam_subjects[$subject->id]->total_marks : 0 ?>" />
+   														<input type="number" name="marks_<?php echo $trainee->sid?>_<?php echo $subject->id; ?>" class="wpsp-form-control" value="<?php echo ( true == isset( $exam_results[$trainee->sid . '_' . $subject->id] ) ? $exam_results[$trainee->sid . '_' . $subject->id]->obtained_marks : '' )?>" placeholder="Out of <?php echo true == isset( $exam_subjects[$subject->id] ) ? $exam_subjects[$subject->id]->total_marks : 0 ?>" />
 													</div>
   												</div>
   											<?php } ?>

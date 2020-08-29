@@ -164,27 +164,42 @@ class CExamsManager extends CFactory {
 					break;
 				}
 				
+				$this->objExam 				= CExams::getInstance()->fetchExamById( sanitize_text_field( $arrmixExamSubjects['exam_id'] ) );
 				$this->arrobjExamSubjects	= $this->rekeyObjects( 'subject_id', CExamSubjects::getInstance()->fetchExamSubjectsByExamId( $this->objExam->id ) );
 				
-				if( true == $this->objValidation->valArr( $this->arrobjExamSubjects ) && false == CExamSubjects::getInstance()->delete( [ 'exam_id' => $arrmixExamSubjects['exam_id'] ] ) ) {
-					$this->arrstrJsonRespose = [ 'status' => false , 'message'=> 'Unable to update. Please contact administrator.' ];
-					break;
+				if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
+				    $this->arrobjSubjects		= rekeyObjects( 'id', CSubjects::getInstance()->getInstance()->fetchSubjectsByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ) ) );
+				} else {
+				    $this->arrobjSubjects		=  rekeyObjects( 'id', CSubjects::getInstance()->getInstance()->fetchSubjectsByUnitIdByInstructorId( $this->getSessionData( [ 'filter', 'unit_id' ] ), $this->objUser->getTeacher()->tid ) );
 				}
-				 
-				$this->arrobjSubjects	= CSubjects::getInstance()->getInstance()->fetchSubjectsByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
 				
 				foreach ( $this->arrobjSubjects AS $objSubject ) {
-					$arrstrSubject = [
+				    
+				    if( true == isset( $this->arrobjExamSubjects[ $objSubject->id ] ) ) {
+				        $arrstrExamSubject = [
+				            'start_datetime'	=> isset( $arrmixExamSubjects['start_datetime_' . $objSubject->id] ) ? date( 'Y-m-d H:i:s', strtotime( $arrmixExamSubjects['start_datetime_' . $objSubject->id] ) ) : '',
+				            'end_datetime'		=> isset( $arrmixExamSubjects['end_datetime_' . $objSubject->id] ) ?  date( 'Y-m-d H:i:s', strtotime( $arrmixExamSubjects['end_datetime_' . $objSubject->id] ) ) : '',
+				            'total_marks'		=> isset( $arrmixExamSubjects['total_marks_' . $objSubject->id] ) ? $arrmixExamSubjects['total_marks_' . $objSubject->id] : ''
+				        ];
+				        
+				        if( false === CExamSubjects::getInstance()->update( $arrstrExamSubject, [ 'exam_id' => $arrmixExamSubjects['exam_id'], 'subject_id' => $objSubject->id ] ) ) {
+				            $this->arrstrJsonRespose = [ 'status' => false , 'message'=> 'Unable to save exam details1.' ];
+				            break 2;
+				        }
+				        continue;
+				    }			    
+				    		    
+					$arrstrExamSubject = [
 						'exam_id'			=> $arrmixExamSubjects['exam_id'],
 						'subject_id'		=> $objSubject->id,
-						'start_datetime'	=> isset( $arrmixExamSubjects['start_datetime_' . $objSubject->id] ) ? date( 'Y-m-d H:i:s', strtotime( $arrmixExamSubjects['start_datetime_' . $objSubject->id] ) ) : '',
-						'end_datetime'		=> isset( $arrmixExamSubjects['end_datetime_' . $objSubject->id] ) ?  date( 'Y-m-d H:i:s', strtotime( $arrmixExamSubjects['end_datetime_' . $objSubject->id] ) ) : '',
+						'start_datetime'	=> isset( $arrmixExamSubjects['start_datetime_' . $objSubject->id] ) ? date( 'Y-m-d H:i:s', strtotime( $arrmixExamSubjects['start_datetime_' . $objSubject->id] ) ) : '0000-00-00',
+					    'end_datetime'		=> isset( $arrmixExamSubjects['end_datetime_' . $objSubject->id] ) ?  date( 'Y-m-d H:i:s', strtotime( $arrmixExamSubjects['end_datetime_' . $objSubject->id] ) ) : '0000-00-00',
 						'total_marks'		=> isset( $arrmixExamSubjects['total_marks_' . $objSubject->id] ) ? $arrmixExamSubjects['total_marks_' . $objSubject->id] : ''
 					];
-					
-					if( false == CExamSubjects::getInstance()->insert( $arrstrSubject ) ) {
-						$this->arrstrJsonRespose = [ 'status' => false , 'message'=> 'Unable to save exam details.' ];
-						break;
+						
+					if( false == CExamSubjects::getInstance()->insert( $arrstrExamSubject ) ) {
+						$this->arrstrJsonRespose = [ 'status' => false , 'message'=> 'Unable to save exam details2.' ];
+						break 2;
 					}
 					
 				}
@@ -211,28 +226,41 @@ class CExamsManager extends CFactory {
 					break;
 				}
 				
-				$this->arrobjExamResults = CExamResults::getInstance()->fetchExamResultsByExamId( sanitize_text_field( $arrmixExamResults['exam_id'] ) );
-
-				if( true == $this->objValidation->valArr( $this->arrobjExamResults ) && false == CExamResults::getInstance()->delete( [ 'exam_id'	=> $arrmixExamResults['exam_id'] ] ) ) {
-					$this->arrstrJsonRespose = [ 'status' => false , 'message'=> 'Unable to update. Please contact administrator.' ];
-					break;
+				$this->arrobjExamResults = rekeyObjects( 'trainee_subject', CExamResults::getInstance()->fetchExamResultsByExamId( sanitize_text_field( $arrmixExamResults['exam_id'] ) ) );
+				
+				if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
+				    $this->arrobjSubjects		= rekeyObjects( 'id', CSubjects::getInstance()->getInstance()->fetchSubjectsByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ) ) );
+				} else {
+				    $this->arrobjSubjects		=  rekeyObjects( 'id', CSubjects::getInstance()->getInstance()->fetchSubjectsByUnitIdByInstructorId( $this->getSessionData( [ 'filter', 'unit_id' ] ), $this->objUser->getTeacher()->tid ) );
 				}
 				
-				$this->arrobjSubjects	= CSubjects::getInstance()->getInstance()->fetchSubjectsByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
 				$this->arrobjTrainees	= CStudents::getInstance()->fetchStudentsByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
 				
 				foreach( $this->arrobjTrainees AS $objTrainee ) {
 					foreach( $this->arrobjSubjects AS $objSubject ) {
+					    if( true == isset( $this->arrobjExamResults[$objTrainee->sid . '_' . $objSubject->id ] ) ) {
+					        $arrstrExamResult = [
+					            'obtained_marks'	=> ( true == isset( $arrmixExamResults['marks_' . $objTrainee->sid . '_' . $objSubject->id ] ) ) ? $arrmixExamResults['marks_' . $objTrainee->sid . '_' . $objSubject->id ] : 0
+					        ];
+					        
+					        if( false === CExamResults::getInstance()->update( $arrstrExamResult, [ 'exam_id' => sanitize_text_field( $arrmixExamResults['exam_id'] ), 'subject_id' => $objSubject->id, 'student_id' => $objTrainee->sid ] ) ) {
+					            $this->arrstrJsonRespose = [ 'status' => false , 'message'=> 'Unable to save exam results.' ];
+					            break 2;
+					        }
+					        
+					        continue;				        
+					    }
+					    
 						$arrstrExanResult = [
 							'exam_id'			=> sanitize_text_field( $arrmixExamResults['exam_id'] ),
 							'subject_id'		=> $objSubject->id,
 							'student_id'		=> $objTrainee->sid,
-							'obtained_marks'	=> ( true == isset( $arrmixExamResults['marks_' . $objSubject->id . '_' . $objTrainee->sid ] ) ) ? $arrmixExamResults['marks_' . $objSubject->id . '_' . $objTrainee->sid ] : 0
+						    'obtained_marks'	=> ( true == isset( $arrmixExamResults['marks_' . $objTrainee->sid . '_' . $objSubject->id ] ) ) ? $arrmixExamResults['marks_' . $objTrainee->sid . '_' . $objSubject->id ] : 0
 						];
 						
 						if( false == CExamResults::getInstance()->insert( $arrstrExanResult ) ) {
 							$this->arrstrJsonRespose = [ 'status' => false , 'message'=> 'Unable to save exam results.' ];
-							break;
+							break 2;
 						}
 					}
 				}
@@ -267,7 +295,7 @@ class CExamsManager extends CFactory {
 		$this->arrmixTemplateParams['subjects']			= $this->arrobjSubjects;
 		$this->arrmixTemplateParams['trainees']			= $this->arrobjTrainees;
 		$this->arrmixTemplateParams['exam_subjects']	= $this->arrobjExamSubjects;
-		$this->arrmixTemplateParams['exam_results']		= $this->rekeyObjects( 'student_subject', $this->arrobjExamResults );
+		$this->arrmixTemplateParams['exam_results']		= $this->rekeyObjects( 'trainee_subject', $this->arrobjExamResults );
 		
 		$this->renderPage( 'exams/view_manage_exam.php' );
 		

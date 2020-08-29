@@ -98,7 +98,7 @@ class CTraineeAttendanceManager extends CFactory {
                         $arrmixAttendance = [
                             'attendance_type_id'    => $objAttendanceType->id,
                             'student_id'            => $objStudent->sid,
-                       		'instructor_id'         => $objUnit->instructor_id,
+                       		'instructor_id'         => $this->objUser->getTeacher()->tid,
                             'attendance_date'       => date( 'Y-m-d', strtotime( $arrmixRequestData['attendance_date'] ) ),
                             'reason'                => $arrmixRequestData['attendance']['reason'][$objStudent->sid]
                         ];
@@ -130,10 +130,9 @@ class CTraineeAttendanceManager extends CFactory {
     	
     	$intTradeId			= $this->getSessionData( [ 'filter', 'trade_id' ] );
     	$intBatchId			= $this->getSessionData( [ 'filter', 'batch_id' ] );
-    	$objUnit			= CUnits::getInstance()->fetchUnitById( $this->getSessionData( [ 'filter', 'unit_id' ] ) );
     	$strAttandaceDate 	= date( 'Y-m-d', strtotime( $this->getRequestData( [ 'data', 'attendance_date' ] ) ) );
     	
-    	if( false == CTraineeAttendances::getInstance()->deleteAttendancesBYTradeIdByBatchIdByInstructorIdByAttendanceDate( $intTradeId, $intBatchId, $objUnit->instructor_id, $strAttandaceDate ) ) {
+    	if( false == CTraineeAttendances::getInstance()->deleteAttendancesBYTradeIdByBatchIdByInstructorIdByAttendanceDate( $intTradeId, $intBatchId, $this->objUser->getTeacher()->tid, $strAttandaceDate ) ) {
     		echo 'error';
     		exit;
     	}
@@ -153,7 +152,7 @@ class CTraineeAttendanceManager extends CFactory {
             $this->objTrade         = CTrade::getInstance()->fetchTradeById( $intTradeId );
             $this->objUnit          = CUnits::getInstance()->fetchUnitById( $intUnitId );
             $this->objBatch         = CBatches::getInstance()->fetchBatchById( $intBatchId );
-            $this->arrobjTraineeAttendances = CTraineeAttendances::getInstance()->fetchAttendancesByBatchIdByAttendanceDate( $intBatchId, date('Y-m-d', strtotime( $strAttendanceDate ) ) );
+            $this->arrobjTraineeAttendances = CTraineeAttendances::getInstance()->fetchAttendanceByBatchIdByInstructorIdByAttendanceDate( $intBatchId, $this->objUser->getTeacher()->tid, date('Y-m-d', strtotime( $strAttendanceDate ) ) );
         }      
         
         $this->displayTraineeAttendanceForm();

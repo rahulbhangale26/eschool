@@ -1,6 +1,6 @@
 <div class="wpsp-card">
 	<div class="wpsp-card-head">
-		
+		<div id="message-muster"></div>
 	</div>
 	<div class="wpsp-card-body" id="trainee_attendance_monthly">
 		<div class="wpsp-col-lg-5 wpsp-col-md-5 wpsp-col-sm-12 wpsp-col-xs-12">
@@ -9,6 +9,22 @@
 						<label for="date" class="wpsp-labelMain">Select Month</label>
 						<input type="text" class="wpsp-form-control select_date" id="attendance_date" value="" name="attendance_date" autocomplete="off">
 					</div>			
+				</div>
+				<div class="line_box">
+					<div class="wpsp-form-group">
+						<label for="date" class="wpsp-labelMain">Select Instructor</label>
+						<select class="wpsp-form-control select_instructor" id="instructor_id">
+							<option value="">Select Instructor</option>
+							<?php foreach ( $teachers AS $teacher ) { ?>
+								<option <?php echo ( $default_teacher->tid == $teacher->tid ) ? 'selected="selected"' : '' ?>value="<?php echo $teacher->tid; ?>"><?php echo $teacher->first_name . ' ' . $teacher->last_name; ?></option>
+							<?php } ?>
+						</select>
+					</div>			
+				</div>
+				<div class="line_box">
+					<div class="wpsp-form-group">
+						<button  style="padding: 10px 30px !important;font-size: large;"onclick="loadTraineeAttendanceMonthly();" name="print_report" class="wpsp-btn wpsp-btn-success">Load Muster</button>
+					</div>
 				</div>
 			</div>
 	</div>
@@ -42,15 +58,21 @@ function printDiv() {
 }
 
 function loadTraineeAttendanceMonthly() {
-
+	$('#message-muster').html();
 	var unit_id  = $('.wpsp-breadcrumb #unit_id').val();	
-	var attendance_date = $('#attendance_date').val()
+	var attendance_date = $('#attendance_date').val();
+	var instructor_id = $('#instructor_id').val();
+
+	if( '' == attendance_date || '' == instructor_id ) {
+		$('#message-muster').html('<div class="error_msg_div"><span class="error_msg_span">Attendance Date and Instructor is required.</span></div>');
+		return false;
+	}
 
 	sch.ajaxRequest({
 		'page': 'sch-trainee_attendance_monthly',
 		'pageAction': 'view_muster_report',
 		'selector': '#trainee_attendance_monthly',
-		data:  { 'attendance_date': attendance_date, 'unit_id': unit_id  },
+		data:  { 'attendance_date': attendance_date, 'unit_id': unit_id, 'instructor_id': instructor_id},
 		success: function( res ) {
 			$('#monthly_report').show();
 			$('#muster_report').html(res);
@@ -69,26 +91,6 @@ $(function(){
 	    changeMonth: true,
 	    changeYear: true
 	});
-	
-    $('#attendance_date').change( function() {
-    	loadTraineeAttendanceMonthly();
-    });
-
-/*  Code for download as pdf
-	var doc = new jsPDF();
-	var specialElementHandlers = {
-	    '#editor': function (element, renderer) {
-	        return true;
-	    }
-	};
-
-	$('#download_report').click(function () {
-	    doc.fromHTML($('#muster_report').html(), 15, 15, {
-	        'width': 170,
-	            'elementHandlers': specialElementHandlers
-	    });
-	    doc.save('sample-file.pdf');
-	}); */
 	
 });
 </script>

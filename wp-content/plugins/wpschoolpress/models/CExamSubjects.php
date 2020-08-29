@@ -35,4 +35,12 @@ class CExamSubjects extends CModel {
 		$strSql = 'SELECT * FROM ' . $this->strTableName . ' WHERE exam_id = ' . $intExamId;
 		return $this->objDatabase->get_results( $strSql );
 	}
+	
+	public function deleteExamSubjectsByExamIdBySubjectId( $intExamId, $arrintSubjectIds ) {
+	    
+	    if( false == is_array( $arrintSubjectIds ) || 0 >= count( $arrintSubjectIds ) ) return [];
+	    
+	    $strSql = 'DELETE FROM ' . $this->strTableName . ' WHERE exam_id = ' .  ( int ) $intExamId . ' AND subject_id IN ( ' . implode( ',', $arrintSubjectIds ) . ' )';
+	    return $this->objDatabase->query( $strSql );
+	}
 }

@@ -184,8 +184,9 @@ class CFactory {
         $this->renderJson();
     }
     
+    
    
-    public function renderPage( $strPage ) {
+    public function renderPage( $strPage, $boolIncludeHeaderFooter = true ) {
 
         
         $this->arrmixTemplateParams['success_messages']     = $this->arrstrSuccessMessages;
@@ -195,6 +196,9 @@ class CFactory {
             $$strKey = $strValue;
         }
         
+        if( false == $boolIncludeHeaderFooter ) {
+            require_once WPSP_PLUGIN_PATH . 'pages/' . $strPage;
+        }
         
         if( false == $this->boolIsAjaxRequest ) {
             require_once WPSP_PLUGIN_PATH . 'pages/wpsp-header.php';

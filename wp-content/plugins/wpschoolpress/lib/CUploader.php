@@ -37,7 +37,7 @@ class Uploader {
         $name   =   $_FILES[$fileBrowse]["name"];
         $ext    =   pathinfo($name,PATHINFO_EXTENSION);
 
-        $this->uploadName = time() . '-' . $name;
+        $this->uploadName = randomString( 10 ) . time() . '-' . $name;
 
         if(empty($name))
         {

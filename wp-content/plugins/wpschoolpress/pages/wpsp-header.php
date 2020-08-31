@@ -113,7 +113,7 @@ function ewpsp_customcss(){
 						</script>
           			</li>
           			<li>
-          				<a href="<?php echo site_url( '/wp-admin/admin.php?page=dashboard' ); ?>">Dashboard</a>
+          				<a href="<?php echo site_url( '/wp-admin/admin.php?page=sch-dashboard' ); ?>">Dashboard</a>
           			</li>
           			<?php 
               			if( true == isset( $arrstrCurrentModule['id'] ) && 1 != $arrstrCurrentModule['id'] ) { 

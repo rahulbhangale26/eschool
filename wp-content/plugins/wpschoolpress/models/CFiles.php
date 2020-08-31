@@ -22,6 +22,14 @@ class CFiles extends CModel {
         }
         return false;
     }
+    
+    public function fetchFilesByIds( $arrintIds ) {
+        if( false == is_array( $arrintIds ) || 0 == count( $arrintIds ) ) return [];
+        
+        $strSql = 'SELECT * FROM ' . $this->strTableName . ' WHERE id IN ( ' . implode( ',', $arrintIds ) . ' )';
+        return $this->getResults( $strSql );
+        
+    }
 
 }
 

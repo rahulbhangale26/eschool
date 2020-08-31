@@ -178,7 +178,7 @@ a:focus {
   background: -webkit-linear-gradient(left, rgba(1, 120, 188, 1) 0%, rgba(0, 189, 218, 1) 100%);
   background: linear-gradient(to right, rgba(1, 120, 188, 1) 0%, rgba(0, 189, 218, 1) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0178bc', endColorstr='#00bdda', GradientType=1);
-  z-index: 9999;
+  z-index: 999;
 }
 
 .wpsp-header .wpsp-logo {

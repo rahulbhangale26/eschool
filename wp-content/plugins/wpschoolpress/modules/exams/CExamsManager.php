@@ -117,7 +117,7 @@ class CExamsManager extends CFactory {
 							'end_date'			=> sanitize_text_field( $this->getRequestData( [ 'end_date' ] ) ),
 					];
 					
-					if( false == CExams::getInstance()->update( $arrstrExam, [ 'id' =>  sanitize_text_field( $this->getRequestData( [ 'exam_id'] ) ) ] ) ) {
+					if( false === CExams::getInstance()->update( $arrstrExam, [ 'id' =>  sanitize_text_field( $this->getRequestData( [ 'exam_id'] ) ) ] ) ) {
 						$this->addErrorMessage( 'Unable to update the exam.' );
 						break;
 					}

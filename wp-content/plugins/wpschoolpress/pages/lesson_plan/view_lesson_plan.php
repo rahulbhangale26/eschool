@@ -1,70 +1,74 @@
 <div class="wpsp-card" id="view_lesson_plan">
+			
+	<?php if( 'pdf' != $lesson_plan->format_type ) { ?>
+		<div style="padding: 20px;"><input type="button" name="print" value="Print" id="print" class="wpsp-btn wpsp-btn-success" onclick="printDiv();" /></div>
+	<?php }?>
+	<div id="print_view">
+	<style>
+	   @media print {
+        footer {page-break-after: always;}
+        }
+	</style>
 	<div class="wpsp-card-head">
 		<div class="lesson-plan-inner wpsp-left wpsp-class-filter" id="lesson-plan-filter">
-			
 		</div>
 	</div>
 	
 	<div class="wpsp-card-body">
-		<div class="lesson-plan-head">
-			<table id="lesson_plan_table" class="wpsp-table" cellspacing="0" width="100%" style="width:100%">
-				<thead>
-					<tr role="row">
-						<th>Id.</th>
-						<th>Lesson Plan</th>
-						<th>Instructor </th>
-						<th>Created On</th>
-						<th>Action</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php foreach( $lesson_plans AS $lesson_plan ) { ?>
-						<tr>
-							<td><?php echo $lesson_plan->id; ?></td>
-							<td><?php echo $lesson_plan->name; ?></td>
-							<td><?php echo ( true == isset( $instructors[$lesson_plan->instructor_id] ) ? $instructors[$lesson_plan->instructor_id]->first_name . ' ' . $instructors[$lesson_plan->instructor_id]->last_name : '' ); ?>
-							<td><?php echo date( 'Y-m-d', strtotime( $lesson_plan->created_on ) ); ?></td>
-							<td>
-								<a target="_blank" href="<?php echo WP_CONTENT_URL . $lesson_plan->file_url; ?>"><span class="dashicons dashicons-welcome-view-site"></span></a>
-								<a href="javascript:;" id="trash-lesson-plan" class="wpsp-popclick" data-id="<?php echo $lesson_plan->id; ?>" data-pop="DeleteModal"><span class="dashicons dashicons-trash" style="color: red;"></span></a>
-							</td>
-						</tr>
-					<?php } ?>
-				</tbody>
-			 </table>
+		<div class="lesson-plan-container">
+			<?php 
+			if( 'pdf' == $lesson_plan->format_type ) {
+			    foreach( $files AS $file ) {
+			        ?>
+			        	<div>
+    						<object data="<?php echo WP_CONTENT_URL . $file->file_path . $file->file_name; ?>" type="application/pdf" style="width: 100%; height: 100%; min-height: 600px;" >
+        						alt : <a href="<?php echo WP_CONTENT_URL . $file->file_path . $file->file_name; ?>"><?php echo $file->file_name; ?></a>
+    						</object>
+						</div>
+			        <?php 
+			    }
+			}
+			?>
+			
+			<?php 
+			if( 'image' == $lesson_plan->format_type ) {
+			    foreach( $files AS $file ) {
+			        ?>
+			        	<div>
+    						<img src="<?php echo WP_CONTENT_URL . $file->file_path . $file->file_name; ?>" style="padding: 20px; margin: 10px; width: 100%; height: 100%; min-height: 600px;" />
+						</div>
+						<footer></footer>
+			        <?php 
+			    }
+			}
+			?>
+			
+			<?php 
+			if( 'custom' == $lesson_plan->format_type ) {
+			    foreach( $files AS $file ) {
+			        ?>
+			        	<div style="padding: 10px; margin: 10px;">
+    						<?php echo stripslashes( file_get_contents( WP_CONTENT_DIR . $file->file_path . $file->file_name ) ); ?>
+						</div>
+						<footer></footer>
+			        <?php 
+			    }
+			}
+			?>
+			
 		</div>
 	</div>
+	</div>
 </div>
-
-<script>
-$(function () {
-	handleDatatables();
-
-	$(document).on('click', '.wpsp-popclick', function(e) {
-		$("#DeleteModal").css("display", "block");
-		$("#DeleteModal").attr('data-single-delete', true);
-		$("#DeleteModal").attr( 'data-id', $( this ).attr( 'data-id') );
-	});
-
-	$('.ClassDeleteBt').unbind();
-	$('.ClassDeleteBt').click( function(e) {
-		$("body").removeClass("wpsp-bodyFixed");
-		$("#DeleteModal").css("display", "none");
-		sch.ajaxRequest({
-			'page': 'sch-lesson_plan',
-			'pageAction': 'delete_lesson_plan',
-			'selector': '#view_lesson_plan',
-			data:  { 'lesson_plan_id': $("#DeleteModal").attr( 'data-id' ) },
-			success: function( res ) {
-				if( 'error' == res ) {
-					$('#lesson-plan-filter').html('<div class="error_msg_div"><span class="error_msg_div">Problem occurred while deleting lesson plan.</span></div>');
-				} else {
-					$('#view_lesson_plan').replaceWith( res );
-					$('#lesson-plan-filter').html('<div class="success_msg_div"><span class="success_msg_span">Lesson Plan Deleted Successfully.</span></div>');				
-				}
-			}
-		});
-	});
-	
-});
+<script type="text/javascript">
+function printDiv() {
+	var divToPrint = $('#print_view').html();
+	var htmlToPrint = ''
+	htmlToPrint += divToPrint;
+	newWin = window.open("");
+	newWin.document.write('<html><head></head><body>' + htmlToPrint + '</body></html>');
+	setTimeout(function(){
+    	newWin.print();
+    }, 1000 );
+} 
 </script>

@@ -32,11 +32,9 @@ class CLessonPlans extends CModel {
     public function fetchAllLessonPlans() {
         
         $strSql = 'SELECT
-                        lp.*,
-                        CONCAT( f.file_path, f.file_name )  AS file_url
+                        lp.*
                     FROM
-                        ' . $this->strTableName . ' lp
-                        JOIN ' . CFiles::getInstance()->strTableName . ' f ON f.id = lp.file_id';
+                        ' . $this->strTableName . ' lp';
         
         return $this->objDatabase->get_results( $strSql );
     }
@@ -44,15 +42,18 @@ class CLessonPlans extends CModel {
     public function fetchLessonPlansByInstructorId( $intInstructorId) {
         
         $strSql = 'SELECT
-                        lp.*,
-                        CONCAT( f.file_path, f.file_name )  AS file_url
+                        lp.*
                     FROM
                         ' . $this->strTableName . ' lp
-                        JOIN ' . CFiles::getInstance()->strTableName . ' f ON f.id = lp.file_id
                     WHERE
                         lp.instructor_id = ' . ( int ) $intInstructorId;
         
         return $this->objDatabase->get_results( $strSql );
+    }
+    
+    public function fetchLessonPlanById( $intId ) {
+        $strSql = 'SELECT * FROM ' . $this->strTableName . ' WHERE id = ' . ( int ) $intId;
+        return $this->getResult( $strSql );
     }
     
 }

@@ -35,6 +35,10 @@ class CModel extends CAbstractModel {
     	return $this->objDatabase->get_results( $strSql );
     }
     
+    public function getResult( $strSql ) {
+        return array_pop( $this->objDatabase->get_results( $strSql ) );
+    }
+    
     
 }
 

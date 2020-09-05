@@ -22,6 +22,14 @@
 								<input type="text" class="wpsp-form-control" id="lesson_plan_name" placeholder="Lesson Plan Name" name="lesson_plan_name" value="<?php echo ( true == isset( $lesson_plan['lesson_plan_name'] ) ) ? $lesson_plan['lesson_plan_name'] : '' ?>">
 							</div>
 						</div>
+					</div>
+					<div class="wpsp-row">
+						<div class="wpsp-col-lg-3 wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">
+							<div class="wpsp-form-group">
+								<label class="wpsp-labelMain">Lesson Plan Number<span></span></label>
+								<input type="text" class="wpsp-form-control" id="lesson_plan_number" placeholder="Lesson Plan Number" name="lesson_plan_number" value="<?php echo ( true == isset( $lesson_plan['lesson_plan_number'] ) ) ? $lesson_plan['lesson_plan_number'] : '' ?>">
+							</div>
+						</div>
 					</div>	
 					<div class="wpsp-row">
 						<div class="wpsp-col-lg-3 wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">

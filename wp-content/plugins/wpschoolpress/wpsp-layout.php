@@ -44,7 +44,9 @@ function wpsp_topbar(){
   $role   = isset( $current_user->roles[0] ) ? $current_user->roles[0] : '';
   $url = site_url()."/wp-content/plugins/wpschoolpress/img/wpschoolpresslogo.jpg";
   $img_url  = $loc_avatar ? $loc_avatar['full'] : WPSP_PLUGIN_URL.'img/avatar.png';
+
   $schoolname = isset( $wpsp_settings_data['sch_name'] ) && !empty( $wpsp_settings_data['sch_name'] ) ? $wpsp_settings_data['sch_name'] : __( 'ESchool','WPSchoolPress' );
+
   $imglogo  = isset( $wpsp_settings_data['sch_logo'] ) ? $wpsp_settings_data['sch_logo'] : $url;
   $schoolyear = isset( $wpsp_settings_data['sch_wrkingyear'] ) ? $wpsp_settings_data['sch_wrkingyear'] : '';
   $postname = isset( $post->post_name ) ? $post->post_name :'';

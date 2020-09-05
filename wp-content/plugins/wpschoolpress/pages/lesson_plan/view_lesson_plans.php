@@ -13,7 +13,7 @@
 			<table id="lesson_plan_table" class="wpsp-table" cellspacing="0" width="100%" style="width:100%">
 				<thead>
 					<tr role="row">
-						<th>Id.</th>
+						<th>Number</th>
 						<th>Lesson Plan</th>
 						<th>Instructor </th>
 						<th>Created On</th>
@@ -23,7 +23,7 @@
 				<tbody>
 					<?php foreach( $lesson_plans AS $lesson_plan ) { ?>
 						<tr>
-							<td><?php echo $lesson_plan->id; ?></td>
+							<td><?php echo $lesson_plan->number; ?></td>
 							<td><?php echo $lesson_plan->name; ?></td>
 							<td><?php echo ( true == isset( $instructors[$lesson_plan->instructor_id] ) ? $instructors[$lesson_plan->instructor_id]->first_name . ' ' . $instructors[$lesson_plan->instructor_id]->last_name : '' ); ?>
 							<td><?php echo date( 'Y-m-d', strtotime( $lesson_plan->created_on ) ); ?></td>

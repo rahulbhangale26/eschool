@@ -140,7 +140,7 @@
     }
     
     .writable-text {
-        font-size: 10px !important;
+        font-size: 14px !important;
         font-weight: normal !important;
         line-height: normal !important;
         vertical-align: top !important;

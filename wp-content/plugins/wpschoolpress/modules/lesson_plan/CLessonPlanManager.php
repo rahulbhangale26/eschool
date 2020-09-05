@@ -93,6 +93,7 @@ class CLessonPlanManager extends CFactory {
 
                    $arrmixLessonPlan = [
                         'name'                  => $this->getRequestData( [ 'lesson_plan_name' ] ),
+                        'number'                => sanitize_text_field( $this->getRequestData( ['lesson_plan_number'] ) ),
                         'format_type'           => sanitize_text_field( $arrmixRequestData ['lesson_plan_type'] ), 
                         'file_ids'              => $strFileIds,
                         'instructor_id'         => $this->objUser->getTeacher()->tid,
@@ -143,6 +144,7 @@ class CLessonPlanManager extends CFactory {
                     
                     $arrmixLessonPlan = [
                         'name'                  => $this->getRequestData( [ 'lesson_plan_name' ] ),
+                        'number'                => sanitize_text_field( $this->getRequestData( ['lesson_plan_number'] ) ),
                         'file_ids'              => $strFileIds
                     ];
                     
@@ -234,6 +236,9 @@ class CLessonPlanManager extends CFactory {
     }
 
     public function displayViewLessonPlanTemplate() {
+        global $wpsp_settings_data;
+        
+        $this->arrmixTemplateParams['iti_name']         = isset( $wpsp_settings_data['sch_name'] ) && !empty( $wpsp_settings_data['sch_name'] ) ? $wpsp_settings_data['sch_name'] : __( 'ITIMS','WPSchoolPress' );
         $this->arrmixTemplateParams['lesson_plans']     = $this->arrobjLessonPlans;
         $this->arrmixTemplateParams['instructors']      = $this->rekeyObjects( 'tid', CTeachers::getInstance()->fetchAllTeachers() );
         
@@ -241,6 +246,9 @@ class CLessonPlanManager extends CFactory {
     }
     
     public function displayEditLessonPlan() {
+        global $wpsp_settings_data;
+
+        $this->arrmixTemplateParams['iti_name']         = isset( $wpsp_settings_data['sch_name'] ) && !empty( $wpsp_settings_data['sch_name'] ) ? $wpsp_settings_data['sch_name'] : __( 'ITIMS','WPSchoolPress' );
         $this->arrmixTemplateParams['lesson_plan']          = $this->objLessonPlan;
         $this->arrmixTemplateParams['lesson_plan_files']    = $this->arrobjFiles;
         

@@ -250,6 +250,11 @@ function wpsp_admin_menu() {
 		    'wpsp_callback'
 		));
 		
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Subjets', 'edit_posts', 'sch-upload_manager', array(
+		    $this,
+		    'wpsp_callback'
+		));
+		
 		
 		
 		/** MVC FInished **/

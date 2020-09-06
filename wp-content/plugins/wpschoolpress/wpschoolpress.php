@@ -86,6 +86,11 @@ function wpsp_plugins_loaded()
 		$objUser->setStudent( CStudents::getInstance()->fetchStudentByUserId( $objUser->getUserId() ) );
 	}
 	
+	if( 1 == $_REQUEST['skip_wp'] ) {
+	    require_once( WPSP_PLUGIN_PATH . '/modules/autoload.php' );
+	    exit;
+	}
+	
 	
 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks.php');
 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks-student.php');
@@ -113,8 +118,7 @@ function wpsp_logout() {
 add_action( 'wp_logout', 'wpsp_logout' );
 
 add_action('admin_init', 'ajax_actions');
-function ajax_actions()
-{
+function ajax_actions() {
     
     /**
      * Ajax in MVC

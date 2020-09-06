@@ -19,7 +19,7 @@
 						<div class="wpsp-col-lg-3 wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
 								<label class="wpsp-labelMain">Demostration Plan Name<span></span></label>
-								<input type="text" class="wpsp-form-control" id="demostration_plan_name" placeholder="Demostration Plan Name" name="demostration_plan_name" value="<?php echo ( true == isset( $demonstration_plan['demostration_plan_name'] ) ? $demonstration_plan['demostration_plan_name'] : '' )?>">
+								<input type="text" class="wpsp-form-control" id="demostration_plan_name" placeholder="Demostration Plan Name" name="demostration_plan_name" value="<?php echo $dp->name; ?>">
 							</div>
 						</div>
 					</div>
@@ -27,7 +27,7 @@
 						<div class="wpsp-col-lg-3 wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
 								<label class="wpsp-labelMain">Demostration Plan Number<span></span></label>
-								<input type="text" class="wpsp-form-control" id="demostration_plan_number" placeholder="Demostration Plan Number" name="demostration_plan_number" value="<?php echo ( true == isset( $demonstration_plan['demostration_plan_number'] ) ? $demonstration_plan['demostration_plan_number'] : '' )?>">
+								<input type="text" class="wpsp-form-control" id="demostration_plan_number" placeholder="Demostration Plan Number" name="demostration_plan_number" value="<?php echo $dp->number ?>">
 							</div>
 						</div>
 					</div>	
@@ -35,39 +35,85 @@
 						<div class="wpsp-col-lg-3 wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
 								<label class="wpsp-labelMain">Demostration Plan Format Type<span></span></label>
-								<select class="wpsp-form-control" id="demostration_plan_type" name="demostration_plan_type">
+								<input type="hidden" name="demostration_plan_type" value="<?php echo $dp->format_type; ?>">
+								<select class="wpsp-form-control" id="demostration_plan_type_select" name="demostration_plan_type_select" disabled="disabled">
 									<option value="">Select Demostration Plan Type</option>
-									<option <?php echo ( true == isset( $demonstration_plan['demostration_plan_type'] ) && 'pdf' == $demonstration_plan['demostration_plan_type'] ) ? 'selected="selected"' : ''; ?> value="pdf">Pdf Files</option>
-									<option <?php echo ( true == isset( $demonstration_plan['demostration_plan_type'] ) && 'image' == $demonstration_plan['demostration_plan_type'] ) ? 'selected="selected"' : ''; ?> value="image">Image Files</option>
-									<option <?php echo ( true == isset( $demonstration_plan['demostration_plan_type'] ) && 'custom' == $demonstration_plan['demostration_plan_type'] ) ? 'selected="selected"' : ''; ?> value="custom">Custom Design</option>
+									<option <?php echo ( 'pdf' == $dp->format_type ) ? 'selected="selected"' : ''; ?> value="pdf">Pdf Files</option>
+									<option <?php echo ( 'image' == $dp->format_type ) ? 'selected="selected"' : ''; ?> value="image">Image Files</option>
+									<option <?php echo ( 'custom' == $dp->format_type ) ? 'selected="selected"' : ''; ?>value="custom">Custom Design</option>
 								</select>
 							</div>
 						</div>
 					</div>
 
 					<div id="demostration_plan_file_container">
+						<?php 
+						if( 'pdf' == $dp->format_type ) {
+						    foreach( $dp_files AS $file ) {
+						        ?>
+						        <div class="wpsp-row row-separators" >
+    						       <div class="wpsp-col-lg-3 wpsp-col-md-12 wpsp-col-sm-12 wpsp-col-xs-12">
+    									<div class="wpsp-form-group">
+    										<?php echo $file->file_name; ?>
+    									</div>
+    								</div>
+    								<div class="wpsp-col-lg-1 wpsp-col-md-12 wpsp-col-sm-12 wpsp-col-xs-12">
+										<span class="dashicons dashicons-no" id="remove-pdf-<?php echo $file->id ?>" data-FileId="<?php echo $file->id ?>" style="color: red; cursor: pointer;"></span>
+									</div>
+									<script>
+    					       			$(function(){
+    					       				$('#remove-pdf-<?php echo $file->id; ?>' ).click( function( e ) {
+    					       					removeFile( $(this).attr('data-FileId') ); 
+                        						$(this).parent().parent().remove();
+                        						addPdfFileSelectionBox();
+                        					});
+    					       			});
+    					       		</script>
+    							</div>
+						        <?php 
+						    }
+
+						}  else if( 'image' == $dp->format_type ) {
+						    foreach( $dp_files AS $file ) {
+						        ?>
+						        <div class="wpsp-row row-separators" >
+    						       <div class="wpsp-col-lg-3 wpsp-col-md-12 wpsp-col-sm-12 wpsp-col-xs-12">
+    									<div class="wpsp-form-group">
+    										<img id="demostration_plan_image_<?php echo $file->id ?>" src="<?php echo WP_CONTENT_URL . $file->file_path . $file->file_name; ?>" style="width: 200px; height: 200px;"/>
+    									</div>
+    								</div>
+    								<div class="wpsp-col-lg-1 wpsp-col-md-12 wpsp-col-sm-12 wpsp-col-xs-12">
+										<span class="dashicons dashicons-no" id="remove-image-<?php echo $file->id ?>" data-FileId="<?php echo $file->id ?>" style="color: red; cursor: pointer;"></span>
+									</div>
+									<script>
+    					       			$(function(){
+    					       				$('#remove-image-<?php echo $file->id; ?>' ).click( function( e ) {
+                        						removeFile( $(this).attr('data-FileId') );
+                        						$(this).parent().parent().remove();
+                        					});
+    					       			});
+    					       		</script>
+    							</div>
+						        <?php 
+						    }
+						}
+						?>
 					</div>			
 
 					<div id="demostration_plan_custom_container">
 								
-					<?php 
-					   if( true == isset($demonstration_plan['demostration_plan_type'] ) && 'custom' == $demonstration_plan['demostration_plan_type'] ) {
-					       foreach( $demonstration_plan AS $key => $val ) {
-					           if( false !== strpos( $key, 'demostration_plan_custom_' ) ) {
-					               $custom_demostration_plans[$key] = $val;
-					           }
-					       }
-					   
-					       $indexCustom = 0;
-					       foreach ( $custom_demostration_plans AS $custom_demostration_plan ) {
-    					       $indexCustom++;
-    					       ?>
-    					       <div class="wpsp-row" >
+					<?php
+					if( 'custom' == $dp->format_type ) {
+					    $indexCustom = 0;
+					    foreach ( $dp_files AS $file  ) {
+					        $indexCustom++;
+					        ?>
+    					       <div class="wpsp-row row-separators" >
     						       <div class="wpsp-col-lg-10 wpsp-col-md-12 wpsp-col-sm-12 wpsp-col-xs-12">
     									<div class="wpsp-form-group">
     										<textarea class="ckeditor" name="demostration_plan_custom_<?php echo $indexCustom; ?>" id="demostration_plan_custom_<?php echo $indexCustom; ?>" rows="30" cols="80">
     	        	        					<?php 
-    	        	        					     echo stripslashes( $custom_demostration_plan );
+    	        	        					echo stripslashes( file_get_contents( WP_CONTENT_DIR. $file->file_path . $file->file_name ) );
         	                	                ?>
     	            						</textarea>
     									</div>
@@ -79,10 +125,9 @@
     					       </div>
     					       <script>
     					       		$(function(){
-    					       			CKEDITOR.replace( 'demostration_plan_custom_<?php echo $indexCustom; ?>',  {
+    					       			CKEDITOR.replace( 'demostration_plan_custom_<?php echo $indexCustom; ?>', {
     										filebrowserUploadUrl: "<?php echo site_url( '/wp-admin/admin.php?page=sch-upload_manager&page_action=upload_image&skip_wp=1' ); ?>" 
 										} );
-										
                         				$('#remove-custom-<?php echo $indexCustom; ?>' ).click( function( e ) {
                         					CKEDITOR.instances[$(this).parent().prev().find('.ckeditor').attr('name')].destroy();
                         					$(this).parent().parent().remove();
@@ -90,10 +135,8 @@
     					       		});
     					       </script>
     					       <?php
-					       }
-					   
-					   }
-					   
+					    }
+					}
 					?>
 					</div>
 					
@@ -129,13 +172,25 @@
 var indexCustom 		= <?php echo isset( $indexCustom ) ? $indexCustom : 0 ?>;
 var indexFileSelection	= 0;
 
+function removeFile( fileId ) {
+	sch.ajaxRequest({
+		'page': 'sch-demostration_plan',
+		'pageAction': 'remove_demostration_plan_file',
+		'selector': '#demostration_plan_upload_form',
+		data:  { 'file_id': fileId, 'demostration_plan_id': $('#demostration_plan_id').val() },
+		success: function( res ) {
+	
+		}
+	});
+}
+
 function addPdfFileSelectionBox() {
 	html = `
 		<div class="wpsp-row" id="demostration_plan_file_div">
 			<div class="wpsp-col-lg-3 wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">
 				<div class="wpsp-form-group">
 					<label class="wpsp-labelMain">Demostration Plan File: <span></span></label>
-					<input type="file" class="wpsp-form-control" id="demostration_plan_file_1" placeholder="" name="demostration_plan_file_1">
+					<input type="file" class="wpsp-form-control" id="demostration_plan_file_` + indexFileSelection + `" placeholder="" name="demostration_plan_file_` + indexFileSelection + `">
 				</div>
 			</div>
 		</div>

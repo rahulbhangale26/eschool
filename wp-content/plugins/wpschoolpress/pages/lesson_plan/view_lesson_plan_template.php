@@ -12,10 +12,10 @@
         font-family: "Arial";
         font-size: 10pt;
         vertical-align: middle;
-        white-space: nowrap;
         direction: ltr;
         padding: 1px 3px 1px 3px;
         min-width: 150px;
+        max-width: 150px;
     }
     .ritz .waffle .s6 {
         border-bottom: 1px SOLID #000000;
@@ -27,7 +27,6 @@
         font-family: "Arial";
         font-size: 10pt;
         vertical-align: bottom;
-        white-space: nowrap;
         direction: ltr;
         padding: 1px 3px 1px 3px;
     }
@@ -40,7 +39,6 @@
         font-family: "Arial";
         font-size: 10pt;
         vertical-align: top;
-        white-space: nowrap;
         direction: ltr;
         padding: 1px 3px 1px 3px;
     }
@@ -54,7 +52,6 @@
         font-family: "Arial";
         font-size: 18pt;
         vertical-align: middle;
-        white-space: nowrap;
         direction: ltr;
         padding: 1px 3px 1px 3px;
     }
@@ -68,7 +65,6 @@
         font-family: "Arial";
         font-size: 10pt;
         vertical-align: top;
-        white-space: nowrap;
         direction: ltr;
         padding: 1px 3px 1px 3px;
     }
@@ -82,7 +78,6 @@
         font-family: "Arial";
         font-size: 10pt;
         vertical-align: top;
-        white-space: nowrap;
         direction: ltr;
         padding: 1px 3px 1px 3px;
     }
@@ -96,7 +91,6 @@
         font-family: "Arial";
         font-size: 10pt;
         vertical-align: middle;
-        white-space: nowrap;
         direction: ltr;
         padding: 1px 3px 1px 3px;
     }

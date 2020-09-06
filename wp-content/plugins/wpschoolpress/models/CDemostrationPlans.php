@@ -29,14 +29,17 @@ class CDemostrationPlans extends CModel {
         return $this->objDatabase->delete( $this->strTableName, $arrmixDemostrationPlan );
     }
     
+    public function fetchDemostrationPlanById( $intId ) {
+        $strSql = 'SELECT * FROM ' . $this->strTableName . ' WHERE id = ' . ( int ) $intId;
+        return $this->getResult( $strSql );
+    }
+    
     public function fetchAllDemostrationPlans() {
         
         $strSql = 'SELECT
-                        dp.*,
-                        CONCAT( f.file_path, f.file_name )  AS file_url
+                        dp.*
                     FROM
-                        ' . $this->strTableName . ' dp
-                        JOIN ' . CFiles::getInstance()->strTableName . ' f ON f.id = dp.file_id';
+                        ' . $this->strTableName . ' dp';
         
         return $this->objDatabase->get_results( $strSql );
     }
@@ -44,11 +47,9 @@ class CDemostrationPlans extends CModel {
     public function fetchDemostrationPlansByInstructorId( $intInstructorId) {
         
         $strSql = 'SELECT
-                        dp.*,
-                        CONCAT( f.file_path, f.file_name )  AS file_url
+                        dp.*
                     FROM
                         ' . $this->strTableName . ' dp
-                        JOIN ' . CFiles::getInstance()->strTableName . ' f ON f.id = dp.file_id
                     WHERE
                         dp.instructor_id = ' . ( int ) $intInstructorId;
         

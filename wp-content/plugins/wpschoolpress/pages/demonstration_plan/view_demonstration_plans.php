@@ -25,7 +25,8 @@
 							<td><?php echo ( true == isset( $instructors[$dp->instructor_id] ) ? $instructors[$dp->instructor_id]->first_name . ' ' . $instructors[$dp->instructor_id]->last_name : '' ); ?>
 							<td><?php echo date( 'Y-m-d', strtotime( $dp->created_on ) ); ?></td>
 							<td>
-								<a target="_blank" href="<?php echo WP_CONTENT_URL . $dp->file_url; ?>"><span class="dashicons dashicons-welcome-view-site"></span></a>
+								<a title="Edit Job" href="<?php echo site_url( '/wp-admin/admin.php?page=sch-demostration_plan&page_action=edit_demostration_plan&demostration_plan_id=' . $dp->id ); ?>"><span class="dashicons dashicons-edit" style="color: orange;"></span></a>
+								<a title="View Demonstration Plan" href="<?php echo site_url( '/wp-admin/admin.php?page=sch-demostration_plan&page_action=view_demostration_plan&demostration_plan_id=' . $dp->id ); ?>"><span class="dashicons dashicons-welcome-view-site"></span></a>
 								<a href="javascript:;" id="trash-demonstration-plan" class="wpsp-popclick" data-id="<?php echo $dp->id; ?>" data-pop="DeleteModal"><span class="dashicons dashicons-trash" style="color: red;"></span></a>
 							</td>
 						</tr>

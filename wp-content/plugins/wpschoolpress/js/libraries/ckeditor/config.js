@@ -7,6 +7,6 @@ CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here. For example:
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
-	 config.removeButtons = 'Source,Save,NewPage,DocProps,Print,Templates,document,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Subscript,Superscript,RemoveFormat,CreatePlaceholder,Image,Flash,HorizontalRule,SpecialChar,PageBreak,Iframe,InsertPre,UIColor,ShowBlocks,About';
+	 config.removeButtons = 'Source,Save,NewPage,DocProps,Print,Templates,document,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,HiddenField,Subscript,Superscript,RemoveFormat,CreatePlaceholder,Image,Flash,HorizontalRule,SpecialChar,PageBreak,Iframe,InsertPre,UIColor,ShowBlocks,About';
 	 config.allowedContent = true;
 };

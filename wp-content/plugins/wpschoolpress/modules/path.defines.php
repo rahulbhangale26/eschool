@@ -1,6 +1,7 @@
 <?php
 
 $arrstrModules = [
+    'sch-upload_manager'        => WPSP_PLUGIN_PATH . 'modules/CUploadManager.php',
     'sch-trades'                => WPSP_PLUGIN_PATH  . 'modules/trades/CTradesManager.php',
     'sch-trainees'              => WPSP_PLUGIN_PATH  . 'modules/trainees/CTraineesManager.php',
     'sch-subjects-new'          => WPSP_PLUGIN_PATH  . 'modules/subjects/CSubjectsManager.php',

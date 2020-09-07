@@ -10,7 +10,7 @@
 			<table id="demonstration_plan_table" class="wpsp-table" cellspacing="0" width="100%" style="width:100%">
 				<thead>
 					<tr role="row">
-						<th>Id.</th>
+						<th>Number</th>
 						<th>Demonstration Plan</th>
 						<th>Instructor </th>
 						<th>Created On</th>
@@ -20,7 +20,7 @@
 				<tbody>
 					<?php foreach( $demonstration_plans AS $dp ) { ?>
 						<tr>
-							<td><?php echo $dp->id; ?></td>
+							<td><?php echo $dp->number; ?></td>
 							<td><?php echo $dp->name; ?></td>
 							<td><?php echo ( true == isset( $instructors[$dp->instructor_id] ) ? $instructors[$dp->instructor_id]->first_name . ' ' . $instructors[$dp->instructor_id]->last_name : '' ); ?>
 							<td><?php echo date( 'Y-m-d', strtotime( $dp->created_on ) ); ?></td>

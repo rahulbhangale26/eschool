@@ -51,9 +51,24 @@ class CDemostrationPlans extends CModel {
                     FROM
                         ' . $this->strTableName . ' dp
                     WHERE
-                        dp.instructor_id = ' . ( int ) $intInstructorId;
+                        dp.instructor_id = ' . ( int ) $intInstructorId . '
+                    ORDER BY number';
         
         return $this->objDatabase->get_results( $strSql );
+    }
+    
+    public function fetchDemonstrationPlansByFormatByInstructorId( $strFormat, $intInstructorId ) {
+        $strSql = 'SELECT
+                        dp.*
+                    FROM
+                        ' . $this->strTableName . ' dp
+                    WHERE
+                        dp.instructor_id = ' . ( int ) $intInstructorId . '
+                        AND dp.format_type = \''. $strFormat . '\'
+                    ORDER BY number';
+
+        return $this->getResults( $strSql );
+        
     }
     
 }

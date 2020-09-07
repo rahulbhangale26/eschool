@@ -20,6 +20,7 @@ $arrstrModules = [
 	CModules::PROGRESS_CARD['slug']		=> WPSP_PLUGIN_PATH . 'modules/progress_card/CProgressCardManager.php',
 	CModules::EXAM_MANAGEMENT['slug']	=> WPSP_PLUGIN_PATH . 'modules/exams/CExamsManager.php',
 	CModules::SKILL_ASSESSMENT['slug']	=> WPSP_PLUGIN_PATH . 'modules/exams/CSkillAssessmentManager.php',
-	CModules::A_V_AIDS['slug']			=> WPSP_PLUGIN_PATH . 'modules/avaids/CAvAidsManager.php'
+	CModules::A_V_AIDS['slug']			=> WPSP_PLUGIN_PATH . 'modules/avaids/CAvAidsManager.php',
+    CModules::SELL['slug']              => WPSP_PLUGIN_PATH . 'modules/sell/CSellManager.php'
 		
 ];

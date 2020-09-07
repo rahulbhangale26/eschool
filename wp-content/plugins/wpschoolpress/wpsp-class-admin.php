@@ -255,7 +255,10 @@ function wpsp_admin_menu() {
 		    'wpsp_callback'
 		));
 		
-		
+		add_submenu_page('ITIMS', 'ITIMS',  '<i class="fa fa-key fa-fw"></i>&nbsp; Subjets', 'edit_posts', CModules::SELL['slug'], array(
+		    $this,
+		    'wpsp_callback'
+		));	
 		
 		/** MVC FInished **/
 

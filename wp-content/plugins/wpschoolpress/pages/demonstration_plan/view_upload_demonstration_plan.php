@@ -19,7 +19,7 @@
 						<div class="wpsp-col-lg-3 wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
 								<label class="wpsp-labelMain">Demostration Plan Name<span></span></label>
-								<input type="text" class="wpsp-form-control" id="demostration_plan_name" placeholder="Demostration Plan Name" name="demostration_plan_name" value="<?php echo ( true == isset( $demonstration_plan['demostration_plan_name'] ) ? $demonstration_plan['demostration_plan_name'] : '' )?>">
+								<input type="text" class="wpsp-form-control" id="demostration_plan_name" placeholder="Demostration Plan Name" name="demostration_plan_name" value="<?php echo ( true == isset( $demonstration_plan['demostration_plan_name'] ) ? stripslashes( $demonstration_plan['demostration_plan_name'] ) : '' )?>">
 							</div>
 						</div>
 					</div>
@@ -27,7 +27,7 @@
 						<div class="wpsp-col-lg-3 wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
 								<label class="wpsp-labelMain">Demostration Plan Number<span></span></label>
-								<input type="text" class="wpsp-form-control" id="demostration_plan_number" placeholder="Demostration Plan Number" name="demostration_plan_number" value="<?php echo ( true == isset( $demonstration_plan['demostration_plan_number'] ) ? $demonstration_plan['demostration_plan_number'] : '' )?>">
+								<input type="text" class="wpsp-form-control" id="demostration_plan_number" placeholder="Demostration Plan Number" name="demostration_plan_number" value="<?php echo ( true == isset( $demonstration_plan['demostration_plan_number'] ) ? stripslashes( $demonstration_plan['demostration_plan_number'] ) : '' )?>">
 							</div>
 						</div>
 					</div>	

@@ -51,6 +51,19 @@ class CLessonPlans extends CModel {
         return $this->objDatabase->get_results( $strSql );
     }
     
+    public function fetchLessonPlansByFormatTypeByInstructorId( $strFormatType, $intInstructorId) {
+        
+        $strSql = 'SELECT
+                        lp.*
+                    FROM
+                        ' . $this->strTableName . ' lp
+                    WHERE
+                        lp.instructor_id = ' . ( int ) $intInstructorId . '
+                        AND lp.format_type = \'' . $strFormatType . '\'';
+        
+        return $this->objDatabase->get_results( $strSql );
+    }
+    
     public function fetchLessonPlanById( $intId ) {
         $strSql = 'SELECT * FROM ' . $this->strTableName . ' WHERE id = ' . ( int ) $intId;
         return $this->getResult( $strSql );

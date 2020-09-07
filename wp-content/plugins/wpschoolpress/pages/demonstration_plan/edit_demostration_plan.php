@@ -19,7 +19,7 @@
 						<div class="wpsp-col-lg-3 wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
 								<label class="wpsp-labelMain">Demostration Plan Name<span></span></label>
-								<input type="text" class="wpsp-form-control" id="demostration_plan_name" placeholder="Demostration Plan Name" name="demostration_plan_name" value="<?php echo $dp->name; ?>">
+								<input type="text" class="wpsp-form-control" id="demostration_plan_name" placeholder="Demostration Plan Name" name="demostration_plan_name" value="<?php echo stripslashes( $dp->name ) ?>">
 							</div>
 						</div>
 					</div>
@@ -27,7 +27,7 @@
 						<div class="wpsp-col-lg-3 wpsp-col-md-6 wpsp-col-sm-6 wpsp-col-xs-12">
 							<div class="wpsp-form-group">
 								<label class="wpsp-labelMain">Demostration Plan Number<span></span></label>
-								<input type="text" class="wpsp-form-control" id="demostration_plan_number" placeholder="Demostration Plan Number" name="demostration_plan_number" value="<?php echo $dp->number ?>">
+								<input type="text" class="wpsp-form-control" id="demostration_plan_number" placeholder="Demostration Plan Number" name="demostration_plan_number" value="<?php echo stripslashes( $dp->number ) ?>">
 							</div>
 						</div>
 					</div>	

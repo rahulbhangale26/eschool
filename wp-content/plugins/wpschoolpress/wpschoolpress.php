@@ -30,6 +30,13 @@ if (!defined('WPSP_PLUGIN_VERSION'))
 {
 	define('WPSP_PLUGIN_VERSION', '2.1.2'); //Plugin version number
 }
+
+if (!defined('WP_VENDOR_PATH'))
+{
+    define('WP_VENDOR_PATH', ABSPATH . 'vendor/' );
+}
+
+
 define('WPSP_PERMISSION_MSG', 'You don\'t have enough permission to access this page');
 // Call the  required files when plugin activate
 register_activation_hook(__FILE__, 'wpsp_activation');
@@ -46,8 +53,7 @@ function wpsp_deactivation()
 // add action to load plugin
 add_action('plugins_loaded', 'wpsp_plugins_loaded');
 
-function wpsp_plugins_loaded()
-{
+function wpsp_plugins_loaded() {
  
 	if(!session_id()) {
 		session_start();
@@ -90,7 +96,6 @@ function wpsp_plugins_loaded()
 	    require_once( WPSP_PLUGIN_PATH . '/modules/autoload.php' );
 	    exit;
 	}
-	
 	
 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks.php');
 	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks-student.php');

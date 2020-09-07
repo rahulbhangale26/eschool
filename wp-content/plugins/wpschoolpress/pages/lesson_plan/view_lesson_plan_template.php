@@ -149,7 +149,7 @@
             <tr style="height: 20px;">
             </tr>
             <tr style="height: 20px;">
-                <td class="s1 border-r border-b" dir="ltr" colspan="2"><?php echo $iti_name; ?></td>
+                <td class="s1 border-r border-b" dir="ltr" colspan="2"><ITINAME><?php echo $iti_name; ?></ITINAME></td>
                 <td class="s1  border-r border-b" dir="ltr">LESSON NO: </td>
                 <td class="s1 border-b" dir="ltr">DATE :</td>
             </tr>
@@ -159,28 +159,28 @@
                 <td class="s1" dir="ltr">MONTH:</td>
                 <td class="s1" dir="ltr">WEEK NO:</td>
             </tr>
-            <tr style="height: 30px;">
-                <td class="s2" dir="ltr">REF. BOOKS &amp; PAGE NO.</td>
+            <tr>
+                <td style="height: 30px;" class="s2" dir="ltr">REF. BOOKS &amp; PAGE NO.</td>
                 <td class="s1 writable-text" colspan="3"></td>
             </tr>
-            <tr style="height: 30px;">
-                <td class="s2" dir="ltr">NAME OF TOPIC</td>
+            <tr>
+                <td style="height: 30px;" class="s2" dir="ltr">NAME OF TOPIC</td>
                 <td class="s1 writable-text" colspan="3"></td>
             </tr>
-            <tr style="height: 100px;">
-                <td class="s2" dir="ltr">OBJECTIVE:</td>
+            <tr>
+                <td style="height: 100px;" class="s2" dir="ltr">OBJECTIVE:</td>
                 <td class="s1 writable-text" colspan="3"></td>
             </tr>
-            <tr style="height: 30px;">
-                <td class="s2" dir="ltr">TEACHING AIDS:-</td>
+            <tr>
+                <td style="height: 30px;" class="s2" dir="ltr">TEACHING AIDS:-</td>
                 <td class="s3 writable-text"  colspan="3"></td>
             </tr>
-            <tr style="height: 30px;">
-                <td class="s2" dir="ltr">REVIEW:</td>
+            <tr>
+                <td style="height: 30px;" class="s2" dir="ltr">REVIEW:</td>
                 <td class="s3 writable-text" colspan="3"></td>
             </tr>
-            <tr style="height: 30px;">
-                <td class="s2" dir="ltr">MOTIVATION:</td>
+            <tr>
+                <td style="height: 30px;" class="s2" dir="ltr">MOTIVATION:</td>
                 <td class="s3 writable-text" colspan="3"></td>
             </tr>
             <tr style="height: 20px;">
@@ -188,44 +188,44 @@
                 <td class="s4" dir="ltr" colspan="2">INFORMATION POINT</td>
                 <td class="s4" dir="ltr">SPOT HINTS</td>
             </tr>
-            <tr style="height: 95px;">
-                <td class="s3 writable-text"></td>
+            <tr>
+                <td style="height: 95px;" class="s3 writable-text"></td>
                 <td class="s3 writable-text" colspan="2"></td>
                 <td class="s3 writable-text"></td>
             </tr>
-            <tr style="height: 95px;">
-                <td class="s3 writable-text"></td>
+            <tr>
+                <td style="height: 95px;" class="s3 writable-text"></td>
                 <td class="s3 writable-text" colspan="2"></td>
                 <td class="s3 writable-text"></td>
             </tr>
-            <tr style="height: 95px;">
-                <td class="s3 writable-text"></td>
+            <tr>
+                <td style="height: 95px;" class="s3 writable-text"></td>
                 <td class="s3 writable-text" colspan="2"></td>
                 <td class="s3 writable-text"></td>
             </tr>
-            <tr style="height: 95px;">
-                <td class="s3 writable-text"></td>
+            <tr>
+                <td class="s3 writable-text" style="height: 95px;"></td>
                 <td class="s3 writable-text" colspan="2"></td>
                 <td class="s3 writable-text"></td>
             </tr>
-            <tr style="height: 60px;">
-                <td class="s2" dir="ltr">QUESTIONS:</td>
+            <tr>
+                <td class="s2" dir="ltr" style="height: 60px;">QUESTIONS:</td>
                 <td class="s3 no-btm-border writable-text" colspan="3"></td>
             </tr>
-            <tr style="height: 30px;">
-                <td class="s2" dir="ltr">SUMMARY:</td>
+            <tr>
+                <td class="s2" dir="ltr" style="height: 30px;">SUMMARY:</td>
                 <td class="s3 no-btm-border writable-text" colspan="3"></td>
             </tr>
-            <tr style="height: 30px;">
-                <td class="s2" dir="ltr">ASSIGNMENT:</td>
+            <tr>
+                <td style="height: 30px;" class="s2" dir="ltr">ASSIGNMENT:</td>
                 <td class="s3 no-btm-border writable-text" colspan="3"></td>
             </tr>
-            <tr style="height: 30px;">
-                <td class="s5" dir="ltr">NEXT LESSON:</td>
+            <tr>
+                <td style="height: 30px;" class="s5" dir="ltr">NEXT LESSON:</td>
                 <td class="s3 writable-text" colspan="3"></td>
             </tr>
-            <tr style="height: 40px; border-top: 1px solid #000">
-                <td class="s6" dir="ltr">INSTRUCTOR</td>
+            <tr style="border-top: 1px solid #000">
+                <td style="height: 60px;" class="s6" dir="ltr"><INAME>INSTRUCTOR</INAME></td>
                 <td class="s6" dir="ltr">GROUP INSTRUCTOR</td>
                 <td class="s6" dir="ltr" colspan="2">VICE PRINCIPAL/ PRINCIPAL</td>
             </tr>

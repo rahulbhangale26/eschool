@@ -253,7 +253,7 @@
     <table class="waffle dark-border" style="margin: 0 auto;" cellspacing="0" cellpadding="0">
         <tbody>
             <tr style="height: 20px;">
-                <td class="s0" dir="ltr" colspan="4" rowspan="2">Nutan ITI, Chinawal</td>
+                <td class="s0" dir="ltr" colspan="4" rowspan="2"><ITINAME>Nutan ITI, Chinawal</ITINAME></td>
             </tr>
             <tr style="height: 20px;">
             </tr>
@@ -261,7 +261,7 @@
                 <td class="s1" dir="ltr" colspan="4">DEMONSTRATION PLAN</td>
             </tr>
             <tr style="height: 20px;">
-                <td class="s2" dir="ltr" colspan="2">Name:</td>
+                <td class="s2" dir="ltr" colspan="2"><INAME>Name:</INAME></td>
                 <td class="s2" dir="ltr">Ex No:</td>
                 <td class="s2" dir="ltr">Date:</td>
             </tr>
@@ -280,7 +280,7 @@
                 <td class="s3 writable-text" colspan="3"></td>
             </tr>
             <tr style="height: 100px;">
-                <td class="s5" dir="ltr">Objective:</td>
+                <td class="s5" dir="ltr" style="height: 100px;">Objective:</td>
                 <td class="s6 writable-text" dir="ltr" colspan="3">At the End of this Exercise, Trainee shall be able to :</td>
             </tr>
             <tr style="height: 20px;">
@@ -298,7 +298,7 @@
             <tr style="height: 20px;">
             </tr>
             <tr style="height: 80px;">
-                <td class="s5" dir="ltr">Motivation:</td>
+                <td class="s5" dir="ltr" style="height: 80px;">Motivation:</td>
                 <td class="s3 writable-text" colspan="3"></td>
             </tr>
             <tr style="height: 20px;">
@@ -307,26 +307,26 @@
                 <td class="s8" dir="ltr">POINTS</td>
             </tr>
             <tr style="height: 60px;">
-                <td class="s5" dir="ltr" >Arrangement</td>
+                <td class="s5" dir="ltr" style="height: 60px;">Arrangement</td>
                 <td class="s3 writable-text" colspan="3"></td>
             </tr>
             <tr style="height: 100px;">
-                <td class="s5" dir="ltr">Sketch</td>
+                <td class="s5" dir="ltr" style="height: 100px;">Sketch</td>
                 <td class="s3 writable-text" colspan="2"></td>
                 <td class="s5 writable-text" dir="ltr">Explain</td>
             </tr>
             <tr style="height: 100px;">
-                <td class="s5" dir="ltr">Steps</td>
+                <td class="s5" dir="ltr" style="height: 100px;">Steps</td>
                 <td class="s3 writable-text" colspan="2"></td>
                 <td class="s5 writable-text" dir="ltr">Show and Explain</td>
             </tr>
             <tr style="height: 100px;">
-                <td class="s5" dir="ltr">Saftey</td>
+                <td class="s5" dir="ltr" style="height: 100px;">Saftey</td>
                 <td class="s3 writable-text" colspan="2"></td>
                 <td class="s5 writable-text" dir="ltr">Show</td>
             </tr>
             <tr style="height: 40px;">
-                <td class="s9" dir="ltr" >Questions:</td>
+                <td class="s9" dir="ltr" style="height: 40px;">Questions:</td>
                 <td class="s3 writable-text" colspan="3"></td>
             </tr>
             <tr style="height: 20px;">
@@ -345,7 +345,8 @@
                 <td class="s3 border-t writable-text" colspan="3"></td>
             </tr>
             <tr style="height: 60px;">
-                <td class="s13" dir="ltr" colspan="4" rowspan="3" style="padding:10px;">Signature G.I.</td>
+            	<td class="border-b" style="height: 60px; border-left: none;">
+                <td class="s13" dir="ltr" colspan="3" rowspan="3" style="padding:10px;">Signature G.I.</td>
             </tr>
         </tbody>
     </table>

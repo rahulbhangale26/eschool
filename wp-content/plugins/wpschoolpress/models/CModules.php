@@ -475,7 +475,14 @@ class CModules extends CModel {
         'has_sub_modules'   => 0
     ];
     
-    
+    const SELL = [
+        'id'                => 48,
+        'title'             => 'Sell Management',
+        'slug'              => 'sch-sell',
+        'icon'              => '',
+        'parent_module_id'  => 0,
+        'has_sub_modules'   => 0
+    ];
     
     protected $arrSlugModules;
     
@@ -502,59 +509,60 @@ class CModules extends CModel {
             'sch-daily_diary'                   => self::INSTRUCTOR_DAILY_DIARY,
         	'sch-exam'							=> self::EXAM_MANAGEMENT,
         	self::SKILL_ASSESSMENT['slug']		=> self::SKILL_ASSESSMENT,
-        	'sch-avaids'						=> self::A_V_AIDS
+        	'sch-avaids'						=> self::A_V_AIDS,
+            self::SELL['slug']                  => self::SELL
         ];
     
     }
-       
+
     public function getModules() {
         global $objUser;
-        
+
         switch ( $objUser->getRole() ){
             case CRole::ADMIN:
                 return $this->getAdminModules();
                 break;
-                
+
             case CRole::TEACHER:
                 return $this->getInstructorModules();
                 break;
-                
+
             case CRole::STUDENT:
                 return $this->getStudentModules();
                 break;
-                
+
         } 
     }
-    
+
     public function getSubModules( $intParentId ) {
         global $objUser;
-              
+
         switch ( $objUser->getRole() ){
             case CRole::ADMIN:
                 return $this->getAdminSubModules( $intParentId );
                 break;
-                
+
             case CRole::TEACHER:
                 return $this->getInstructorSubModules( $intParentId );
                 break;
-                
+
         }
     }
-    
+
     public function getCurrentModule( $strSlug ) {
         return ( true == isset( $this->arrSlugModules[$strSlug] ) ? $this->arrSlugModules[$strSlug] : false );
     }
- 
+
     private function getAdminSubModules( $intParentId ) {
         $arrmixModule = [];
-               
+
         switch ( $intParentId ) {
-                
+
             case self::TRADE['id']:
                 $arrmixModule[self::TRADES['id']]           = self::TRADES;
                 $arrmixModule[self::SUBJECTS['id']]         = self::SUBJECTS;
                 break;
-                
+
             case self::INSTRUCTOR_RECORD['id']:
                 $arrmixModule[self::SYLLABUS['id']]                     = self::SYLLABUS;
                 $arrmixModule[self::TIME_TABLE['id']]                   = self::TIME_TABLE;
@@ -569,7 +577,7 @@ class CModules extends CModel {
                 $arrmixModule[self::HANDTOOL_DISTRIBUTION['id']]        = self::HANDTOOL_DISTRIBUTION;
                 $arrmixModule[self::A_V_AIDS['id']]                     = self::A_V_AIDS;
                 break;
-                
+
              case self::CLASSES['id']:
                  $arrmixModule[self::SUB_CLASSES['id']]     = self::SUB_CLASSES;
                  $arrmixModule[self::SUBJECTS['id']]        = self::SUBJECTS;
@@ -577,28 +585,28 @@ class CModules extends CModel {
                  $arrmixModule[self::EXAMS['id']]           = self::EXAMS;
                  $arrmixModule[self::TIMETABLE['id']]       = self::TIMETABLE;
                  break;
-                 
+
              case self::ATTENDANCE['id']:
                  $arrmixModule[self::TRAINEE_ATTENDANCE['id']]      = self::TRAINEE_ATTENDANCE;
                  $arrmixModule[self::TRAINEE_ATTENDANCE_MONTHLY['id']]      = self::TRAINEE_ATTENDANCE_MONTHLY;
                  break;
-                 
+
              case self::SETTINGS['id']:
                  $arrmixModule[self::SUB_SETTINGS['id']]      = self::SUB_SETTINGS;
                  $arrmixModule[self::WORKING_HOURS['id']]      = self::WORKING_HOURS;
                  $arrmixModule[self::LEAVE_CALENDAR['id']]      = self::LEAVE_CALENDAR;
                  break;
-                 
+
              case self::EXAMS['id']:
              	$arrmixModule[self::EXAM_MANAGEMENT['id']]		= self::EXAM_MANAGEMENT;
              	$arrmixModule[self::SKILL_ASSESSMENT['id']]	= self::SKILL_ASSESSMENT;
              	break;
-                
+
         }
-        
+
         return $arrmixModule;
     }
-    
+
     private function getInstructorSubModules( $intParentId ) {
         $arrmixModule = [];
         switch ( $intParentId ) {
@@ -638,12 +646,12 @@ class CModules extends CModel {
             	$arrmixModule[self::EXAM_MANAGEMENT['id']]		= self::EXAM_MANAGEMENT;
             	$arrmixModule[self::SKILL_ASSESSMENT['id']]	= self::SKILL_ASSESSMENT;
 				break;
-                    
+
         }
-        
+
         return $arrmixModule;
     }
-    
+
     private function getAdminModules() {
         $arrmixModule = [
             self::DASHBOARD['id']           => self::DASHBOARD,
@@ -662,11 +670,12 @@ class CModules extends CModel {
             self::PARENTS['id']             => self::PARENTS,
             self::SETTINGS['id']            => self::SETTINGS,
         ];
-        
+
         return $arrmixModule;
     }
-    
+
     private function getInstructorModules() {
+   
         $arrmixModule = [
             self::DASHBOARD['id']           => self::DASHBOARD,
             self::TRAINEES['id']            => self::TRAINEES,
@@ -684,10 +693,16 @@ class CModules extends CModel {
             self::PARENTS['id']             => self::PARENTS,
             self::SETTINGS['id']            => self::SETTINGS,
         ];
-        
+
+        global $objUser;
+
+        if( true == in_array( $objUser->getTeacher()->tid, CAccesibilities::SELLERS ) ) {
+            $arrmixModule[self::SELL['id']]     = self::SELL;
+        }
+
         return $arrmixModule;
     } 
-    
+
     private function getStudentModules() {
         $arrmixModule = [
             self::DASHBOARD['id']           => self::DASHBOARD,
@@ -697,9 +712,9 @@ class CModules extends CModel {
             self::EVENTS['id']              => self::EVENTS,
             self::PARENTS['id']             => self::PARENTS,
         ];
-        
+
         return $arrmixModule;
     }
-        
+
 }
 

@@ -6,6 +6,7 @@ class CFileIO {
     protected $strDir;
     
     const WRITE_MODE = 'w';
+    const READ_MODE = 'r';
     
     public function __construct() {
         
@@ -24,7 +25,7 @@ class CFileIO {
     }
     
     public function open( $strFileName, $strMode = self::WRITE_MODE ) {
-        
+
         if(!is_dir( $this->strDir ) )
             mkdir( $this->strDir );
 
@@ -33,6 +34,25 @@ class CFileIO {
         if( false === $this->intFilePointer ) {
             $this->addErrorMsg( 'Unable to open file.' );
         }
+    }
+    
+    public function read( $strFileName, $strMode = self::READ_MODE ) {
+        
+        if( NULL !== $strFileName ) {
+            $this->open( $strFileName, $strMode );
+        }
+        
+        if( 0 < count( $this->arrstrErrorMsgs ) ) {
+            return  false;
+        }
+
+        $intFileSize = filesize( $this->strDir . $strFileName );
+       
+        if( 0 == $intFileSize ) return '';
+        
+        $strContent = fread( $this->intFilePointer, $intFileSize );
+
+        return $strContent;
     }
     
     public function write( $strContent, $strFileName = NULL ) {

@@ -64,7 +64,7 @@ class CSellManager extends CFactory {
         $strInstructorName          = $this->getRequestData( [ 'customer_instructor_name' ] );
         $strContent                 = '';
         $arrobjDemostrationPlans    = CDemostrationPlans::getInstance()->fetchDemonstrationPlansByFormatByInstructorId( 'custom', $this->objUser->getTeacher()->tid );
-        $objMpdf = new \Mpdf\Mpdf();
+        $objMpdf                    = new \Mpdf\Mpdf( ['mode' => 'utf-8'] );
         $boolIsFirst = true;
         foreach ( $arrobjDemostrationPlans AS $objDp ) {
             $arrobjFiles = CFiles::getInstance()->fetchFilesByIds( explode( ',', $objDp->file_ids ) );
@@ -83,7 +83,7 @@ class CSellManager extends CFactory {
                     if( "" != $strContent ) {
                         $strContent = preg_replace('/<ITINAME>(.*)<\/ITINAME>/is', '<ITINAME>'. $strITIName . '</ITINAME>', $strContent );
                         $strContent = preg_replace('/<INAME>(.*)<\/INAME>/is', '<INAME>Name: '. $strInstructorName . '</INAME>', $strContent );
-                        $objMpdf->WriteHTML(  $strContent );
+                        $objMpdf->WriteHTML( '<style>div, p, td { font-family: freeserif; }</style>' . $strContent );
                     }
                     
                     $boolIsFirst = false;
@@ -105,6 +105,8 @@ class CSellManager extends CFactory {
         $arrobjLessonPlans          = CLessonPlans::getInstance()->fetchLessonPlansByFormatTypeByInstructorId( 'custom', $this->objUser->getTeacher()->tid );
 
         $objMpdf                    = new \Mpdf\Mpdf();
+        $objMpdf->autoLangToFont    = true;
+        $mpdf->autoScriptToLang = true;
         $boolIsFirst                = true;
         foreach ( $arrobjLessonPlans AS $objLessonPlan ) {
 
@@ -124,7 +126,7 @@ class CSellManager extends CFactory {
                     if( "" != $strContent ) {
                         $strContent = preg_replace('/<ITINAME>(.*)<\/ITINAME>/is', '<ITINAME>'. $strITIName . '</ITINAME>', $strContent );
                         $strContent = preg_replace('/<INAME>(.*)<\/INAME>/is', '<INAME>INSTRUCTOR: '. $strInstructorName . '</INAME>', $strContent );
-                        $objMpdf->WriteHTML(  $strContent );
+                        $objMpdf->WriteHTML( '<style>div, p, td { font-family: freeserif; }</style>' . $strContent );
                     }
                     
                     $boolIsFirst = false;

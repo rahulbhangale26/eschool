@@ -83,7 +83,7 @@ class CSellManager extends CFactory {
                     if( "" != $strContent ) {
                         $strContent = preg_replace('/<ITINAME>(.*)<\/ITINAME>/is', '<ITINAME>'. $strITIName . '</ITINAME>', $strContent );
                         $strContent = preg_replace('/<INAME>(.*)<\/INAME>/is', '<INAME>Name: '. $strInstructorName . '</INAME>', $strContent );
-                        $objMpdf->WriteHTML( '<style>div, p, td { font-family: freeserif; }</style>' . $strContent );
+                        $objMpdf->WriteHTML( '<style>div, p, td { font-family: freeserif !important; }</style>' . $strContent );
                     }
                     
                     $boolIsFirst = false;
@@ -126,7 +126,7 @@ class CSellManager extends CFactory {
                     if( "" != $strContent ) {
                         $strContent = preg_replace('/<ITINAME>(.*)<\/ITINAME>/is', '<ITINAME>'. $strITIName . '</ITINAME>', $strContent );
                         $strContent = preg_replace('/<INAME>(.*)<\/INAME>/is', '<INAME>INSTRUCTOR: '. $strInstructorName . '</INAME>', $strContent );
-                        $objMpdf->WriteHTML( '<style>div, p, td { font-family: freeserif; }</style>' . $strContent );
+                        $objMpdf->WriteHTML( '<style>div, p, td { font-family: freeserif !important; }</style>' . $strContent );
                     }
                     
                     $boolIsFirst = false;

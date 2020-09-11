@@ -74,6 +74,7 @@ class CSellManager extends CFactory {
                 foreach( $arrobjFiles AS $objFile ) {
                     $objFileIO->setDir( WP_CONTENT_DIR . $objFile->file_path );
                     $strContent = stripslashes( $objFileIO->read( $objFile->file_name ) );
+                    if( '' == $strContent ) continue;
                     
                     if( false == $boolIsFirst ) {
                         $objMpdf->AddPage();
@@ -102,6 +103,7 @@ class CSellManager extends CFactory {
         $strInstructorName          = $this->getRequestData( [ 'customer_instructor_name' ] );
         $strContent                 = '';
         $arrobjLessonPlans          = CLessonPlans::getInstance()->fetchLessonPlansByFormatTypeByInstructorId( 'custom', $this->objUser->getTeacher()->tid );
+
         $objMpdf                    = new \Mpdf\Mpdf();
         $boolIsFirst                = true;
         foreach ( $arrobjLessonPlans AS $objLessonPlan ) {
@@ -113,6 +115,7 @@ class CSellManager extends CFactory {
                 foreach( $arrobjFiles AS $objFile ) {
                     $objFileIO->setDir( WP_CONTENT_DIR . $objFile->file_path );
                     $strContent = stripslashes( $objFileIO->read( $objFile->file_name ) );
+                    if( '' == $strContent ) continue;
                     
                     if( false == $boolIsFirst ) {
                         $objMpdf->AddPage();
@@ -128,7 +131,7 @@ class CSellManager extends CFactory {
                 }
             }
         }
-        
+
         $objMpdf->Output();
         exit;
     }

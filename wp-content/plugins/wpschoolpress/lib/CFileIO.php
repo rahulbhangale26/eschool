@@ -38,6 +38,8 @@ class CFileIO {
     
     public function read( $strFileName, $strMode = self::READ_MODE ) {
         
+        if( false === $this->fileExists( $strFileName ) ) return '';
+        
         if( NULL !== $strFileName ) {
             $this->open( $strFileName, $strMode );
         }
@@ -55,6 +57,10 @@ class CFileIO {
         return $strContent;
     }
     
+    public function fileExists( $strFileNam ) {
+        return file_exists( $this->strDir . $strFileNam );        
+    }
+        
     public function write( $strContent, $strFileName = NULL ) {
         
         if( NULL !== $strFileName ) {

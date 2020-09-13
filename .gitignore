@@ -3,3 +3,4 @@ wp-admin/error_log
 error_log
 .htaccess
 /vendor/
+/wp-content/uploads/

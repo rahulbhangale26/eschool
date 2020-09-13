@@ -81,6 +81,7 @@ class CFileIO {
     
     public function close() {
         fclose( $this->intFilePointer );
+        unset( $this->intFilePointer );
     }
     
 }

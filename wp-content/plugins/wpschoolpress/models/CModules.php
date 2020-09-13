@@ -484,6 +484,15 @@ class CModules extends CModel {
         'has_sub_modules'   => 0
     ];
     
+    const SCRIPT = [
+        'id'                => 49,
+        'title'             => 'Script',
+        'slug'              => 'sch-script',
+        'icon'              => '',
+        'parent_module_id'  => 0,
+        'has_sub_modules'   => 0
+    ];
+    
     protected $arrSlugModules;
     
     public function __construct() {

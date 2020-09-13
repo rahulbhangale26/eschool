@@ -70,7 +70,6 @@ class CSellManager extends CFactory {
             $arrobjFiles = CFiles::getInstance()->fetchFilesByIds( explode( ',', $objDp->file_ids ) );
 
             if( true == is_array( $arrobjFiles ) AND 0 < count( $arrobjFiles ) ) {
-
                 foreach( $arrobjFiles AS $objFile ) {
                     $objFileIO->setDir( WP_CONTENT_DIR . $objFile->file_path );
                     $strContent = stripslashes( $objFileIO->read( $objFile->file_name ) );
@@ -117,6 +116,7 @@ class CSellManager extends CFactory {
                 foreach( $arrobjFiles AS $objFile ) {
                     $objFileIO->setDir( WP_CONTENT_DIR . $objFile->file_path );
                     $strContent = stripslashes( $objFileIO->read( $objFile->file_name ) );
+
                     if( '' == $strContent ) continue;
                     
                     if( false == $boolIsFirst ) {
@@ -126,7 +126,7 @@ class CSellManager extends CFactory {
                     if( "" != $strContent ) {
                         $strContent = preg_replace('/<ITINAME>(.*)<\/ITINAME>/is', '<ITINAME>'. $strITIName . '</ITINAME>', $strContent );
                         $strContent = preg_replace('/<INAME>(.*)<\/INAME>/is', '<INAME>INSTRUCTOR: '. $strInstructorName . '</INAME>', $strContent );
-                        $objMpdf->WriteHTML( '<style>div, p, td { font-family: freeserif !important; }</style>' . $strContent );
+                        $objMpdf->WriteHTML( '<style>td, p, tr, div { font-family: freeserif !important; }</style>' . $strContent );
                     }
                     
                     $boolIsFirst = false;

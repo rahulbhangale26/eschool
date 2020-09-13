@@ -11,6 +11,7 @@
 				<thead>
 					<tr role="row">
 						<th>Number</th>
+						<th>Format Type</th>
 						<th>Demonstration Plan</th>
 						<th>Instructor </th>
 						<th>Created On</th>
@@ -21,6 +22,7 @@
 					<?php foreach( $demonstration_plans AS $dp ) { ?>
 						<tr>
 							<td><?php echo $dp->number; ?></td>
+							<td><?php echo $dp->format_type; ?></td>
 							<td><?php echo $dp->name; ?></td>
 							<td><?php echo ( true == isset( $instructors[$dp->instructor_id] ) ? $instructors[$dp->instructor_id]->first_name . ' ' . $instructors[$dp->instructor_id]->last_name : '' ); ?>
 							<td><?php echo date( 'Y-m-d', strtotime( $dp->created_on ) ); ?></td>

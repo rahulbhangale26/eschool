@@ -3,6 +3,8 @@ class CLessonPlans extends CModel {
     
     public $strTableName;
     
+    const CUSTOM = 'custom';
+    
     protected static $_INSTANCE;
     
     public function __construct() {
@@ -62,6 +64,17 @@ class CLessonPlans extends CModel {
                         AND lp.format_type = \'' . $strFormatType . '\'';
         
         return $this->objDatabase->get_results( $strSql );
+    }
+    
+    public function fetchLessonPlanByFormatType( $strFormatType ) {
+        $strSql = 'SELECT
+                        lp.*
+                    FROM
+                        ' . $this->strTableName . ' lp
+                    WHERE
+                        lp.format_type = \'' . $strFormatType . '\'
+                    ORDER BY lp.number ASC';
+        return $this->getResults( $strSql );
     }
     
     public function fetchLessonPlanById( $intId ) {

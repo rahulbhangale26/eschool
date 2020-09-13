@@ -20,10 +20,6 @@ class CScriptsManager extends CFactory {
     }
     
     public function handleMigrateLessonPlan() {
-        require WP_VENDOR_PATH . "autoload.php";
-        
-        $objDom = new \PHPHtmlParser\Dom();
-        
         $objFileIO         = new CFileIO();
         $arrobjLessonPlans = CLessonPlans::getInstance()->fetchLessonPlanByFormatType( CLessonPlans::CUSTOM );
                

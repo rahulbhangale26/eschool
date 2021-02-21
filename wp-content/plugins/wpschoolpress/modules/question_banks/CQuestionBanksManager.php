@@ -4,6 +4,8 @@ class CQuestionBanksManager extends CFactory {
     
     protected $arrobjSubjects;
     protected $arrobjQuestionBanks;
+    
+    protected $objQuestionBank;
 
     public function __construct() {
         
@@ -59,6 +61,16 @@ class CQuestionBanksManager extends CFactory {
                         break;
                     }
                     
+                    if( false == isset( $arrmixRequestData['format_type'] ) || "" == $arrmixRequestData['format_type'] ) {
+                        $this->addErrorMessage( 'Please Format Type.' );
+                        break;
+                    }
+                    
+                    if( CQuestionBanks::FORMAT_TYPE_CUSTOM == $arrmixRequestData['format_type'] ) {
+                        $this->handleCustomQuestionBank();
+                        return true;
+                    }
+                    
                     if( false == isset( $_FILES['question_bank_file'] ) || "" == $_FILES['question_bank_file']['name'] ) {
                         $this->addErrorMessage( 'Please select the question bank file to upload.' );
                         break;
@@ -95,6 +107,7 @@ class CQuestionBanksManager extends CFactory {
                     
                     $arrmixQuestionBank = [
                         'file_id'           => $intFileId,
+                        'format_type'       => CQuestionBanks::FORMAT_TYPE_FILE,
                         'subject_id'        => $arrmixRequestData['subject_id'],
                         'instructor_id'     => $this->objUser->getTeacher()->tid,
                         'name'              => $arrmixRequestData['question_bank_name']
@@ -116,6 +129,54 @@ class CQuestionBanksManager extends CFactory {
         }
         
         $this->displayAddQuestionBank();
+    }
+    
+    public function handleCustomQuestionBank() {
+        $arrmixRequestData = $this->getRequestData( [] );
+        
+        if( true == isset( $arrmixRequestData[ 'upload_question_bank' ] ) ) {
+            switch( NULL ) {
+                default:
+                    if( false == isset( $arrmixRequestData['question_bank_name'] ) && "" == $arrmixRequestData['question_bank_name']  ) {
+                        $this->addErrorMessage( 'Please provide Question Bank name.' );
+                        break;
+                    }
+                    
+                    if( false == isset( $arrmixRequestData['subject_id'] ) || "" == $arrmixRequestData['subject_id'] ) {
+                        $this->addErrorMessage( 'Please select subject for Question Bank.' );
+                        break;
+                    }
+                    
+                    if( false == isset( $arrmixRequestData['format_type'] ) || "" == $arrmixRequestData['format_type'] ) {
+                        $this->addErrorMessage( 'Please Format Type.' );
+                        break;
+                    }
+                    
+                    $arrmixQuestionBank = [
+                        'format_type'       => CQuestionBanks::FORMAT_TYPE_CUSTOM,
+                        'subject_id'        => $arrmixRequestData['subject_id'],
+                        'instructor_id'     => $this->objUser->getTeacher()->tid,
+                        'name'              => $arrmixRequestData['question_bank_name']
+                    ];
+                    
+                    if( false == ( $intQuestionBankId = CQuestionBanks::getInstance()->insert( $arrmixQuestionBank ) ) ) {
+                        $this->addErrorMessage( 'Unable to add Question Bank. Please contact administrator.' );
+                        break;
+                    }
+                    
+                    $this->objQuestionBank = CQuestionBanks::getInstance()->fetchQuestionBankById( $intQuestionBankId );
+                    
+                    $this->addSuccessMessage( 'Question Bank Uploaded Successfully.' );
+            }
+        }
+        
+        if(  CRole::ADMIN == $this->objUser->getRole() || ( CRole::TEACHER == $this->objUser->getRole() && true == in_array( $this->objUser->getTeacher()->designation_id, [ CDesignations::PRINCIPAL, CDesignations::CLERK ] ) ) ) {
+            $this->arrobjSubjects = CSubjects::getInstance()->fetchSubjectsByUnitId( $this->getSessionData( [ 'filter', 'unit_id' ] ), $this->objUser->getTeacher()->tid );
+        } else {
+            $this->arrobjSubjects = CSubjects::getInstance()->fetchSubjectsByUnitIdByInstructorId( $this->getSessionData( [ 'filter', 'unit_id' ] ), $this->objUser->getTeacher()->tid );
+        }
+        
+        $this->displayCustomQuestionBank();
     }
     
     public function handleDeleteQuestionBank() {
@@ -144,6 +205,13 @@ class CQuestionBanksManager extends CFactory {
     	$this->arrmixTemplateParams['subjects']   = $this->arrobjSubjects;
 
         $this->renderPage( 'question_banks/add_question_bank.php' );
+    }
+    
+    public function displayCustomQuestionBank() {
+        $this->arrmixTemplateParams['subjects']         = $this->arrobjSubjects;
+        $this->arrmixTemplateParams['question_bank']    = $this->objQuestionBank;
+        
+        $this->renderPage( 'question_banks/add_custom_question_bank.php' );
     }
 }
 

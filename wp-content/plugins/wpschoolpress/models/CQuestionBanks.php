@@ -3,6 +3,9 @@ class CQuestionBanks extends CModel {
     
     protected static $_INSTANCE;
     
+    const FORMAT_TYPE_FILE      = 'file';
+    const FORMAT_TYPE_CUSTOM    = 'custom';
+    
     public function __construct() {
         parent::__construct();
         $this->strTableName = $this->strTablePrefix . 'wpsp_question_banks';
@@ -25,6 +28,17 @@ class CQuestionBanks extends CModel {
     
     public function delete( $arrstrWhere ) {
         return $this->objDatabase->delete( $this->strTableName, $arrstrWhere );
+    }
+    
+    public function fetchQuestionBankById( $intQuestionBankId ) {
+        $strSql = 'SELECT 
+                        *
+                    FROM
+                        ' . $this->strTableName . '
+                    WHERE
+                        id = ' . ( int ) $intQuestionBankId;
+        
+        return $this->getResult( $strSql );
     }
     
     public function fetchAllQuestionBanks() {
